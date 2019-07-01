@@ -40,7 +40,7 @@ const parse_en_main int = 1
 
 
 func parse(s string, tz *time.Location)(nextTime, error){
-    nt:=nextTime{}
+    nt:=nextTime{loc:tz}
     cs, p, pe, eof:= 0, 0, len(s), len(s)
     mark := 0
     _ = mark
@@ -1161,51 +1161,51 @@ m=1<<6
 	goto _again
 f20:
 //line parse.rl:353
-m=1<<1
+m=1
 	goto _again
 f19:
 //line parse.rl:353
-m=1<<2
+m=1<<1
 	goto _again
 f23:
 //line parse.rl:353
-m=1<<3
+m=1<<2
 	goto _again
 f15:
 //line parse.rl:353
-m=1<<4
+m=1<<3
 	goto _again
 f24:
 //line parse.rl:353
-m=1<<5
+m=1<<4
 	goto _again
 f22:
 //line parse.rl:353
-m=1<<6
+m=1<<5
 	goto _again
 f21:
 //line parse.rl:353
-m=1<<7
+m=1<<6
 	goto _again
 f17:
 //line parse.rl:353
-m=1<<8
+m=1<<7
 	goto _again
 f27:
 //line parse.rl:353
-m=1<<9
+m=1<<8
 	goto _again
 f26:
 //line parse.rl:353
-m=1<<10
+m=1<<9
 	goto _again
 f25:
 //line parse.rl:353
-m=1<<11
+m=1<<10
 	goto _again
 f18:
 //line parse.rl:353
-m=1<<12
+m=1<<11
 	goto _again
 f0:
 //line parse.rl:363

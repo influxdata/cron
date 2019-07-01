@@ -54,11 +54,11 @@ func Test_nextTime_next(t *testing.T) {
 		return nt
 	}
 	tests := []struct {
-		name string
-		nt   nextTime
-		zone *time.Location
-		from time.Time
-		want time.Time
+		name    string
+		nt      nextTime
+		from    time.Time
+		want    time.Time
+		wanterr bool
 	}{
 		// TODO: Add test cases.
 		{
@@ -82,7 +82,7 @@ func Test_nextTime_next(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.nt.next(tt.from); !reflect.DeepEqual(got, tt.want) {
+			if got, err := tt.nt.next(tt.from); !reflect.DeepEqual(got, tt.want) || tt.wanterr != (err != nil) {
 				t.Errorf("from = %v, nextTime.next() = %v, want %v", tt.from, got, tt.want)
 			}
 		})

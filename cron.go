@@ -3,6 +3,8 @@ package cron
 //go:generate ragel -Z -G1 parse.rl
 
 import (
+	"errors"
+	"fmt"
 	"math/bits"
 	"time"
 )
@@ -12,7 +14,27 @@ type years struct {
 	high uint64
 }
 
-func (y years) TrailingZeros64() {
+func (y years) isZero() bool {
+	return y.low|y.high == 0
+}
+
+func (ys years) set(year int) {
+	y := uint64(year - 1970)
+	if y > 64 {
+		ys.high |= (1 << (y - 64))
+	}
+	ys.low |= (1 << y)
+}
+
+func (ys years) unset(year int) {
+	y := uint64(year - 1970)
+	if y > 64 {
+		ys.high &= ^(1 << (y - 64))
+	}
+	ys.low &= ^(1 << y)
+}
+
+func (y years) TrailingZeros64() int {
 	zeros := bits.TrailingZeros64(y.low)
 	if zeros == 64 {
 		zeros += bits.TrailingZeros64(y.high)
@@ -28,12 +50,12 @@ func (y years) Intersection(y2 years) years {
 }
 
 // this is undefined if the year is above 2070 or below 1970
-func (ys years)in(year int) bool{
-	y:=uint64(year-1970)
-	if y >64{
-		return ys.high & (1<<(y-64)) >0
+func (ys years) in(year int) bool {
+	y := uint64(year - 1970)
+	if y > 64 {
+		return ys.high&(1<<(y-64)) > 0
 	}
-	return ys.low & (1<<y)>0
+	return ys.low&(1<<y) > 0
 }
 
 type nextTime struct {
@@ -46,6 +68,8 @@ type nextTime struct {
 	year   years
 	loc    *time.Location
 }
+
+const sundaysAtFirst = uint64(1 | 1<<7 | 1<<14 | 1<<21 | 1<<28)
 
 var maxMonthLengths = [12]int{1 << 31, 1 << 28, 1 << 31, 1 << 30, 1 << 31, 1 << 30, 1 << 31, 1 << 31, 1 << 30, 1 << 31, 1 << 30, 1 << 31}
 
@@ -62,7 +86,8 @@ func (nt *nextTime) nextYear(y, m, d uint64) int {
 	y++
 	//Feb 29th special casing
 	// if we only allow feb 29th, or  then the next year must be a leap year
-	if nt.month == 2 && bits.TrailingZeros64(nt.dom) >= 28 {
+	// remember we zero index months here
+	if m == 1 && bits.TrailingZeros64(nt.dom) > 28 {
 		if y&3 == 0 && y%100 != 0 {
 			return int(y)
 		}
@@ -91,16 +116,12 @@ func (nt *nextTime) nextMonth(m, d uint64) time.Month {
 	if maxMonthLengths[m-1] < (1<<d) && m < 12 {
 		m++
 	}
-
 	return time.Month(m)
 }
 
-func (nt *nextTime) nextDay(y, m, d uint64) int {
-	// no need to increment day, because we zero index and the result of Date is 1 indexed
-	// find next avaliable dom
-	const sundaysAtFirst = uint(1|1 < 7|1 < 14|1 < 21|1 < 28)
-	firstOfMonth := time.Date(y, m, 0, 0, 0, 0, 0, nt.Zone)
-	days := ((sundaysAtFirst << uint(firstOfMonth.Weekday())) * nt.dow) & nt.dom
+func (nt *nextTime) nextDay(y int, m time.Month, d uint64) int {
+	firstOfMonth := time.Date(y, m, 1, 0, 0, 0, 0, nt.loc)
+	days := ((sundaysAtFirst << uint64(firstOfMonth.Weekday())) * nt.dow) & nt.dom
 	d = uint64(bits.TrailingZeros64(days>>d)) + d
 	if d >= uint64(maxMonthLengths[m]) {
 		return -1
@@ -135,136 +156,118 @@ func (nt *nextTime) nextSecond(s uint64) int {
 	return int(s)
 }
 
-func (nt *nextTime) nextTime(from time.Time) (h,m,s int, advanceDay bool){
+func (nt *nextTime) next(from time.Time) (time.Time, error) {
+	y, M, d := from.Date()
+	d-- //day is 1 indexed but our day is zero indexed
+	M-- //month is 1 indexed in time but ours is 0 indexed
 	h := from.Hour()
 	m := from.Minute()
 	s := from.Second()
 
-func (nt *nextTime) next(from time.Time) (time.Time, error) {
-	y, M, d := from.Date()
-	h := from.Hour()
-	m := from.Minute()
-	s := from.Second()
-	//res:=nt.intersection(timebm(from).Add(time.Second))
-	advance_day:=false
-	// handle time of day
-	if s2 := nt.nextSecond(uint64(s)); s2 < 0 {
-		s = bits.TrailingZeros64(nt.second)// if not found set to first second and advance minute
-		if m2 := nt.nextMinute(uint64(m)); m2 < 0 {
-			m = bits.TrailingZeros64(nt.minute) // if not found set to first minute and advance hour
-			if h2 := nt.nextHour(uint64(h)); h2 < 0 {
-				h = bits.TrailingZeros64(nt.hour) // if not found set to hour and advance day
-				advanceDay = true
-			}
-			else {
-				h = h2
-			}
+	updateMin := nt.minute&(1<<uint64(m)) == 0
+	updateHour := nt.hour&(1<<uint(h)) == 0
+	updateMonth := nt.month&(1<<uint(M)) == 0
+	updateYear := nt.year.in(y)
+
+	firstOfMonth := time.Date(y, M+1, 1, 0, 0, 0, 0, nt.loc)
+	days := ((sundaysAtFirst << uint64(firstOfMonth.Weekday())) * nt.dow) & nt.dom
+
+	updateDay := days&(1<<uint(d)) == 0
+
+	updateSec := nt.second&(1<<uint64(s)) == 0 || !(updateMin && updateHour && updateMonth && updateYear)
+
+	if updateSec {
+		fmt.Println("UPDATING SEC")
+		if s2 := nt.nextSecond(uint64(s)); s2 < 0 {
+			s = bits.TrailingZeros64(nt.second) // if not found set to first second and advance minute
+			updateMin = true
+		} else {
+			s = s2
+		}
+	}
+	if updateMin {
+		if m2 := nt.nextMinute(uint64(m)); m < 0 {
+			m = bits.TrailingZeros64(nt.minute) // if not found set to first second and advance minute
+			updateHour = true
 		} else {
 			m = m2
 		}
-	} else {
-		s = s2
 	}
-
-	// handle date
-	// first we have to check the year
-	if !nt.year.in(y){
-		y2 := nt.nextYear(uint64(y), uint64(M), uint64(d))
-		if y2 < 0 {
-			return time{}, errors.New("could not fulfil schedule") // zero time means that it couldn't schedule something.
+	if updateHour {
+		if h2 := nt.nextHour(uint64(h)); h < 0 {
+			h = bits.TrailingZeros64(nt.hour) // if not found set to first second and advance minute
+			updateDay = true
+		} else {
+			h = h2
 		}
 	}
-	if !nt.month&(1<<m)>0{ //check the month
-		M2 := nt.nextMonth(uint64(M), uint64(d))
-		if M2<0 {
-			M = bits.TrailingZeros64(nt.month)
-			y2 := nt.nextYear(uint64(y), uint64(M), uint64(d))
-			if y2 < 0 {
-				return time{}, errors.New("could not fulfil schedule") // zero time means that it couldn't schedule something.
-			}
+processDay:
+	if updateDay {
+		if d2 := nt.nextDay(y, time.Month(M), uint64(d)); d2 < 0 {
+			d = 1
+			updateDay = true
+			updateMonth = true
+		} else {
+			d = d2
+			updateDay = false
 		}
 	}
-
-
-	for y <= 2099 /* maximum year handleable by our crons and also other various crons */ {
-		if d2 := nt.nextDay(uint64(y), uint64(M)); d2 < 0 {
+processMonth:
+	if y > 2099 {
+		return time.Time{}, errors.New("could not fulfil schedule")
+	}
+	if updateMonth {
 		if M2 := nt.nextMonth(uint64(M), uint64(d)); M2 < 0 {
-			M = bits.TrailingZeros64(nt.month)
-			y2 := nt.nextYear(uint64(y), uint64(M), uint64(d))
-			if y2 < 0 {
-				return time{}, errors.New("could not fulfil schedule") // zero time means that it couldn't schedule something.
-			}
+			M = time.Month(bits.TrailingZeros64(nt.month))
+			updateYear = true
+			goto processYear
 		} else {
 			M = M2
 		}
+		d = 0
+		goto processDay
 	}
-
-	return time.Date(y,M,d,h,m,s,0,from.Location), nil
+processYear:
+	if updateYear {
+		if y2 := nt.nextYear(uint64(y), uint64(M), uint64(d)); y2 < 1 {
+			return time.Time{}, errors.New("could not fulfil schedule")
+		}
+		updateMonth = true
+		m = 0
+		d = 0
+		goto processMonth
+	}
+	return time.Date(y, M, d, h, m, s, 0, from.Location()), nil
 }
 
-
-
-// 	if s2 := nt.nextSecond(uint64(s)); s2 < 0 {
-// 		s = bits.TrailingZeros64(nt.second)// if not found set to first second and advance minute
-// 		if m2 := nt.nextMinute(uint64(m)); m2 < 0 {
-// 			m = bits.TrailingZeros64(nt.minute) // if not found set to first minute and advance hour
-// 			if h2 := nt.nextHour(uint64(h)); h2 < 0 {
-// 				h = bits.TrailingZeros64(nt.hour) // if not found set to hour and advance day
-// 				if d2 := nt.nextDay(uint64(y), uint64(M)); d2 < 0 {
-// 					d = bits.TrailingZeros64(nt.month) // if not found set to first day and advance month
-
-// 					if M2 := nt.nextMonth(uint64(M), uint64(d)); M2 < 0 {
-// 						M = 0
-// 						y2 := nt.nextYear(uint64(y), uint64(M), uint64(d))
-// 						if y2 < 0 {
-// 							return time.Time{}
-// 						}
-// 						y = y2
-// 					} else {
-// 						M = M2
-// 					}
-// 				} else {
-// 					d = d2
-// 				}
-// 			} else {
-// 				h = h2
-// 			}
-// 		} else {
-// 			m = m2
-// 		}
-// 	} else {
-// 		s = s2
-// 	}
-
-
-
-// 	return 
-// }
-
-func (nt *nextTime) intersectionExists(ct *nextTime) bool {
-	return ct.month&nt.month != 0 &&
-		ct.dom&nt.dom != 0 &&
-		ct.hour&nt.hour != 0 &&
-		ct.minute&nt.minute != 0 &&
-		ct.second&nt.second != 0
-}
-
-func (nt *nextTime)intersection(ct *nextTime) *nextTime
-	return nextTime{
-		second: nt.second&ct.second,
-		minute: nt.minute&ct.minute,
-		hour:   nt.hour&ct.hour,
-		dow:    nt.dow&ct.dow,
-		month:  nt.month&ct.month,
-		dom:    nt.dom&ct.dom,
+func (nt *nextTime) intersection(ct *nextTime) *nextTime {
+	return &nextTime{
+		second: nt.second & ct.second,
+		minute: nt.minute & ct.minute,
+		hour:   nt.hour & ct.hour,
+		dow:    nt.dow & ct.dow,
+		month:  nt.month & ct.month,
+		dom:    nt.dom & ct.dom,
+		year: years{
+			high: nt.year.high & ct.year.high,
+			low:  nt.year.low & ct.year.low,
+		},
 	}
 }
 
-func timebm(ts time.Time) nextTime {
+func (nt *nextTime) updateDateIntersectDate(y int, M, d uint64) {
+	nt.dom = nt.dom & 1 << d
+	nt.year.high = 0
+	nt.year.low = 0
+	nt.year.set(y)
+	nt.month = nt.month & 1 << M
+}
+
+func timebm(ts time.Time) *nextTime {
 	_, M, D := ts.Date()
 	hr, m, s := ts.Clock()
 	dow := ts.Weekday()
-	return nextTime{
+	return &nextTime{
 		second: 1 << uint(s),
 		minute: 1 << uint(m),
 		hour:   1 << uint(hr),

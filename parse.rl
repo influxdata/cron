@@ -15,7 +15,7 @@ import (
 
 
 func parse(s string, tz *time.Location)(nextTime, error){
-    nt:=nextTime{}
+    nt:=nextTime{loc:tz}
     cs, p, pe, eof:= 0, 0, len(s), len(s)
     mark := 0
     _ = mark
@@ -350,7 +350,7 @@ func parse(s string, tz *time.Location)(nextTime, error){
         hash = "#";
 
         dow = ( "SUN" @{m=1} | "MON" @{m=1<<1} | "TUE" @{m=1<<2} | "WED" @{m=1<<3} | "THU" @{m=1<<4} | "FRI" @{m=1<<5} | "SAT" @{m=1<<6} );
-        monthName = ( "JAN" @{m=1<<1} | "FEB" @{m=1<<2} | "MAR" @{m=1<<3} | "APR" @{m=1<<4} | "MAY" @{m=1<<5} | "JUN" @{m=1<<6} | "JUL" @{m=1<<7} | "AUG" @{m=1<<8} | "SEP" @{m=1<<9} | "OCT" @{m=1<<10} | "NOV" @{m=1<<11} | "DEC" @{m=1<<12} ) ;
+        monthName = ( "JAN" @{m=1} | "FEB" @{m=1<<1} | "MAR" @{m=1<<2} | "APR" @{m=1<<3} | "MAY" @{m=1<<4} | "JUN" @{m=1<<5} | "JUL" @{m=1<<6} | "AUG" @{m=1<<7} | "SEP" @{m=1<<8} | "OCT" @{m=1<<9} | "NOV" @{m=1<<10} | "DEC" @{m=1<<11} ) ;
         last = ( digit+ "L" ) >mark %{
             m, err = strconv.ParseUint(s[mark:p-1], 10, 64)
             if err!=nil{
