@@ -1,6 +1,6 @@
 package cron
 
-//go:generate ragel -Z -G1 parse.rl
+//go:generate ragel -G0 -Z parse.rl
 
 import (
 	"errors"
@@ -18,7 +18,7 @@ func (y years) isZero() bool {
 	return y.low|y.high == 0
 }
 
-func (ys years) set(year int) {
+func (ys *years) set(year int) {
 	y := uint64(year - 1970)
 	if y > 64 {
 		ys.high |= (1 << (y - 64))
@@ -26,7 +26,7 @@ func (ys years) set(year int) {
 	ys.low |= (1 << y)
 }
 
-func (ys years) unset(year int) {
+func (ys *years) unset(year int) {
 	y := uint64(year - 1970)
 	if y > 64 {
 		ys.high &= ^(1 << (y - 64))
@@ -58,6 +58,10 @@ func (ys years) in(year int) bool {
 	return ys.low&(1<<y) > 0
 }
 
+func isLeap(y int) bool {
+	return (y&3 == 0 && y%100 != 0) || y%400 == 0
+}
+
 type nextTime struct {
 	second uint64
 	minute uint64
@@ -69,26 +73,25 @@ type nextTime struct {
 	loc    *time.Location
 }
 
-const sundaysAtFirst = uint64(1 | 1<<7 | 1<<14 | 1<<21 | 1<<28)
+var maxMonthLengths = [13]uint64{31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31, 31} // we wrap back around from jan to jan to make stuff easy
 
-var maxMonthLengths = [12]int{1 << 31, 1 << 28, 1 << 31, 1 << 30, 1 << 31, 1 << 30, 1 << 31, 1 << 31, 1 << 30, 1 << 31, 1 << 30, 1 << 31}
-
-func monthLen(year, month int) int {
-	l := maxMonthLengths[month-1]
-	// check if feb and not leap year
-	if month == 2 && (year&3 != 0 || year%100 == 0) {
-		l--
-	}
-	return l
-}
+// func monthLen(year, month int) uint64 {
+// 	l := maxMonthLengths[month-1]
+// 	// check if feb and not leap year
+// 	if month == 1 && (year&3 != 0 || year%100 == 0) {
+// 		l--
+// 	}
+// 	return l
+// }
 
 func (nt *nextTime) nextYear(y, m, d uint64) int {
 	y++
 	//Feb 29th special casing
 	// if we only allow feb 29th, or  then the next year must be a leap year
 	// remember we zero index months here
-	if m == 1 && bits.TrailingZeros64(nt.dom) > 28 {
-		if y&3 == 0 && y%100 != 0 {
+	//fmt.Println("month in nextYear", m)
+	if m == 1 && d == 28 {
+		if isLeap(int(y)) {
 			return int(y)
 		}
 		if y%100 == 0 {
@@ -102,26 +105,32 @@ func (nt *nextTime) nextYear(y, m, d uint64) int {
 			return int(y + 4)
 		}
 	}
-	return -1
+	return int(y)
 }
 
-func (nt *nextTime) nextMonth(m, d uint64) time.Month {
-	// no need to increment month, because we zero index and the result of Date is 1 indexed
+// returns the index for the month
+func (nt *nextTime) nextMonth(m, d uint64) int {
+	//fmt.Printf("prenextmonth %d, %b\n", time.Month(m+1), nt.month)
 	m = uint64(bits.TrailingZeros64(nt.month>>m)) + m
 	d = uint64(bits.TrailingZeros64(nt.dom>>d)) + d
-	if nt.month < 1<<m { // if there is no next avaliable months
+	if m > 11 { // if there is no next avaliable months
 		return -1
 	}
-
-	if maxMonthLengths[m-1] < (1<<d) && m < 12 {
+	if maxMonthLengths[m] <= d {
 		m++
 	}
-	return time.Month(m)
+	return int(m)
 }
 
 func (nt *nextTime) nextDay(y int, m time.Month, d uint64) int {
-	firstOfMonth := time.Date(y, m, 1, 0, 0, 0, 0, nt.loc)
-	days := ((sundaysAtFirst << uint64(firstOfMonth.Weekday())) * nt.dow) & nt.dom
+	firstOfMonth := time.Date(y, m+1, 1, 0, 0, 0, 0, nt.loc)
+	//days := ((sundaysAtFirst << uint64(firstOfMonth.Weekday())) * nt.dow) & nt.dom
+	// fmt.Printf("sundays at first %b, days thingy %b\n", sundaysAtFirst, sundaysAtFirst>>uint64(firstOfMonth.Weekday()))
+	//fomDay := uint(firstOfMonth.Weekday())
+	days := nt.prepDays(firstOfMonth.Weekday())
+	d++
+	//fmt.Printf("days %b, fom: %s\n", days>>(d-2), firstOfMonth.Weekday())
+	//d++
 	d = uint64(bits.TrailingZeros64(days>>d)) + d
 	if d >= uint64(maxMonthLengths[m]) {
 		return -1
@@ -156,35 +165,44 @@ func (nt *nextTime) nextSecond(s uint64) int {
 	return int(s)
 }
 
+// undefined for shifts larger than 7
+// firstDayOfWeek is the 0 indexed day of first day of the month
+func (nt *nextTime) prepDays(firstDayOfWeek time.Weekday) uint64 {
+	s := uint(firstDayOfWeek)
+	//fmt.Println("FOM is", firstDayOfWeek)
+	q := (nt.dow >> s) & nt.dom
+	//fmt.Printf("%b, %d\n", nt.dow>>s, firstDayOfWeek)
+	return q
+}
+
 func (nt *nextTime) next(from time.Time) (time.Time, error) {
-	y, M, d := from.Date()
-	d-- //day is 1 indexed but our day is zero indexed
-	M-- //month is 1 indexed in time but ours is 0 indexed
+	y, MTime, dTime := from.Date()
+	d := int(dTime - 1) //time's day is 1 indexed but our day is zero indexed
+	M := int(MTime - 1) //time's month is 1 indexed in time but ours is 0 indexed
 	h := from.Hour()
 	m := from.Minute()
 	s := from.Second()
 
-	updateMin := nt.minute&(1<<uint64(m)) == 0
+	// updateYear := !nt.year.in(y)
+	// updateMonth := nt.month&(1<<uint(M)) == 0
+
+	// firstOfMonth := time.Date(y, time.Month(M+1), 1, 0, 0, 0, 0, nt.loc)
+	// fmt.Println("today is", d)
+	// updateDay := nt.prepDays(firstOfMonth.Weekday())&(1<<uint(d)) == 0
 	updateHour := nt.hour&(1<<uint(h)) == 0
-	updateMonth := nt.month&(1<<uint(M)) == 0
-	updateYear := nt.year.in(y)
-
-	firstOfMonth := time.Date(y, M+1, 1, 0, 0, 0, 0, nt.loc)
-	days := ((sundaysAtFirst << uint64(firstOfMonth.Weekday())) * nt.dow) & nt.dom
-
-	updateDay := days&(1<<uint(d)) == 0
-
-	updateSec := nt.second&(1<<uint64(s)) == 0 || !(updateMin && updateHour && updateMonth && updateYear)
+	updateMin := nt.minute&(1<<uint64(m)) == 0
+	updateSec := nt.second&(1<<uint64(s)) == 0 || !(updateMin && updateHour)
 
 	if updateSec {
-		fmt.Println("UPDATING SEC")
 		if s2 := nt.nextSecond(uint64(s)); s2 < 0 {
 			s = bits.TrailingZeros64(nt.second) // if not found set to first second and advance minute
 			updateMin = true
+			fmt.Println("seconds in update", s)
 		} else {
 			s = s2
 		}
 	}
+	//fmt.Println("updateMin", updateMin)
 	if updateMin {
 		if m2 := nt.nextMinute(uint64(m)); m < 0 {
 			m = bits.TrailingZeros64(nt.minute) // if not found set to first second and advance minute
@@ -192,52 +210,80 @@ func (nt *nextTime) next(from time.Time) (time.Time, error) {
 		} else {
 			m = m2
 		}
+		s = bits.TrailingZeros64(nt.second) // if not found set to first second and advance minute
 	}
+	//fmt.Println("updateHour", updateHour)
 	if updateHour {
 		if h2 := nt.nextHour(uint64(h)); h < 0 {
-			h = bits.TrailingZeros64(nt.hour) // if not found set to first second and advance minute
-			updateDay = true
+			h = bits.TrailingZeros64(nt.hour) // if not found set to first hour and advance the day
+			d++
 		} else {
 			h = h2
 		}
+		m = bits.TrailingZeros64(nt.minute)
+		s = bits.TrailingZeros64(nt.second)
 	}
-processDay:
-	if updateDay {
-		if d2 := nt.nextDay(y, time.Month(M), uint64(d)); d2 < 0 {
-			d = 1
-			updateDay = true
-			updateMonth = true
-		} else {
-			d = d2
-			updateDay = false
+	weekDayOfFirst := time.Date(y, time.Month(M+1), 1, 0, 0, 0, 0, from.Location()).Weekday()
+
+	if (d == 28 && M == 1 && !isLeap(y)) || !nt.year.in(y) || (nt.month&(1<<uint(M)) == 0) || nt.prepDays(weekDayOfFirst)&(1<<uint(d)) == 0 {
+		h = bits.TrailingZeros64(nt.hour) // if not found set to first hour and advance the day
+		m = bits.TrailingZeros64(nt.minute)
+		s = bits.TrailingZeros64(nt.second)
+	}
+	oldYear, oldMonth, oldDay := y, M, d
+
+	for y < 2099 {
+		if nt.prepDays(weekDayOfFirst)&(1<<uint(d)) == 0 {
+			// fmt.Printf("updateDay %v, %b\n", updateDay, nt.prepDays(firstOfMonth.Weekday()))
+			if d2 := nt.nextDay(y, time.Month(M), uint64(d)); d2 < 0 {
+				M++
+				weekDayOfFirst = time.Date(y, time.Month(M+1), 1, 0, 0, 0, 0, from.Location()).Weekday()
+				d = bits.TrailingZeros64(nt.prepDays(weekDayOfFirst))
+				//updateDay = true
+			} else {
+				d = d2
+			}
 		}
-	}
-processMonth:
-	if y > 2099 {
-		return time.Time{}, errors.New("could not fulfil schedule")
-	}
-	if updateMonth {
-		if M2 := nt.nextMonth(uint64(M), uint64(d)); M2 < 0 {
-			M = time.Month(bits.TrailingZeros64(nt.month))
-			updateYear = true
-			goto processYear
-		} else {
-			M = M2
+
+		if nt.month&(1<<uint(M)) == 0 {
+			if M2 := nt.nextMonth(uint64(M), uint64(d)); M2 < 0 {
+				M = bits.TrailingZeros64(nt.month)
+				y++
+				weekDayOfFirst = time.Date(y, time.Month(M+1), 1, 0, 0, 0, 0, from.Location()).Weekday()
+				d = bits.TrailingZeros64(nt.prepDays(weekDayOfFirst))
+			} else {
+				M = M2
+				fmt.Println("year", y, "month", M+1, "day", d)
+			}
 		}
-		d = 0
-		goto processDay
-	}
-processYear:
-	if updateYear {
-		if y2 := nt.nextYear(uint64(y), uint64(M), uint64(d)); y2 < 1 {
-			return time.Time{}, errors.New("could not fulfil schedule")
+		// fmt.Printf("%v, %v, %v, %b\n", !nt.year.in(y), (nt.month&(1<<uint(M)) == 0), nt.prepDays(firstOfMonth.Weekday())&(1<<uint(d)) == 0, nt.prepDays(firstOfMonth.Weekday()))
+		// fmt.Println("0 year", y, "month", time.Month(M+1), "day", d)
+		if !nt.year.in(y) || (d == 28 && M == 1 && !isLeap(y)) {
+			y2 := nt.nextYear(uint64(y), uint64(M), uint64(d))
+			if y2 < 1 {
+				return time.Time{}, errors.New("could not fulfil schedule with year")
+			}
+			// updateMonth = true
+			// M = -1
+			y = y2
+			M = bits.TrailingZeros64(nt.month)
+			weekDayOfFirst = time.Date(y, time.Month(M+1), 1, 0, 0, 0, 0, from.Location()).Weekday()
+			d = bits.TrailingZeros64(nt.prepDays(weekDayOfFirst))
+			//fmt.Println("2 year", y, "month", M+1, "day", d)
+			// if nt.prepDays(time.Date(y, time.Month(M+1), 1, 0, 0, 0, 0, from.Location()).Weekday())&(1<<uint(d)) == 0 {
+			// 	goto processDay
+			// }
 		}
-		updateMonth = true
-		m = 0
-		d = 0
-		goto processMonth
+		// if no changes, break
+		if oldYear == y && oldMonth == M && oldDay == d {
+			if nt.prepDays(weekDayOfFirst)&(1<<uint(d)) != 0 && (nt.year.in(y) && (d != 28 || M != 1 || isLeap(y))) && nt.month&(1<<uint(M)) != 0 {
+				//fmt.Printf("day stuff %d\n", bits.TrailingZeros64(nt.prepDays(weekDayOfFirst)&(1<<uint(d-1))))
+				return time.Date(y, time.Month(M+1), int(d+1), h, m, s, 0, from.Location()), nil // again we 0 index day of month, and the month but the actual date doesn't
+			}
+		}
+		oldYear, oldMonth, oldDay = y, M, d
 	}
-	return time.Date(y, M, d, h, m, s, 0, from.Location()), nil
+	return time.Time{}, errors.New("could not fulfil schedule before 2099")
 }
 
 func (nt *nextTime) intersection(ct *nextTime) *nextTime {
