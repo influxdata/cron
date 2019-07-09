@@ -8,7 +8,6 @@ import (
     "errors"
 )
 
-
 %% machine parse;
 %% variable data s;
 %% write data;
@@ -17,8 +16,9 @@ func parse(s string, tz *time.Location)(nextTime, error){
     nt:=nextTime{loc:tz}
     cs, p, pe, eof:= 0, 0,len(s), len(s)
 
-    mark := 0
+    mark, backtrack := 0,0
     _ = mark
+    _ = backtrack
     m, d, start, end:=uint64(0), uint64(0), uint64(0), uint64(0)
     _ = d
     // TODO(docmerlin): handle ranges
@@ -29,7 +29,7 @@ func parse(s string, tz *time.Location)(nextTime, error){
         action mark {
             mark = p;
         }
-
+        action testLen { backtrack >= 5 }
         action appendsecond {
             fmt.Println("m", m)
             if m>60 {
@@ -46,7 +46,7 @@ func parse(s string, tz *time.Location)(nextTime, error){
         }
 
         action appendminute {
-            if m>1<<60 {
+            if m>60 {
                 return nt, fmt.Errorf("invalid minute %d", m)
             }
             nt.minute |= 1<<m
@@ -319,8 +319,9 @@ func parse(s string, tz *time.Location)(nextTime, error){
         }
 
         action appendStarSlDoW {
-            const sundaysAtFirst = uint64(1 | 1<<7 | 1<<14 | 1<<21 | 1<<28 | 1<<35 | 1<<42)
+            fmt.Println("here")
             {
+                const sundaysAtFirst = uint64(1 | 1<<7 | 1<<14 | 1<<21 | 1<<28 | 1<<35 | 1<<42)
                 x:= [...]uint64{
                     sundaysAtFirst|sundaysAtFirst<<1|sundaysAtFirst<<2|sundaysAtFirst<<3|sundaysAtFirst<<4|sundaysAtFirst<<5|sundaysAtFirst<<6, //every day
                     sundaysAtFirst<<1|sundaysAtFirst<<3|sundaysAtFirst<<5|sundaysAtFirst<<7, //every 2nd day
@@ -354,7 +355,7 @@ func parse(s string, tz *time.Location)(nextTime, error){
             }
         }
         action printf {
-            fmt.Println("vars", cs, p, pe, eof)
+            fmt.Println("vars", cs, p, pe)
         }
 
         action appendStarSlDoM {
@@ -399,15 +400,27 @@ func parse(s string, tz *time.Location)(nextTime, error){
             }
         }
 
-        #space = ( " " | "\t" );
-        digits = digit+ >mark %{
+        action incBacktrack {
+            backtrack++
+        }
+
+        action len_err {
+            return nt, fmt.Errorf("too many positions in cron")
+        }
+
+        action parse_err {
+            fhold;
+            return nt, fmt.Errorf("error in parsing at char %d, '%s'", p, s[p:p+1])
+        }
+
+        digits = (digit+) >mark %{
+            fmt.Println("print digit", s[mark:p])
             m, err = strconv.ParseUint(s[mark:p], 10, 64)
             if err!=nil {
                 return nt,  fmt.Errorf("unable to parse %s into a number", s[mark:p])
             }
         };
         allowedNonSpace = alnum|"/"|"*"|","|"-";
-        star = "*";
         slash = "/";
         comma = ",";
         hypen = "-";
@@ -421,7 +434,7 @@ func parse(s string, tz *time.Location)(nextTime, error){
             }
         };
         digitlist = digits ("," space* digits)*;
-        starSlashDigits = ( (star @{m=1})( slash %mark digits )? );
+        starSlashDigits = ( ("*" @{m=1})( slash %mark digits )? );
         digitsAndSlashList = ( starSlashDigits | digits ) ( ',' ( starSlashDigits | digits ) )*;
 
         #range = (digits @{s=m;} hyphen digits @{e=m;})
@@ -440,26 +453,46 @@ func parse(s string, tz *time.Location)(nextTime, error){
 
         month = ( starSlashDigits %appendStarSlashMonths | ( digits | monthName ) %appendmonth ) ( "," ( starSlashDigits %appendStarSlashMonths | ( digits | monthName ) %appendmonth) )*;
         #month =  ( "*"@{m=1;} ) %appendStarSlashMonths ;
-        dayOfWeek = ( starSlashDigits %appendStarSlDoW | ( digits | dow ) %appenddow ) ( "," ( starSlashDigits %appendStarSlDoW | ( digits | dow ) %appenddow ) )*;
+        dayOfWeek = ( starSlashDigits %appendStarSlDoW | ( digits | dow ) %appenddow ) ( "," ( starSlashDigits %appendStarSlDoW | ( digits | dow ) %appenddow ) )* ;
         #dayOfWeek = ( "*"@{m=1;} ) %appendStarSlDoW ;
-        year = ( starSlashDigits %appendStarSlYears| digits %appendyear ) ( "," (starSlashDigits %appendStarSlYears | digits %appendyear ) )*; #TODO: year
-        main = space* ( seconds space+ minutes space+ hours space+ dayOfMonth space+ month space+ dayOfWeek ( space+ year )? ) ;
-        #fivePosition = ( minutes space+ hours space+ dayOfMonth space+ month space+ dayOfWeek ) ;
+        year = ( starSlashDigits %appendStarSlYears | digits %appendyear ) ( "," (starSlashDigits %appendStarSlYears | digits %appendyear ) )**;
+        #main = (seconds . space+ . minutes  . space+ . hours . space+ . dayOfMonth . space+ . month . space+ . dayOfWeek . ( space+ year )?);
+        main := (
+            start: space* %mark
+                (allowedNonSpace+ %incBacktrack space+){8}
+            $err{ 
+                if p!=pe{
+                    fmt.Println(p,pe, backtrack)
+                }
+                if p==pe{
+                    if backtrack == 7{
+                        fmt.Println("here case 7")
+                        p=mark
+                        fmt.Println("here case 7", p, pe, mark)
+                        //fhold;
+                        fmt.Println("here case 7.b")
+                        //cs = fentry(sevenPos);
+                        fexec p;
+                        fnext sevenPos;
+                        //fgoto *fentry(sevenPos);
+                    }
+                }
+            } %len_err space*
+            ,sevenPos: (( seconds space+ minutes space+ hours space+ dayOfMonth space+ month space+ dayOfWeek (space+ year )?) space*) >{panic("")}
+            );
     }%%
     %% write exec;
     // check current month
     // check the next year, unless feb 1<<29th is allowed then check the next 1<<8 years
     // if year isn't specified accept any year
     fmt.Println("nt.year", nt.year)
-    fmt.Println("vars", cs, p, pe, eof)
-    fmt.Printf("in parser: year %b, %b \nmonth %b, \ndom %b, \ndow %b, \nhour %b, \nmin %b, \ns %b\n", nt.year.low, nt.year.high, nt.month, nt.dom, nt.dow, nt.hour, nt.minute, nt.second)
-    if nt.minute==0||nt.hour==0||nt.dom==0||nt.month==0||nt.dow==0 {
+    fmt.Println("vars", cs, p, pe)
+    fmt.Printf("in parser: backtrack %d\n, year %b, %b \nmonth %b, \ndom %b, \ndow %b, \nhour %b, \nmin %b, \ns %b\n", backtrack, nt.year.low, nt.year.high, nt.month, nt.dom, nt.dow, nt.hour, nt.minute, nt.second)
+    if nt.minute==0||nt.hour==0||nt.dom==0||nt.month==0||nt.dow==0||nt.year.isZero() {
         return nt, errors.New("failed to parse cron string")
     }
 
     if nt.year.high==0 && nt.year.low==0 {
-        nt.year.high = ^uint64(0)
-        nt.year.low = ^uint64(0)
     }
 
     return nt,  nil

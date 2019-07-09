@@ -1,6 +1,8 @@
 package cron
 
-//go:generate ragel -G0 -Z parse.rl
+//go:generate ragel -G2 -Z parse.rl
+//go:generate ragel -G2 -Z parse.rl -Smain_start -o parse.dot
+//go:generate dot -Tpdf parse.dot -o parse.pdf
 
 import (
 	"errors"
@@ -66,9 +68,9 @@ type nextTime struct {
 	second uint64
 	minute uint64
 	hour   uint64
-	dow    uint64
-	month  uint64
 	dom    uint64
+	month  uint64
+	dow    uint64
 	year   years
 	loc    *time.Location
 }
@@ -192,17 +194,17 @@ func (nt *nextTime) next(from time.Time) (time.Time, error) {
 	updateHour := nt.hour&(1<<uint(h)) == 0
 	updateMin := nt.minute&(1<<uint64(m)) == 0
 	updateSec := nt.second&(1<<uint64(s)) == 0 || !(updateMin && updateHour)
+	fmt.Printf("updateMin %v,%b\n", updateMin, nt.minute)
 
 	if updateSec {
 		if s2 := nt.nextSecond(uint64(s)); s2 < 0 {
 			s = bits.TrailingZeros64(nt.second) // if not found set to first second and advance minute
 			updateMin = true
-			fmt.Println("seconds in update", s)
 		} else {
 			s = s2
 		}
 	}
-	//fmt.Println("updateMin", updateMin)
+	fmt.Printf("updateMin %v,%b\n", updateMin, nt.minute)
 	if updateMin {
 		if m2 := nt.nextMinute(uint64(m)); m < 0 {
 			m = bits.TrailingZeros64(nt.minute) // if not found set to first second and advance minute
