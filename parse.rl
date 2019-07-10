@@ -16,6 +16,15 @@ func parse(s string, tz *time.Location)(nextTime, error){
     nt:=nextTime{loc:tz}
     cs, p, pe, eof:= 0, 0,len(s), len(s)
 
+
+    // init scanner vars
+    act, ts, te := 0, 0, 0
+    _, _, _ = act, ts, te // we have to do this.
+
+    // for fcall
+    top := 0
+    _ = top
+    stack := [8]int{}
     mark, backtrack := 0,0
     _ = mark
     _ = backtrack
@@ -457,30 +466,35 @@ func parse(s string, tz *time.Location)(nextTime, error){
         #dayOfWeek = ( "*"@{m=1;} ) %appendStarSlDoW ;
         year = ( starSlashDigits %appendStarSlYears | digits %appendyear ) ( "," (starSlashDigits %appendStarSlYears | digits %appendyear ) )**;
         #main = (seconds . space+ . minutes  . space+ . hours . space+ . dayOfMonth . space+ . month . space+ . dayOfWeek . ( space+ year )?);
-        main := (
-            start: space* %mark
-                (allowedNonSpace+ %incBacktrack space+){8}
-            $err{ 
-                if p!=pe{
-                    fmt.Println(p,pe, backtrack)
-                }
-                if p==pe{
-                    if backtrack == 7{
-                        fmt.Println("here case 7")
-                        p=mark
-                        fmt.Println("here case 7", p, pe, mark)
-                        //fhold;
-                        fmt.Println("here case 7.b")
-                        //cs = fentry(sevenPos);
-                        fexec p;
-                        fnext sevenPos;
-                        //fgoto *fentry(sevenPos);
-                    }
-                }
-            } %len_err space*
-            ,sevenPos: (( seconds space+ minutes space+ hours space+ dayOfMonth space+ month space+ dayOfWeek (space+ year )?) space*) >{panic("")}
-            );
+        sevenPos:= ( seconds space+ minutes space+ hours space+ dayOfMonth space+ month space+ dayOfWeek space+ year ) space*;
+        sixPos:= ( seconds space+ minutes space+ hours space+ dayOfMonth space+ month space+ dayOfWeek ) space*; 
+        fivePos:= ( minutes space+ hours space+ dayOfMonth space+ month space+ dayOfWeek ) space*;
+
+        main := |*
+            space* => mark;
+            # 5 position cron
+            ((allowedNonSpace+ space+){4} allowedNonSpace+) >mark => {
+                // set seconds to 0 second of minute
+                nt.second=1
+                // set year to be permissive
+                nt.year.high=^uint64(0)
+                nt.year.low=^uint64(0)
+                fexec mark;
+                fcall fivePos;
+                };
+            # 6 position cron with seconds but no year
+            ((allowedNonSpace+ space+){5} allowedNonSpace+) >mark => {
+                // set year to be permissive
+                nt.year.high=^uint64(0)
+                nt.year.low=^uint64(0)
+                fexec mark;
+                fgoto sixPos;
+                };
+            # 7 position cron
+            ((allowedNonSpace+ space+){6} allowedNonSpace+) >mark => {fexec mark;fcall sevenPos;};
+        *|;
     }%%
+    //
     %% write exec;
     // check current month
     // check the next year, unless feb 1<<29th is allowed then check the next 1<<8 years
@@ -489,12 +503,8 @@ func parse(s string, tz *time.Location)(nextTime, error){
     fmt.Println("vars", cs, p, pe)
     fmt.Printf("in parser: backtrack %d\n, year %b, %b \nmonth %b, \ndom %b, \ndow %b, \nhour %b, \nmin %b, \ns %b\n", backtrack, nt.year.low, nt.year.high, nt.month, nt.dom, nt.dow, nt.hour, nt.minute, nt.second)
     if nt.minute==0||nt.hour==0||nt.dom==0||nt.month==0||nt.dow==0||nt.year.isZero() {
-        return nt, errors.New("failed to parse cron string")
+        return nt, fmt.Errorf("failed to parse cron string '%s'", s)
     }
-
-    if nt.year.high==0 && nt.year.low==0 {
-    }
-
     return nt,  nil
 }
 

@@ -54,7 +54,7 @@ func (y years) Intersection(y2 years) years {
 // this is undefined if the year is above 2070 or below 1970
 func (ys years) in(year int) bool {
 	y := uint64(year - 1970)
-	if y > 64 {
+	if y >= 64 {
 		return ys.high&(1<<(y-64)) > 0
 	}
 	return ys.low&(1<<y) > 0
@@ -87,7 +87,29 @@ var maxMonthLengths = [13]uint64{31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31,
 // }
 
 func (nt *nextTime) nextYear(y, m, d uint64) int {
+	fmt.Println("here", y)
+	yBits := uint64(0)
 	y++
+	if y >= 1970 {
+		yBits = y - 1970
+	}
+
+	if yBits >= 64 {
+		yBits -= 64
+		y += uint64(bits.TrailingZeros64(nt.year.high >> yBits))
+	} else {
+		addToY := uint64(bits.TrailingZeros64(nt.year.low >> yBits))
+		if addToY == 64 {
+			addToY = uint64(bits.TrailingZeros64(nt.year.high))
+		}
+		y += addToY
+	}
+	fmt.Println("here3", y)
+
+	if y > 2099 {
+		return -1
+	}
+	fmt.Println("nextYear", y)
 	//Feb 29th special casing
 	// if we only allow feb 29th, or  then the next year must be a leap year
 	// remember we zero index months here
@@ -107,6 +129,7 @@ func (nt *nextTime) nextYear(y, m, d uint64) int {
 			return int(y + 4)
 		}
 	}
+
 	return int(y)
 }
 
@@ -194,7 +217,6 @@ func (nt *nextTime) next(from time.Time) (time.Time, error) {
 	updateHour := nt.hour&(1<<uint(h)) == 0
 	updateMin := nt.minute&(1<<uint64(m)) == 0
 	updateSec := nt.second&(1<<uint64(s)) == 0 || !(updateMin && updateHour)
-	fmt.Printf("updateMin %v,%b\n", updateMin, nt.minute)
 
 	if updateSec {
 		if s2 := nt.nextSecond(uint64(s)); s2 < 0 {
@@ -204,7 +226,6 @@ func (nt *nextTime) next(from time.Time) (time.Time, error) {
 			s = s2
 		}
 	}
-	fmt.Printf("updateMin %v,%b\n", updateMin, nt.minute)
 	if updateMin {
 		if m2 := nt.nextMinute(uint64(m)); m < 0 {
 			m = bits.TrailingZeros64(nt.minute) // if not found set to first second and advance minute
@@ -262,12 +283,14 @@ func (nt *nextTime) next(from time.Time) (time.Time, error) {
 		// fmt.Println("0 year", y, "month", time.Month(M+1), "day", d)
 		if !nt.year.in(y) || (d == 28 && M == 1 && !isLeap(y)) {
 			y2 := nt.nextYear(uint64(y), uint64(M), uint64(d))
-			if y2 < 1 {
-				return time.Time{}, errors.New("could not fulfil schedule with year")
+			if y2 < 0 {
+				return time.Time{}, errors.New("could not fulfil schedule due to year")
 			}
 			// updateMonth = true
 			// M = -1
 			y = y2
+			time.Sleep(20 * time.Millisecond)
+			fmt.Println(y)
 			M = bits.TrailingZeros64(nt.month)
 			weekDayOfFirst = time.Date(y, time.Month(M+1), 1, 0, 0, 0, 0, from.Location()).Weekday()
 			d = bits.TrailingZeros64(nt.prepDays(weekDayOfFirst))
@@ -276,7 +299,7 @@ func (nt *nextTime) next(from time.Time) (time.Time, error) {
 			// 	goto processDay
 			// }
 		}
-		// if no changes, break
+		// if no changes, return
 		if oldYear == y && oldMonth == M && oldDay == d {
 			if nt.prepDays(weekDayOfFirst)&(1<<uint(d)) != 0 && (nt.year.in(y) && (d != 28 || M != 1 || isLeap(y))) && nt.month&(1<<uint(M)) != 0 {
 				//fmt.Printf("day stuff %d\n", bits.TrailingZeros64(nt.prepDays(weekDayOfFirst)&(1<<uint(d-1))))
