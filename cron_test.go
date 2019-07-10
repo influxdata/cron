@@ -71,7 +71,7 @@ func Test_nextTime_next(t *testing.T) {
 		},
 		{
 			name: "all stars",
-			nt:   parsit("* * * * * * *", time.UTC),
+			nt:   parsit("* * * * * 4-6 *", time.UTC),
 			from: ts,
 			want: ceilTime(ts, time.Second),
 		},
@@ -148,6 +148,12 @@ func Test_nextTime_next(t *testing.T) {
 			want: mustParseTime("2019-06-27T06:05:16Z"),
 		},
 		{
+			name: "every fourth second and every 4th hour between 4 and 16",
+			nt:   parsit("*/4 * 4-16/4 * * * *", time.UTC),
+			from: ts,
+			want: mustParseTime("2019-06-27T08:00:00Z"),
+		},
+		{
 			name: "every second except on thursday",
 			nt:   parsit("* * * * * FRI,SAT,SUN,MON,TUE,WED *", time.UTC),
 			from: ts,
@@ -196,6 +202,12 @@ func Test_nextTime_next(t *testing.T) {
 			want: mustParseTime("2040-02-29T12:00:00Z"),
 		},
 		{
+			name: "noon on leap day on day on tuesday,wednesday, or thursday",
+			nt:   parsit("* * 12 29 FEB tue-thu *", time.UTC),
+			from: ts,
+			want: mustParseTime("2024-02-29T12:00:00Z"),
+		},
+		{
 			name: "noon on leap day on day on Monday or sunday",
 			nt:   parsit("* * 12 29 2 MON,0 *", time.UTC),
 			from: ts,
@@ -238,12 +250,24 @@ func Test_nextTime_next(t *testing.T) {
 			from: ts,
 			want: mustParseTime("2019-06-27T06:06:00Z"),
 		},
+		{
+			name: "1970",
+			nt:   parsit("*  * *  * * *  1970", time.UTC),
+			from: time.Time{},
+			want: mustParseTime("1970-01-01T00:00:00Z"),
+		},
+		{
+			name: "2097",
+			nt:   parsit("*  * *  * * *  2097", time.UTC),
+			from: time.Time{},
+			want: mustParseTime("2097-01-01T00:00:00Z"),
+		},
 	}
 
-	//
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			nt := tt.nt(t)
+			//fmt.Printf("in parser:  year %b, %b \nmonth %b, \ndom %b, \ndow %b, \nhour %b, \nmin %b, \ns %b\n", nt.year.low, nt.year.high, nt.month, nt.dom, nt.dow, nt.hour, nt.minute, nt.second)
 			if got, err := nt.next(tt.from); !reflect.DeepEqual(got, tt.want) || tt.wanterr == (err == nil) {
 				fmt.Printf("year %b, %b\n", nt.year.low, nt.year.high)
 				if (!tt.wanterr) && (err != nil) {
@@ -257,35 +281,3 @@ func Test_nextTime_next(t *testing.T) {
 		})
 	}
 }
-
-// func TestParse(t *testing.T) {
-// 	fmt.Println(parse("* * * * * * *", time.UTC))
-// }
-
-// func Test_next(t *testing.T) {
-// 	type args struct {
-// 		nt   nextTime
-// 		from time.Time
-// 		tz   *time.Location
-// 	}
-// 	tests := []struct {
-// 		name    string
-// 		args    args
-// 		want    time.Time
-// 		wantErr bool
-// 	}{
-// 		// TODO: Add test cases.
-// 	}
-// 	for _, tt := range tests {
-// 		t.Run(tt.name, func(t *testing.T) {
-// 			got, err := next(tt.args.nt, tt.args.from, tt.args.tz)
-// 			if (err != nil) != tt.wantErr {
-// 				t.Errorf("next() error = %v, wantErr %v", err, tt.wantErr)
-// 				return
-// 			}
-// 			if !reflect.DeepEqual(got, tt.want) {
-// 				t.Errorf("next() = %v, want %v", got, tt.want)
-// 			}
-// 		})
-// 	}
-// }
