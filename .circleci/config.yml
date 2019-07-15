@@ -18,8 +18,7 @@ jobs:
             cd ragel-${RAGEL_VERSION}/ && \
             ./configure --prefix=/usr/local && \
             make && \
-            make install && \
-            cd .. && rm -rf ragel-${RAGEL_VERSION}*
+            sudo make install
       - run:
           name: check generated code
           command: |
