@@ -33,6 +33,14 @@ jobs:
             make && \
             make install && \
             cd .. && rm -rf ragel-${RAGEL_VERSION}*
+      - run: 
+          name: check generated code
+          command: |
+            go generate
+            if ! git --no-pager diff --exit-code -- go.mod go.sum; then
+              echo generate not generated properly run go generate with ${RAGEL_VERSION}
+              exit 1
+            fi
       - run:
           name: check tidy
           command: |
@@ -45,4 +53,4 @@ jobs:
       - run: go get -v -t -d ./...
       - run: go vet ./...
       - run: go get honnef.co/go/tools/cmd/staticcheck  && staticcheck ./...
-      - run: go test -v -e2e ./...
+      - run: go test -v -e2e --race ./...
