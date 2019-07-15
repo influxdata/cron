@@ -1,8 +1,6 @@
 package cron
 
 //go:generate ragel -G2 -Z parse.rl
-//go:generate ragel -G2 -Z parse.rl -Smain_start -o parse.dot
-//go:generate dot -Tpdf parse.dot -o parse.pdf
 
 import (
 	"errors"
