@@ -1,7 +1,6 @@
 package cron
 
 import (
-	"fmt"
 	"reflect"
 	"testing"
 	"time"
@@ -47,21 +46,18 @@ func Test_nextTime_next(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	parsit := func(s string, zone *time.Location) func(t *testing.T) nextTime {
-		return func(t *testing.T) nextTime {
-			nt, err := parse(s, zone)
-			if err != nil {
-				t.Error(err)
-			}
-			return nt
+	parsit := func(s string, zone *time.Location) func(t *testing.T) (nextTime, error) {
+		return func(t *testing.T) (nextTime, error) {
+			return parse(s, zone)
 		}
 	}
 	tests := []struct {
-		name    string
-		nt      func(t *testing.T) nextTime
-		from    time.Time
-		want    time.Time
-		wanterr bool
+		name         string
+		nt           func(t *testing.T) (nextTime, error)
+		from         time.Time
+		want         time.Time
+		wanterr      bool
+		wantParseErr bool
 	}{
 		{
 			name: "2023",
@@ -262,14 +258,125 @@ func Test_nextTime_next(t *testing.T) {
 			from: time.Time{},
 			want: mustParseTime("2097-01-01T00:00:00Z"),
 		},
+		{
+			name: "yearly",
+			nt:   parsit("@yearly", time.UTC),
+			from: ts,
+			want: mustParseTime("2020-01-01T00:00:00Z"),
+		},
+		{
+			name: "annually",
+			nt:   parsit("@annually", time.UTC),
+			from: ts,
+			want: mustParseTime("2020-01-01T00:00:00Z"),
+		},
+		{
+			name:         "fred likes snickerdoodles",
+			nt:           parsit("fred likes snickerdoodles", time.UTC),
+			from:         ts,
+			wantParseErr: true,
+		},
+		{
+			name:         "@notanemailaddress",
+			nt:           parsit("@notanemailaddress", time.UTC),
+			from:         ts,
+			wantParseErr: true,
+		},
+		{
+			name:         "@yearlyplusextraletters",
+			nt:           parsit("@yearlyplusextraletters", time.UTC),
+			from:         ts,
+			wantParseErr: true,
+		},
+		{
+			name:         "too many fields",
+			nt:           parsit("* * 8 8 1 1 0", time.UTC),
+			from:         ts,
+			wantParseErr: true,
+		},
+		{
+			name:         "too many fields",
+			nt:           parsit("* * 8 8 1 1 0", time.UTC),
+			from:         ts,
+			wantParseErr: true,
+		},
+		{
+			name:         "error instead of summoning the old ones",
+			nt:           parsit("c̴̡͈̪̪̬͙͈̼̞̥̩̜̪̳̜̰̬̱͇̮̼̳̟̩̳̫̾̃͐̽̒̎̈́̽͠͝͝͠t̴͍̫͓͉̥̤̺͇͇̦̮̞͈̬̮͕͖̼̺̭̥͓̬̣͉̻̭̣̓̐̿̇͊̈́̉̏͐̆͑͂͛̎͒͌̈́͋̃̾̔̕͝h̸̜̭͕͎̰̮̭͙̙͇͎̺̤̙͖̒͌̂̌̍̿̒̀̊̿̾̚̕̕͝͠ͅū̷̲̝̂̑̈́͊͋̓̆̈́́́̄̎̄̃͐̈́̇̚͝ͅl̷̢̡̛͉̠̞̮̝͙̻̜͓̹̻̩̯̙̹̯͓̝͇̫̫̠̿̑̇̓̀̂̀͗̒͋̀͌͒̕̕͜͠ͅh̵̡̛̖͉̟̞̣̖̬͓̜̄̀̂̽̄͒̅̀͋̓̀͌̆̂̀͌͌̉̀̐̈́͋̓͂̚̕͠͠ų̶̛͎̖͖̜̹̬͙̖̜̲̺͐̀̎̎̽͛͌͆̂̌͒̋̆̿̎̎̽̑̏̏̈̾͘̕̕̕̕̕̚͠ͅ ̸̢̨̡̛̙̺̹͖͙͔̩̮͙̝̳̘̰̣̪̦̥̰̠̝̼͕͔͌̑̃́̐̈͗̍̅̽̌̈́̑̉̋̃͘͜͝͠͠f̶̹̹͉̉ä̸̲͈̺͉̮̹̘̦̦̟̘̼̪͚̯͓̻͉̣̬͓̰̟͇͕̳̟̗̉̈̔̉̿̔̇̑̕͜g̴̢̧̡̱̞̭͉̼̤̟̗͚͖̩̖̤͉͉̤̪͖̣̠̜̟̟̜̜̺̯̭̋̐̌̆͒͌̓̒͛́̌͒̀̓̆͋͐̈́̐̚͝ň̴̨̢̨̡͓̥̪̬͍̙̳̫̰̲̗̰̥̖̫̹̱̟̰̒̿̓̀̒̊́͛̊̈́̒̌̂͐́̕͝", time.UTC),
+			from:         ts,
+			wantParseErr: true,
+		},
+		{
+			name:         "empty string",
+			nt:           parsit("", time.UTC),
+			from:         ts,
+			wantParseErr: true,
+		},
+		{
+			name:         "white space",
+			nt:           parsit("       ", time.UTC),
+			from:         ts,
+			wantParseErr: true,
+		},
+		{
+			name:         "white space",
+			nt:           parsit("       ", time.UTC),
+			from:         ts,
+			wantParseErr: true,
+		},
+		{
+			name:         "incorrectly formatted range",
+			nt:           parsit("a-7/7 1 1 1 1       ", time.UTC),
+			from:         ts,
+			wantParseErr: true,
+		},
+		{
+			name: "correctly formatted range",
+			nt:   parsit("2-7/7 1 1 1 0-7       ", time.UTC),
+			from: ts,
+			want: mustParseTime("2020-01-01T01:02:00Z"),
+		},
+		{
+			name: "month ranges",
+			nt:   parsit("* * * * 8-10/3 * *", time.UTC),
+			from: ts,
+			want: mustParseTime("2019-10-27T00:00:00Z"),
+		},
+		{
+			name: "more ranges",
+			nt:   parsit("2-20/2 * * * 8-10/3 * *", time.UTC),
+			from: ts,
+			want: mustParseTime("2019-10-27T00:00:02Z"),
+		},
+		{
+			name:         "zeros in months",
+			nt:           parsit("2-20/2 * * * 0-2 * *", time.UTC),
+			from:         ts,
+			wantParseErr: true,
+		},
+		{
+			name:         "zeros in month ranges",
+			nt:           parsit("2-20/2 * * * 0-2 * *", time.UTC),
+			from:         ts,
+			wantParseErr: true,
+		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			nt := tt.nt(t)
-			//fmt.Printf("in parser:  year %b, %b \nmonth %b, \ndom %b, \ndow %b, \nhour %b, \nmin %b, \ns %b\n", nt.year.low, nt.year.high, nt.month, nt.dom, nt.dow, nt.hour, nt.minute, nt.second)
+			nt, err := tt.nt(t)
+			if (!tt.wantParseErr) && (err != nil) {
+				t.Errorf("expected no parse error but got %v", err)
+				return // if parse errors we can't schedule.
+			}
+			if tt.wantParseErr && (err == nil) {
+				t.Errorf("expected parse error but got nil")
+				return
+			}
+			if tt.wantParseErr && err != nil {
+				return
+			}
 			if got, err := nt.next(tt.from); !reflect.DeepEqual(got, tt.want) || tt.wanterr == (err == nil) {
-				fmt.Printf("year %b, %b\n", nt.year.low, nt.year.high)
 				if (!tt.wanterr) && (err != nil) {
 					t.Errorf("expected no error but got %v", err)
 				}
@@ -280,4 +387,39 @@ func Test_nextTime_next(t *testing.T) {
 			}
 		})
 	}
+}
+
+func BenchmarkParse(b *testing.B) {
+	nt := nextTime{}
+	var err error
+	b.Run("0 * * * * * *", func(b *testing.B) {
+		for n := 0; n < b.N; n++ {
+			nt, err = parse("0 * * * * * *", time.UTC)
+		}
+	})
+	_, _ = nt, err
+	b.Run("1-6/2 * * * Feb-Oct/3 * *", func(b *testing.B) {
+		for n := 0; n < b.N; n++ {
+			nt, err = parse("1-6/2 * * * Feb-Oct/3 * *", time.UTC)
+		}
+	})
+	_, _ = nt, err
+	b.Run("1-6/2 * * * Feb-Oct/3 * 2020/4", func(b *testing.B) {
+		for n := 0; n < b.N; n++ {
+			nt, err = parse("1-6/2 * * * Feb-Oct/3 * 2020/4", time.UTC)
+		}
+	})
+	_, _ = nt, err
+}
+
+func BenchmarkNext(b *testing.B) {
+	nt := nextTime{}
+	var err error
+	ts := time.Now()
+	b.ResetTimer()
+	for n := 0; n < b.N; n++ {
+		nt, err = parse("* * * * * * *", time.UTC)
+		nt.next(ts)
+	}
+	_, _, _ = nt, err, ts
 }

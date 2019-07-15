@@ -6,7 +6,6 @@ package cron
 
 import (
 	"errors"
-	"fmt"
 	"math/bits"
 	"time"
 )
@@ -139,7 +138,9 @@ func (nt *nextTime) nextDay(y int, m time.Month, d uint64) int {
 	days := nt.prepDays(firstOfMonth.Weekday())
 	d++
 	d = uint64(bits.TrailingZeros64(days>>d)) + d
-	fmt.Printf("month %d, %b\n", m, nt.month)
+	if m >= 12 {
+		return -1
+	}
 	if d >= uint64(maxMonthLengths[m]) {
 		return -1
 	}
@@ -271,28 +272,28 @@ func (nt *nextTime) next(from time.Time) (time.Time, error) {
 	return time.Time{}, errors.New("could not fulfil schedule before 2099")
 }
 
-// func (nt *nextTime) intersection(ct *nextTime) *nextTime {
-// 	return &nextTime{
-// 		second: nt.second & ct.second,
-// 		minute: nt.minute & ct.minute,
-// 		hour:   nt.hour & ct.hour,
-// 		dow:    nt.dow & ct.dow,
-// 		month:  nt.month & ct.month,
-// 		dom:    nt.dom & ct.dom,
-// 		year: years{
-// 			high: nt.year.high & ct.year.high,
-// 			low:  nt.year.low & ct.year.low,
-// 		},
-// 	}
-// }
+func (nt *nextTime) intersection(ct *nextTime) *nextTime {
+	return &nextTime{
+		second: nt.second & ct.second,
+		minute: nt.minute & ct.minute,
+		hour:   nt.hour & ct.hour,
+		dow:    nt.dow & ct.dow,
+		month:  nt.month & ct.month,
+		dom:    nt.dom & ct.dom,
+		year: years{
+			high: nt.year.high & ct.year.high,
+			low:  nt.year.low & ct.year.low,
+		},
+	}
+}
 
-// func (nt *nextTime) updateDateIntersectDate(y int, M, d uint64) {
-// 	nt.dom = nt.dom & 1 << d
-// 	nt.year.high = 0
-// 	nt.year.low = 0
-// 	nt.year.set(y)
-// 	nt.month = nt.month & 1 << M
-// }
+func (nt *nextTime) updateDateIntersectDate(y int, M, d uint64) {
+	nt.dom = nt.dom & 1 << d
+	nt.year.high = 0
+	nt.year.low = 0
+	nt.year.set(y)
+	nt.month = nt.month & 1 << M
+}
 
 // func timebm(ts time.Time) *nextTime {
 // 	_, M, D := ts.Date()

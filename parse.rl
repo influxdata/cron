@@ -40,64 +40,8 @@ func parse(s string, tz *time.Location)(nextTime, error){
         action mark {
             mark = p;
         }
-        action testLen { backtrack >= 5 }
-        action appendsecond {
-            if m>60 {
-                return nt, fmt.Errorf("invalid minute %d", m)
-            }
-            nt.second |= 1<<m
-        }
 
-        action appendmonth {
-            if m>12 || m<1{
-                return nt, fmt.Errorf("invalid month %d", m)
-            }
-            nt.month |= 1<<(m-1) // we zero index months
-        }
-
-        action appendminute {
-            if m>60 {
-                return nt, fmt.Errorf("invalid minute %d", m)
-            }
-            nt.minute |= 1<<m
-        }
-
-        action appenddow {
-            {
-                const sundaysAtFirst = uint64(1 | 1<<7 | 1<<14 | 1<<21 | 1<<28 | 1<< 35 | 1<<42)
-                if m==7 { // early return for sunday for compatibility with some crons that allow sunday to be 0 or 7
-                    nt.dow |= sundaysAtFirst
-                    return nt, nil
-                }
-                if m>6 || m<0 {
-                    return nt, fmt.Errorf("invalid day of week %d", m)
-                }
-                nt.dow |= sundaysAtFirst<<m
-            }
-        }
-
-        action appendhour {
-            if m>24 || m <0 {
-                return nt, fmt.Errorf("invalid hour of day %d", m)
-            }
-            nt.hour |= 1<<m
-        }
-
-        action appenddom {
-            if m>30 || m <0 {
-                return nt,  fmt.Errorf("invalid day of month %d", m)
-            }
-            nt.dom |= 1<<(m-1)// again we zero index day
-        }
-
-        action appendyear {
-            if m<1970 || m>2099{
-                return nt, errors.New("only years on interval [1970, 2099] are supported")
-            }
-            nt.year.set(int(m))
-        }
-
-        action appendStarSlashSeconds {
+        action appendSeconds {
             {
                 x:= [...]uint64{
                     1|1<<1|1<<2|1<<3|1<<4|1<<5|1<<6|1<<7|1<<8|1<<9|1<<10|1<<11|1<<12|1<<13|1<<14|1<<15|1<<16|1<<17|1<<18|1<<19|1<<20|1<<21|1<<22|1<<23|1<<24|1<<25|1<<26|1<<27|1<<28|1<<29|1<<30|1<<31|1<<32|1<<33|1<<34|1<<35|1<<36|1<<37|1<<38|1<<39|1<<40|1<<41|1<<42|1<<43|1<<44|1<<45|1<<46|1<<47|1<<48|1<<49|1<<50|1<<51|1<<52|1<<53|1<<54|1<<55|1<<56|1<<57|1<<58|1<<59,
@@ -183,7 +127,7 @@ func parse(s string, tz *time.Location)(nextTime, error){
             }
         }
 
-        action appendStarSlashMinutes {
+        action appendMinutes {
             {
                 // I really wish that golang had a binary bit representation, this is pretty aweful, but easier to understand than using hex or octal I guess
                 x:= [...]uint64{
@@ -270,7 +214,7 @@ func parse(s string, tz *time.Location)(nextTime, error){
             }
         }
 
-        action appendStarSlashHours {
+        action appendHours {
             {
                 x:= [...]uint64{
                     1|1<<1|1<<2|1<<3|1<<4|1<<5|1<<6|1<<7|1<<8|1<<9|1<<10|1<<11|1<<12|1<<13|1<<14|1<<15|1<<16|1<<17|1<<18|1<<19|1<<20|1<<21|1<<22|1<<23,
@@ -320,7 +264,7 @@ func parse(s string, tz *time.Location)(nextTime, error){
             }
         }
 
-        action appendStarSlashMonths {
+        action appendMonths {
             {
                 x:= [...]uint64{
                     1|1<<1|1<<2|1<<3|1<<4|1<<5|1<<6|1<<7|1<<8|1<<9|1<<10|1<<11,
@@ -339,10 +283,10 @@ func parse(s string, tz *time.Location)(nextTime, error){
                 if d>12{
                     return nt, fmt.Errorf("invalid month */%d", d)
                 }
-                if start>=12 {
+                if start>12 {
                     return nt, fmt.Errorf("invalid start month %d", start)
                 }
-                if  end>=12 {
+                if  end>12 {
                     return nt, fmt.Errorf("invalid end month %d", start)
                 }
                 // handle the case that isn't a 
@@ -352,26 +296,16 @@ func parse(s string, tz *time.Location)(nextTime, error){
                 }
                 endMask := (^uint64(0))<<endOp>>endOp
                 if d==0{
-                    nt.month |= 1<<(m-1)
+                    nt.month |= 1<<(start-1)
                 }else{
-                    nt.month |= (x[d-1]<<start)&endMask
+                    nt.month |= (x[d-1]<<(start-1))&endMask
                 }
-                fmt.Printf("month **** %b\n", nt.month)
             }
         }
 
         action appendStarSlDoW {
             {
                 const sundaysAtFirst = uint64(1 | 1<<7 | 1<<14 | 1<<21 | 1<<28 | 1<<35 | 1<<42)
-                // x:= [...]uint64{
-                //     sundaysAtFirst|sundaysAtFirst<<1|sundaysAtFirst<<2|sundaysAtFirst<<3|sundaysAtFirst<<4|sundaysAtFirst<<5|sundaysAtFirst<<6, //every day
-                //     sundaysAtFirst<<1|sundaysAtFirst<<3|sundaysAtFirst<<5|sundaysAtFirst<<7, //every 2nd day
-                //     sundaysAtFirst<<2|sundaysAtFirst<<5|sundaysAtFirst<<8, //every 3rd day
-                //     sundaysAtFirst<<3|sundaysAtFirst<<6|sundaysAtFirst<<9, //every 4th day
-                //     sundaysAtFirst<<4|sundaysAtFirst<<8, //every 5th day
-                //     sundaysAtFirst<<5, //every 6th day
-                //     sundaysAtFirst<<6, //every 7th day
-                // }
                 x := [...]uint64{
                     1|1<<1|1<<2|1<<3|1<<4|1<<5|1<<6, //every day
                     1<<1|1<<3|1<<5|1<<7, //every 2nd day
@@ -399,7 +333,6 @@ func parse(s string, tz *time.Location)(nextTime, error){
 
                 // handle the case that isn't a 
                 dayRange := (^uint64(0))<<(64 - (end-start+1))>>(64 - end-1)
-                fmt.Printf("dayrange %b\n", dayRange)
                 if d==0{
                     nt.dow |= sundaysAtFirst<<start
                 }else{
@@ -409,7 +342,7 @@ func parse(s string, tz *time.Location)(nextTime, error){
             }
         }
         # this isn't optimized, because I really doubt people will use it very often.  If someone wants to optimize it, go ahead
-        action appendStarSlYears {
+        action appendYears {
             // short circuit for the most common cases.
             if d>128 {
                 return nt, fmt.Errorf("invalid year */%d", d)
@@ -432,7 +365,7 @@ func parse(s string, tz *time.Location)(nextTime, error){
             }
         }
 
-        action appendStarSlDoM {
+        action appendDoM {
             {
                 x:= [...]uint64{
                     1|1<<1|1<<2|1<<3|1<<4|1<<5|1<<6|1<<7|1<<8|1<<9|1<<10|1<<11|1<<12|1<<13|1<<14|1<<15|1<<16|1<<17|1<<18|1<<19|1<<20|1<<21|1<<22|1<<23|1<<24|1<<25|1<<26|1<<27|1<<28|1<<29|1<<30,
@@ -485,14 +418,9 @@ func parse(s string, tz *time.Location)(nextTime, error){
                 if d==0{
                     nt.dom |= 1<<(m-1)
                 }else{
-                    nt.dom |= (x[d-1]<<start)&endMask // start-1 because 1 is the first day of month
+                    nt.dom |= (x[d-1]<<start)&endMask
                 }
             }
-            fmt.Printf("dom %b\n", nt.dom)
-        }
-
-        action incBacktrack {
-            backtrack++
         }
 
         action len_err {
@@ -528,44 +456,119 @@ func parse(s string, tz *time.Location)(nextTime, error){
         digitsAndSlashList = ( starSlashDigits | digits ) ( ',' ( starSlashDigits | digits ) )*;
 
         secminrange = ( ( "*" %{ start=0;end=59;m=1;d=1; } ) |  (digits %{ start=m; end=0;d=0;} ( "-" digits %{ end=m; d=1;} )? )) >{d=0;};
-        second =  ( secminrange ("/" digits %{d=m})? ) %appendStarSlashSeconds; 
+        second =  ( secminrange ("/" digits %{d=m})? ) %appendSeconds; 
         seconds = second ("," second) *;
 
-        minute = ( secminrange ("/" digits %{d=m})? ) %appendStarSlashMinutes; 
+        minute = ( secminrange ("/" digits %{d=m})? ) %appendMinutes; 
         minutes = minute ("," minute) *;
 
         hourrange = ( ( "*" %{ start=0;end=23;m=1;d=1; } ) |  (digits %{ start=m; end=0;d=0;} ( "-" digits %{ end=m; d=1;} )? )) >{d=0;};
-        hour = ( hourrange ("/" digits %{d=m})? ) %appendStarSlashHours; 
+        hour = ( hourrange ("/" digits %{d=m})? ) %appendHours; 
         hours = hour ("," hour) *;
 
-        dayOfMonth = ( starSlashDigits %appendStarSlDoM | digits %appenddom ) ( "," ( starSlashDigits %appendStarSlDoM | digits %appenddom  ) )*;
-
         domrange = ( ( "*" %{ start=0;end=30;m=0;d=1; } ) |  (( digits | dowName ) %{ start=m-1; end=0;d=0;} ( "-" ( digits | dowName ) %{ end=m-1; d=1;} )? )) >{d=0;};
-        dom = ( domrange ("/" digits %{d=m})? ) %appendStarSlDoM;
+        dom = ( domrange ("/" digits %{d=m})? ) %appendDoM;
         doms = dom ("," dom) *;
 
-        monthrange = ( ( "*" %{ start=0;end=11;m=0;d=1; } ) |  (( digits | monthName ) %{ start=m-1; end=0;d=0;} ( "-" ( digits | monthName ) %{ end=m-1; d=1;} )? )) >{d=0;};
-        month = ( monthrange ("/" digits %{d=m})? ) %appendStarSlashMonths; 
+        monthrange = ( ( "*" %{ start=1;end=12;m=0;d=1; } ) |  (( digits | monthName ) %{ start=m; end=0;d=0;} ( "-" ( digits | monthName ) %{ end=m; d=1;} )? )) >{d=0;};
+        month = ( monthrange ("/" digits %{d=m})? ) %appendMonths; 
         months = month ("," month) *;
 
         dowrange = ( ( "*" %{ start=0;end=6;m=0;d=1; } ) |  (( digits | dowName ) %{ start=m; end=6;d=0;} ( "-" ( digits | dowName ) %{ end=m; d=1;} )? )) >{d=0;};
         dow = ( dowrange ("/" digits %{d=m})? ) %appendStarSlDoW;
         dows = dow ("," dow) *;
 
-        dayOfWeek = ( starSlashDigits %appendStarSlDoW | ( digits | dow ) %appenddow ) ( "," ( starSlashDigits %appendStarSlDoW | ( digits | dow ) %appenddow ) )* ;
-
         yearrange = ( ( "*" %{ start=1970;end=2099;m=0;d=1; } ) |  (( digits ) %{ start=m; end=2099;d=0;} ( "-" ( digits ) %{ end=m; d=1;} )? )) >{d=0;};
-        year = ( yearrange ("/" digits %{d=m})? ) %appendStarSlYears; 
+        year = ( yearrange ("/" digits %{d=m})? ) %appendYears; 
         years = year ("," year) *;
-
-        sevenPos:= ( seconds space+ minutes space+ hours space+ doms space+ months space+ dows space+ years ) space*;
-        sixPos:= ( seconds space+ minutes space+ hours space+ doms space+ months space+ dows ) space*; 
-        fivePos:= ( minutes space+ hours space+ doms space+ months space+ dows ) space*;
-
+        sixPos:= (seconds space+ minutes space+ hours space+ doms space+ months space+ dows) space*; 
+        sevenPos:= (seconds space+ minutes space+ hours space+ doms space+ months space+ dows space+ years) space*;
+        fivePos := (minutes space+ hours space+ doms space+ months space+ dows) space*;
+        atMacro := |*
+            ("yearly"|"annually") space* => {
+                nt.second=1
+                nt.minute=1
+                nt.hour=1
+                nt.dom=1
+                nt.month=1
+                nt.dow=^uint64(0)
+                nt.year.high=^uint64(0)
+                nt.year.low=^uint64(0)
+                if p!=pe-1{return nt, fmt.Errorf("error in parsing at char %d, '%s'", p, s[p:p+1])}
+            };
+            "monthly" space* => {
+                nt.second=1
+                nt.minute=1
+                nt.hour=1
+                nt.dom=1
+                nt.month=((1<<13) - 1) // every month
+                nt.dow=^uint64(0)
+                nt.year.high=^uint64(0)
+                nt.year.low=^uint64(0)
+                if p!=pe-1{return nt, fmt.Errorf("error in parsing at char %d, '%s'", p, s[p:p+1])}
+            };
+            "weekly" space* => {
+                nt.second=1
+                nt.minute=1
+                nt.hour=1
+                nt.dom=^uint64(0)
+                nt.month=((1<<13) - 1) // every month
+                nt.dow=1
+                nt.year.high=^uint64(0)
+                nt.year.low=^uint64(0)
+                if p!=pe-1{return nt, fmt.Errorf("error in parsing at char %d, '%s'", p, s[p:p+1])}
+            };
+            ("daily"|"midnight") space* => {
+                nt.second=1
+                nt.minute=1
+                nt.hour=1
+                nt.dom=^uint64(0)
+                nt.month=((1<<13) - 1) // every month
+                nt.dow=^uint64(0)
+                nt.year.high=^uint64(0)
+                nt.year.low=^uint64(0)
+                if p!=pe-1{return nt, fmt.Errorf("error in parsing at char %d, '%s'", p, s[p:p+1])}
+            };
+            "hourly" space* => {
+                nt.second=1
+                nt.minute=1
+                nt.hour=^uint64(0)
+                nt.dom=^uint64(0)
+                nt.month=((1<<13) - 1) // every month
+                nt.dow=^uint64(0)
+                nt.year.high=^uint64(0)
+                nt.year.low=^uint64(0)
+                if p!=pe-1{return nt, fmt.Errorf("error in parsing at char %d, '%s'", p, s[p:p+1])}
+            };
+            "every_minute" space* => {
+                nt.second=1
+                nt.minute=(1<<60)-1
+                nt.hour=^uint64(0)
+                nt.dom=^uint64(0)
+                nt.month=((1<<13) - 1) // every month
+                nt.dow=^uint64(0)
+                nt.year.high=^uint64(0)
+                nt.year.low=^uint64(0)
+                if p!=pe-1{return nt, fmt.Errorf("error in parsing at char %d, '%s'", p, s[p:p+1])}
+            };
+            "every_second" space* => {
+                nt.second=(1<<60)-1
+                nt.minute=(1<<60)-1
+                nt.hour=^uint64(0)
+                nt.dom=^uint64(0)
+                nt.month=((1<<13) - 1) // every month
+                nt.dow=^uint64(0)
+                nt.year.high=^uint64(0)
+                nt.year.low=^uint64(0)
+                if p!=pe-1{return nt, fmt.Errorf("error in parsing at char %d, '%s'", p, s[p:p+1])}
+            };
+            #todo(docmerlin): @every
+        *|; 
         main := |*
-            space* => mark;
+            space* => mark; # to get rid of extra leading white space
             # 5 position cron
             ((allowedNonSpace+ space+){4} allowedNonSpace+) >mark => {
+                _ = p // this is to make staticcheck happy
                 // set seconds to 0 second of minute
                 nt.second=1
                 // set year to be permissive
@@ -576,6 +579,7 @@ func parse(s string, tz *time.Location)(nextTime, error){
                 };
             # 6 position cron with seconds but no year
             ((allowedNonSpace+ space+){5} allowedNonSpace+) >mark => {
+                _ = p // this is to make staticcheck happy
                 // set year to be permissive
                 nt.year.high=^uint64(0)
                 nt.year.low=^uint64(0)
@@ -584,29 +588,14 @@ func parse(s string, tz *time.Location)(nextTime, error){
                 };
             # 7 position cron
             ((allowedNonSpace+ space+){6} allowedNonSpace+) >mark => {fexec mark;fcall sevenPos;};
+            ((allowedNonSpace+ space+){7} (allowedNonSpace+ space?)+) => parse_err;
+            "@" => {fcall atMacro;};
         *|;
     }%%
 
     %% write exec;
-    // fmt.Printf("in parser: backtrack %d\n, year %b, %b \nmonth %b, \ndom %b, \ndow %b, \nhour %b, \nmin %b, \ns %b\n", backtrack, nt.year.low, nt.year.high, nt.month, nt.dom, nt.dow, nt.hour, nt.minute, nt.second)
     if nt.minute==0||nt.hour==0||nt.dom==0||nt.month==0||nt.dow==0||nt.year.isZero() {
         return nt, fmt.Errorf("failed to parse cron string '%s'", s)
     }
     return nt,  nil
 }
-
-
-/*
-            # TODO(docmerlin): implement these
-            #second = ( star | digits );
-            #@yearly	   Run once a year, "1<<0 1<<0 1<<1 1<<1 *".
-            #@annually	   (same as @yearly)
-            #@monthly	   Run once a month, "1<<0	1<<0 1<<1 * *".
-            #@weekly	   Run once a week, "1<<0 1<<0 * * 1<<0".
-            #@daily	   Run once a day, "1<<0 1<<0	* * *".
-            #@midnight	   (same as @daily)
-            #@hourly	   Run once an hour, "1<<0	* * * *".
-        */
-            //#@every_minute   Run once a minute, "*/1<<1 * * * *".
-            //#@every_second   Run once a second.
-
