@@ -3,16 +3,16 @@ A fast non-allocating ron parser in ragel and golang.
 
 
 # features
-[x] standard five-position cron
-[x] six-position cron with seconds
-[x] seven-position cron with seconds and years
-[x] case-insensitive days of the week
-[x] case-insensitive month names
-[x] [Quartz](http://www.quartz-scheduler.org) compatible ranges e.g.: `4/10`, `SUN-THURS/2`
-[x] 
-[ ] timezone handling (other than UTC)
-[ ] Quartz compatible # handling, i.e. `5#3` meaning the third friday of the month
-[ ] Quartz compatible L handling, i.e. `5L` in the day of week field meaning the last friday of a month, or `3L` in the day of month field meaning third to last day of the month
+- [x] standard five-position cron
+- [x] six-position cron with seconds
+- [x] seven-position cron with seconds and years
+- [x] case-insensitive days of the week
+- [x] case-insensitive month names
+- [x] [Quartz](http://www.quartz-scheduler.org) compatible ranges e.g.: `4/10`, `SUN-THURS/2`
+- [x] 
+- [ ] timezone handling (other than UTC)
+- [ ] Quartz compatible # handling, i.e. `5#3` meaning the third friday of the month
+- [ ] Quartz compatible L handling, i.e. `5L` in the day of week field meaning the last friday of a month, or `3L` in the day of month field meaning third to last day of the month
 
 #performance
 On a MacBook Pro (Retina, 15-inch, Mid 2014):
