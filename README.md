@@ -1,5 +1,5 @@
 # cron
-A non-allocating ron parser in ragel and golang
+A fast non-allocating ron parser in ragel and golang.
 
 
 # features
@@ -10,7 +10,7 @@ A non-allocating ron parser in ragel and golang
 [x] case-insensitive month names
 [x] [Quartz](http://www.quartz-scheduler.org) compatible ranges e.g.: `4/10`, `SUN-THURS/2`
 [x] 
-[ ] timezone handling
+[ ] timezone handling (other than UTC)
 [ ] Quartz compatible # handling, i.e. `5#3` meaning the third friday of the month
 [ ] Quartz compatible L handling, i.e. `5L` in the day of week field meaning the last friday of a month, or `3L` in the day of month field meaning third to last day of the month
 
