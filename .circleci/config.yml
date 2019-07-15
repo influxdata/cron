@@ -13,11 +13,12 @@ jobs:
       - run:
           name: get ragel
           command: |
+            cd ../ &&
             curl http://www.colm.net/files/ragel/ragel-${RAGEL_VERSION}.tar.gz -O && \
             tar -xzf ragel-${RAGEL_VERSION}.tar.gz && \
             cd ragel-${RAGEL_VERSION}/ && \
             ./configure --prefix=/usr/local && \
-            make && \
+            sudo make && \
             sudo make install
       - run:
           name: check generated code
