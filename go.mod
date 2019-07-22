@@ -1,3 +1,3 @@
-module github.com/docmerlin/cron
+module github.com/influxdata/cron
 
 go 1.12
