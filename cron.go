@@ -66,15 +66,6 @@ type nextTime struct {
 
 var maxMonthLengths = [13]uint64{31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31, 31} // we wrap back around from jan to jan to make stuff easy
 
-// func monthLen(year, month int) uint64 {
-// 	l := maxMonthLengths[month-1]
-// 	// check if feb and not leap year
-// 	if month == 1 && (year&3 != 0 || year%100 == 0) {
-// 		l--
-// 	}
-// 	return l
-// }
-
 func (nt *nextTime) nextYear(y, m, d uint64) int {
 	yBits := uint64(0)
 	y++
@@ -292,17 +283,3 @@ func (nt *nextTime) updateDateIntersectDate(y int, M, d uint64) {
 	nt.year.set(y)
 	nt.month = nt.month & 1 << M
 }
-
-// func timebm(ts time.Time) *nextTime {
-// 	_, M, D := ts.Date()
-// 	hr, m, s := ts.Clock()
-// 	dow := ts.Weekday()
-// 	return &nextTime{
-// 		second: 1 << uint(s),
-// 		minute: 1 << uint(m),
-// 		hour:   1 << uint(hr),
-// 		dow:    1 << uint(dow),
-// 		month:  1 << uint(M-1),
-// 		dom:    1 << uint(D-1),
-// 	}
-// }
