@@ -1,4 +1,13 @@
-// -*-go-*-
+/*
+    cron is a fast, zero-allocation cron parsing library.  We aim to be Quartz cron compatible eventually.
+    Currently we support:
+    - standard five-position cron
+    - six-position cron with seconds
+    - seven-position cron with seconds and years
+    - case-insensitive names of the days of the week
+    - case-insensitive month names
+*/
+
 package cron
 
 import (
@@ -16,8 +25,8 @@ import (
 %% variable data s;
 %% write data;
 
-func parse(s string, tz *time.Location)(nextTime, error){
-    nt:=nextTime{loc:tz}
+func parse(s string, tz *time.Location)(Parsed, error){
+    nt:=Parsed{loc:tz}
     cs, p, pe, eof:= 0, 0,len(s), len(s)
 
 
@@ -360,8 +369,9 @@ func parse(s string, tz *time.Location)(nextTime, error){
             }else if d==1{
                 nt.year.low=^uint64(0)
                 nt.year.high=^uint64(0)
+                nt.year.end=^uint64(0)
             }else{
-                for i:=start-1970;i<2099;i+=d{
+                for i:=start-1970;i<=2099;i+=d{
                         nt.year.set(int(i))
                 }
             }

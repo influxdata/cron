@@ -8,41 +8,58 @@ import (
 	"time"
 )
 
+// ParseUTC parses a cron string in UTC timezone.
+func ParseUTC(s string) (Parsed, error) {
+	return parse(s, time.UTC)
+}
+
 type years struct {
 	low  uint64
 	high uint64
+	end  uint64 // this is here so we can support 2098 and 2099
 }
 
-func (y years) isZero() bool {
-	return y.low|y.high == 0
+func (ys years) isZero() bool {
+	return ys.low|ys.high|ys.end == 0
 }
 
 func (ys *years) set(year int) {
 	y := uint64(year - 1970)
-	if y > 64 {
+	switch {
+	case y > 128:
+		ys.end |= (1 << (y - 128))
+	case y > 64:
 		ys.high |= (1 << (y - 64))
+	default:
+		ys.low |= (1 << y)
 	}
-	ys.low |= (1 << y)
 }
 
-func (y years) TrailingZeros64() int {
-	zeros := bits.TrailingZeros64(y.low)
+func (ys years) TrailingZeros64() int {
+	zeros := bits.TrailingZeros64(ys.low)
 	if zeros == 64 {
-		zeros += bits.TrailingZeros64(y.high)
+		zeros += bits.TrailingZeros64(ys.high)
+		if zeros == 128 {
+			zeros += bits.TrailingZeros64(ys.end)
+		}
 	}
 	return zeros
 }
 
-func (y years) Intersection(y2 years) years {
+func (ys years) Intersection(y2 years) years {
 	return years{
-		low:  y.low & y2.low,
-		high: y.high & y2.high,
+		low:  ys.low & y2.low,
+		high: ys.high & y2.high,
+		end:  ys.end & y2.end,
 	}
 }
 
 // this is undefined if the year is above 2070 or below 1970
 func (ys years) in(year int) bool {
 	y := uint64(year - 1970)
+	if y >= 128 {
+		return ys.end&(1<<(y-128)) > 0
+	}
 	if y >= 64 {
 		return ys.high&(1<<(y-64)) > 0
 	}
@@ -53,7 +70,8 @@ func isLeap(y int) bool {
 	return (y&3 == 0 && y%100 != 0) || y%400 == 0
 }
 
-type nextTime struct {
+// Parsed is a parsed cron string.  It can be used to find the next instance of a cron task.
+type Parsed struct {
 	second uint64
 	minute uint64
 	hour   uint64
@@ -66,23 +84,31 @@ type nextTime struct {
 
 var maxMonthLengths = [13]uint64{31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31, 31} // we wrap back around from jan to jan to make stuff easy
 
-func (nt *nextTime) nextYear(y, m, d uint64) int {
-	yBits := uint64(0)
+func (nt *Parsed) nextYear(y, m, d uint64) int {
+	if y < 1969 {
+		y = 1969
+	}
 	y++
-	if y >= 1970 {
-		yBits = y - 1970
-	}
-
-	if yBits >= 64 {
-		yBits -= 64
-		y += uint64(bits.TrailingZeros64(nt.year.high >> yBits))
-	} else {
-		addToY := uint64(bits.TrailingZeros64(nt.year.low >> yBits))
+	yBits := y - 1970
+	var addToY uint64
+	if yBits >= 128 {
+		y += uint64(bits.TrailingZeros64(nt.year.end >> (yBits - 128)))
+	} else if yBits >= 64 {
+		addToY += uint64(bits.TrailingZeros64(nt.year.high >> (yBits - 64)))
 		if addToY == 64 {
-			addToY = uint64(bits.TrailingZeros64(nt.year.high))
+			addToY += uint64(bits.TrailingZeros64(nt.year.high))
 		}
-		y += addToY
+	} else {
+		addToY = uint64(bits.TrailingZeros64(nt.year.low >> yBits))
+		if addToY == 64 {
+			addToY -= yBits
+			addToY += uint64(bits.TrailingZeros64(nt.year.high))
+		}
+		if addToY == 128 {
+			addToY += uint64(bits.TrailingZeros64(nt.year.end))
+		}
 	}
+	y += addToY
 
 	if y > 2099 {
 		return -1
@@ -110,7 +136,7 @@ func (nt *nextTime) nextYear(y, m, d uint64) int {
 }
 
 // returns the index for the month
-func (nt *nextTime) nextMonth(m, d uint64) int {
+func (nt *Parsed) nextMonth(m, d uint64) int {
 	m = uint64(bits.TrailingZeros64(nt.month>>m)) + m
 	d = uint64(bits.TrailingZeros64(nt.dom>>d)) + d
 	if m > 11 { // if there is no next avaliable months
@@ -122,7 +148,7 @@ func (nt *nextTime) nextMonth(m, d uint64) int {
 	return int(m)
 }
 
-func (nt *nextTime) nextDay(y int, m time.Month, d uint64) int {
+func (nt *Parsed) nextDay(y int, m time.Month, d uint64) int {
 	firstOfMonth := time.Date(y, m+1, 1, 0, 0, 0, 0, nt.loc)
 	days := nt.prepDays(firstOfMonth.Weekday())
 	d++
@@ -136,7 +162,7 @@ func (nt *nextTime) nextDay(y int, m time.Month, d uint64) int {
 	return int(d)
 }
 
-func (nt *nextTime) nextHour(h uint64) int {
+func (nt *Parsed) nextHour(h uint64) int {
 	h++
 	h = uint64(bits.TrailingZeros64(nt.hour>>h)) + h
 	if h >= 24 {
@@ -145,7 +171,7 @@ func (nt *nextTime) nextHour(h uint64) int {
 	return int(h)
 }
 
-func (nt *nextTime) nextMinute(m uint64) int {
+func (nt *Parsed) nextMinute(m uint64) int {
 	m++
 	m = uint64(bits.TrailingZeros64(nt.minute>>m)) + m
 	if m >= 60 {
@@ -154,7 +180,7 @@ func (nt *nextTime) nextMinute(m uint64) int {
 	return int(m)
 }
 
-func (nt *nextTime) nextSecond(s uint64) int {
+func (nt *Parsed) nextSecond(s uint64) int {
 	s++
 	s = uint64(bits.TrailingZeros64(nt.second>>s)) + s
 	if s >= 60 {
@@ -165,11 +191,13 @@ func (nt *nextTime) nextSecond(s uint64) int {
 
 // undefined for shifts larger than 7
 // firstDayOfWeek is the 0 indexed day of first day of the month
-func (nt *nextTime) prepDays(firstDayOfWeek time.Weekday) uint64 {
+func (nt *Parsed) prepDays(firstDayOfWeek time.Weekday) uint64 {
 	return (nt.dow >> uint64(firstDayOfWeek)) & nt.dom
 }
 
-func (nt *nextTime) next(from time.Time) (time.Time, error) {
+// Next returns the next time a cron task should run given a Parsed cron string.
+// It will error if the Parsed is not from a zero value.
+func (nt Parsed) Next(from time.Time) (time.Time, error) {
 	y, MTime, dTime := from.Date()
 	d := int(dTime - 1) //time's day is 1 indexed but our day is zero indexed
 	M := int(MTime - 1) //time's month is 1 indexed in time but ours is 0 indexed
@@ -217,7 +245,7 @@ func (nt *nextTime) next(from time.Time) (time.Time, error) {
 	}
 	oldYear, oldMonth, oldDay := y, M, d
 
-	for y < 2099 {
+	for y <= 2099 {
 		if nt.prepDays(weekDayOfFirst)&(1<<uint(d)) == 0 {
 			if d2 := nt.nextDay(y, time.Month(M), uint64(d)); d2 < 0 {
 				M++
@@ -258,11 +286,11 @@ func (nt *nextTime) next(from time.Time) (time.Time, error) {
 		}
 		oldYear, oldMonth, oldDay = y, M, d
 	}
-	return time.Time{}, errors.New("could not fulfil schedule before 2099")
+	return time.Time{}, errors.New("could not fulfil schedule before 2100")
 }
 
-func (nt *nextTime) intersection(ct *nextTime) *nextTime {
-	return &nextTime{
+func (nt *Parsed) intersection(ct *Parsed) *Parsed {
+	return &Parsed{
 		second: nt.second & ct.second,
 		minute: nt.minute & ct.minute,
 		hour:   nt.hour & ct.hour,
@@ -276,7 +304,7 @@ func (nt *nextTime) intersection(ct *nextTime) *nextTime {
 	}
 }
 
-func (nt *nextTime) updateDateIntersectDate(y int, M, d uint64) {
+func (nt *Parsed) updateDateIntersectDate(y int, M, d uint64) {
 	nt.dom = nt.dom & 1 << d
 	nt.year.high = 0
 	nt.year.low = 0
