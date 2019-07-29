@@ -596,7 +596,11 @@ func parse(s string, tz *time.Location)(Parsed, error){
                 fexec mark;
                 fgoto sixPos;
                 }; # 7 position cron
-            ((allowedNonSpace+ space+){6} allowedNonSpace+) >mark => {fexec mark;fcall sevenPos;};
+            ((allowedNonSpace+ space+){6} allowedNonSpace+) >mark => {
+                _ = p // this is to make staticcheck happy
+                fexec mark;
+                fcall sevenPos;
+                };
             ((allowedNonSpace+ space+){7} (allowedNonSpace+ space?)+) => parse_err;
             "@" => {fcall atMacro;};
         *|;
