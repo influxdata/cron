@@ -288,26 +288,3 @@ func (nt Parsed) Next(from time.Time) (time.Time, error) {
 	}
 	return time.Time{}, errors.New("could not fulfil schedule before 2100")
 }
-
-func (nt *Parsed) intersection(ct *Parsed) *Parsed {
-	return &Parsed{
-		second: nt.second & ct.second,
-		minute: nt.minute & ct.minute,
-		hour:   nt.hour & ct.hour,
-		dow:    nt.dow & ct.dow,
-		month:  nt.month & ct.month,
-		dom:    nt.dom & ct.dom,
-		year: years{
-			high: nt.year.high & ct.year.high,
-			low:  nt.year.low & ct.year.low,
-		},
-	}
-}
-
-func (nt *Parsed) updateDateIntersectDate(y int, M, d uint64) {
-	nt.dom = nt.dom & 1 << d
-	nt.year.high = 0
-	nt.year.low = 0
-	nt.year.set(y)
-	nt.month = nt.month & 1 << M
-}
