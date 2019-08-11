@@ -18,9 +18,9 @@ On a MacBook Pro (Retina, 15-inch, Mid 2014):
 
 | | | | |
 |-|-|-|-|
-| BenchmarkParse/0_*_*_*_*_*_*-8 | 20000000 |  97.9 ns/op |  0 B/op | 0 allocs/op |
-| BenchmarkParse/1-6/2_*_*_*_Feb-Oct/3_*_*-8 | 10000000 |  184  ns/op |  0 B/op | 0 allocs/op |
-| BenchmarkParse/1-6/2_*_*_*_Feb-Oct/3_*_2020/4-8 |  1000000 |  2262 ns/op |  0 B/op | 0 allocs/op |
+| `BenchmarkParse/0_*_*_*_*_*_*-8` | 20000000 |  97.9 ns/op |  0 B/op | 0 allocs/op |
+| `BenchmarkParse/1-6/2_*_*_*_Feb-Oct/3_*_*-8` | 10000000 |  184  ns/op |  0 B/op | 0 allocs/op |
+| `BenchmarkParse/1-6/2_*_*_*_Feb-Oct/3_*_2020/4-8` |  1000000 |  2262 ns/op |  0 B/op | 0 allocs/op |
 
 As you can see the parsing is pretty fast.  That being said, ranges over years are much slower to parse than basically anything else, as they were likely to be the least used so I didn't bother optimizing their bitmap generation.
 
