@@ -22,7 +22,252 @@ func mustParseTime(s string) time.Time {
 		panic(err)
 	}
 	return ts
+}
 
+func TestLongNext(t *testing.T) {
+	t.Run("six position advance 1 second a million times", func(t *testing.T) {
+		nt, err := cron.ParseUTC("* * * * * *")
+		if err != nil {
+			t.Fatal(err)
+		}
+		t0, err := time.Parse(time.RFC3339Nano, "2019-06-27T06:00:00Z")
+		for i := 0; i < 1000000; i++ {
+			if err != nil {
+				t.Fatal(err)
+			}
+			t1, err := nt.Next(t0)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if t1.Sub(t0) != time.Second {
+				t.Fatalf("every step should be 1 second long, but was %s, t0:%s t1:%s", t0.Sub(t1), t0, t1)
+			}
+			t0 = t1
+		}
+	})
+	t.Run("five position advance 1 minute a million times", func(t *testing.T) {
+		nt, err := cron.ParseUTC("* * * * *")
+		if err != nil {
+			t.Fatal(err)
+		}
+		t0, err := time.Parse(time.RFC3339Nano, "2021-02-28T23:59:00Z")
+		for i := 0; i < 1000000; i++ {
+			if err != nil {
+				t.Fatal(err)
+			}
+			t1, err := nt.Next(t0)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if t1.Sub(t0) != time.Minute {
+				t.Fatalf("every step should be 1 minute long, but was %s, t0:%s t1:%s", t0.Sub(t1), t0, t1)
+			}
+			t0 = t1
+		}
+	})
+	t.Run("six position advance 1 hour ten thousand times", func(t *testing.T) {
+		nt, err := cron.ParseUTC("10 58 * * * *")
+		if err != nil {
+			t.Fatal(err)
+		}
+		t0, err := time.Parse(time.RFC3339Nano, "2001-02-27T23:58:10Z")
+		for i := 0; i < 10000; i++ {
+			if err != nil {
+				t.Fatal(err)
+			}
+			t1, err := nt.Next(t0)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if t1.Sub(t0) != time.Hour {
+				t.Fatalf("every step should be 1 hour long, but was %s, t0:%s t1:%s", t0.Sub(t1), t0, t1)
+			}
+			t0 = t1
+		}
+	})
+}
+
+func TestRange(t *testing.T) {
+	tests := []struct {
+		name    string
+		cron    string
+		start   time.Time
+		results []time.Time
+	}{
+		{
+			name:  "year range",
+			cron:  "3 47 17 3 1 * 2003-2007",
+			start: mustParseTime("2001-01-01T12:10:10.7Z"),
+			results: []time.Time{
+				mustParseTime("2003-01-03T17:47:03.0Z"),
+				mustParseTime("2004-01-03T17:47:03.0Z"),
+				mustParseTime("2005-01-03T17:47:03.0Z"),
+				mustParseTime("2006-01-03T17:47:03.0Z"),
+				mustParseTime("2007-01-03T17:47:03.0Z"),
+			},
+		},
+		{
+			name:  "seconds range",
+			cron:  "5-10 * * * * *",
+			start: mustParseTime("2001-01-01T12:10:10.7Z"),
+			results: []time.Time{
+				mustParseTime("2001-01-01T12:11:05.0Z"),
+				mustParseTime("2001-01-01T12:11:06.0Z"),
+				mustParseTime("2001-01-01T12:11:07.0Z"),
+				mustParseTime("2001-01-01T12:11:08.0Z"),
+				mustParseTime("2001-01-01T12:11:09.0Z"),
+				mustParseTime("2001-01-01T12:11:10.0Z"),
+				mustParseTime("2001-01-01T12:12:05.0Z"),
+				mustParseTime("2001-01-01T12:12:06.0Z"),
+				mustParseTime("2001-01-01T12:12:07.0Z"),
+				mustParseTime("2001-01-01T12:12:08.0Z"),
+				mustParseTime("2001-01-01T12:12:09.0Z"),
+				mustParseTime("2001-01-01T12:12:10.0Z"),
+				mustParseTime("2001-01-01T12:13:05.0Z"),
+			},
+		},
+		{
+			name:  "minutes range",
+			cron:  "3 21-30 * * * *",
+			start: mustParseTime("2001-01-01T12:10:10.7Z"),
+			results: []time.Time{
+				mustParseTime("2001-01-01T12:21:03.0Z"),
+				mustParseTime("2001-01-01T12:22:03.0Z"),
+				mustParseTime("2001-01-01T12:23:03.0Z"),
+				mustParseTime("2001-01-01T12:24:03.0Z"),
+				mustParseTime("2001-01-01T12:25:03.0Z"),
+				mustParseTime("2001-01-01T12:26:03.0Z"),
+				mustParseTime("2001-01-01T12:27:03.0Z"),
+				mustParseTime("2001-01-01T12:28:03.0Z"),
+				mustParseTime("2001-01-01T12:29:03.0Z"),
+				mustParseTime("2001-01-01T12:30:03.0Z"),
+				mustParseTime("2001-01-01T13:21:03.0Z"),
+				mustParseTime("2001-01-01T13:22:03.0Z"),
+				mustParseTime("2001-01-01T13:23:03.0Z"),
+				mustParseTime("2001-01-01T13:24:03.0Z"),
+				mustParseTime("2001-01-01T13:25:03.0Z"),
+				mustParseTime("2001-01-01T13:26:03.0Z"),
+				mustParseTime("2001-01-01T13:27:03.0Z"),
+				mustParseTime("2001-01-01T13:28:03.0Z"),
+				mustParseTime("2001-01-01T13:29:03.0Z"),
+				mustParseTime("2001-01-01T13:30:03.0Z"),
+				mustParseTime("2001-01-01T14:21:03.0Z"),
+				mustParseTime("2001-01-01T14:22:03.0Z"),
+				mustParseTime("2001-01-01T14:23:03.0Z"),
+				mustParseTime("2001-01-01T14:24:03.0Z"),
+				mustParseTime("2001-01-01T14:25:03.0Z"),
+			},
+		},
+		{
+			name:  "hours range",
+			cron:  "3 47 7-13 * * *",
+			start: mustParseTime("2001-01-01T12:10:10.7Z"),
+			results: []time.Time{
+				mustParseTime("2001-01-01T12:47:03.0Z"),
+				mustParseTime("2001-01-01T13:47:03.0Z"),
+				mustParseTime("2001-01-02T07:47:03.0Z"),
+				mustParseTime("2001-01-02T08:47:03.0Z"),
+				mustParseTime("2001-01-02T09:47:03.0Z"),
+				mustParseTime("2001-01-02T10:47:03.0Z"),
+				mustParseTime("2001-01-02T11:47:03.0Z"),
+				mustParseTime("2001-01-02T12:47:03.0Z"),
+				mustParseTime("2001-01-02T13:47:03.0Z"),
+				mustParseTime("2001-01-03T07:47:03.0Z"),
+				mustParseTime("2001-01-03T08:47:03.0Z"),
+				mustParseTime("2001-01-03T09:47:03.0Z"),
+				mustParseTime("2001-01-03T10:47:03.0Z"),
+				mustParseTime("2001-01-03T11:47:03.0Z"),
+				mustParseTime("2001-01-03T12:47:03.0Z"),
+				mustParseTime("2001-01-03T13:47:03.0Z"),
+				mustParseTime("2001-01-04T07:47:03.0Z"),
+			},
+		},
+		{
+			name:  "days range",
+			cron:  "3 47 17 23-27 * *",
+			start: mustParseTime("2001-01-01T12:10:10.7Z"),
+			results: []time.Time{
+				mustParseTime("2001-01-23T17:47:03.0Z"),
+				mustParseTime("2001-01-24T17:47:03.0Z"),
+				mustParseTime("2001-01-25T17:47:03.0Z"),
+				mustParseTime("2001-01-26T17:47:03.0Z"),
+				mustParseTime("2001-01-27T17:47:03.0Z"),
+				mustParseTime("2001-02-23T17:47:03.0Z"),
+				mustParseTime("2001-02-24T17:47:03.0Z"),
+				mustParseTime("2001-02-25T17:47:03.0Z"),
+				mustParseTime("2001-02-26T17:47:03.0Z"),
+				mustParseTime("2001-02-27T17:47:03.0Z"),
+				mustParseTime("2001-03-23T17:47:03.0Z"),
+			},
+		},
+		{
+			name:  "months range",
+			cron:  "3 47 17 9 3-11 *",
+			start: mustParseTime("2001-01-01T12:10:10.7Z"),
+			results: []time.Time{
+				mustParseTime("2001-03-09T17:47:03.0Z"),
+				mustParseTime("2001-04-09T17:47:03.0Z"),
+				mustParseTime("2001-05-09T17:47:03.0Z"),
+				mustParseTime("2001-06-09T17:47:03.0Z"),
+				mustParseTime("2001-07-09T17:47:03.0Z"),
+				mustParseTime("2001-08-09T17:47:03.0Z"),
+				mustParseTime("2001-09-09T17:47:03.0Z"),
+				mustParseTime("2001-10-09T17:47:03.0Z"),
+				mustParseTime("2001-11-09T17:47:03.0Z"),
+				mustParseTime("2002-03-09T17:47:03.0Z"),
+				mustParseTime("2002-04-09T17:47:03.0Z"),
+				mustParseTime("2002-05-09T17:47:03.0Z"),
+				mustParseTime("2002-06-09T17:47:03.0Z"),
+				mustParseTime("2002-07-09T17:47:03.0Z"),
+				mustParseTime("2002-08-09T17:47:03.0Z"),
+				mustParseTime("2002-09-09T17:47:03.0Z"),
+				mustParseTime("2002-10-09T17:47:03.0Z"),
+				mustParseTime("2002-11-09T17:47:03.0Z"),
+				mustParseTime("2003-03-09T17:47:03.0Z"),
+			},
+		},
+		{
+			name:  "day of week range",
+			cron:  "3 47 17 * 1 THU-SAT",
+			start: mustParseTime("2001-01-01T12:10:10.7Z"),
+			results: []time.Time{
+				mustParseTime("2001-01-04T17:47:03.0Z"),
+				mustParseTime("2001-01-05T17:47:03.0Z"),
+				mustParseTime("2001-01-06T17:47:03.0Z"),
+				mustParseTime("2001-01-11T17:47:03.0Z"),
+				mustParseTime("2001-01-12T17:47:03.0Z"),
+				mustParseTime("2001-01-13T17:47:03.0Z"),
+				mustParseTime("2001-01-18T17:47:03.0Z"),
+				mustParseTime("2001-01-19T17:47:03.0Z"),
+				mustParseTime("2001-01-20T17:47:03.0Z"),
+				mustParseTime("2001-01-25T17:47:03.0Z"),
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			nt, err := cron.ParseUTC(tt.cron)
+			ts, err := nt.Next(tt.start)
+			if err != nil {
+				t.Error(err)
+			}
+
+			for i := range tt.results {
+				if err != nil {
+					t.Error(err)
+				}
+				if ts != tt.results[i] {
+					t.Errorf("expected the %dth next call on %s to be %s, but it was %s", i+1, tt.cron, tt.results[i], ts)
+				}
+				if i < len(tt.results)-1 {
+					ts, err = nt.Next(tt.results[i])
+					if err != nil {
+						t.Error(err)
+					}
+				}
+			}
+		})
+	}
 }
 
 func Test_Parsed_next(t *testing.T) {
@@ -44,6 +289,54 @@ func Test_Parsed_next(t *testing.T) {
 		wanterr      bool
 		wantParseErr bool
 	}{
+		{
+			name:         "months > 31 days",
+			nt:           parsit(" * * * 30,32 * * * "),
+			from:         ts,
+			wantParseErr: true,
+		},
+		{
+			name:         "seconds = 60",
+			nt:           parsit(" 60 * * * * * * "),
+			from:         ts,
+			wantParseErr: true,
+		},
+		{
+			name:         "minutes = 60",
+			nt:           parsit("* 60 * * * * * "),
+			from:         ts,
+			wantParseErr: true,
+		},
+		{
+			name:         "hours = 24",
+			nt:           parsit(" * * 24 * * * * "),
+			from:         ts,
+			wantParseErr: true,
+		},
+		{
+			name:         "seconds > 60",
+			nt:           parsit(" 61 * * 30 * * * "),
+			from:         ts,
+			wantParseErr: true,
+		},
+		{
+			name:         "minutes > 60",
+			nt:           parsit(" * 61 * 30 * * * "),
+			from:         ts,
+			wantParseErr: true,
+		},
+		{
+			name:         "month = 0",
+			nt:           parsit(" * * * * 0 * * "),
+			from:         ts,
+			wantParseErr: true,
+		},
+		{
+			name:         "month = 13",
+			nt:           parsit(" * * * * 13 * * "),
+			from:         ts,
+			wantParseErr: true,
+		},
 		{
 			name: "2023",
 			nt:   parsit(" *   * * * * * 2023 "),
@@ -201,17 +494,22 @@ func Test_Parsed_next(t *testing.T) {
 			want: mustParseTime("2019-07-04T00:00:00Z"),
 		},
 		{
-			name:    "when leap day is a monday and the year is a multiple of 3 after 1970",
-			nt:      parsit("* * * 29 2 MON */3"),
-			from:    ts,
-			want:    time.Time{},
-			wanterr: true,
+			name: "when leap day is a monday and the year is a multiple of 3 after 1970",
+			nt:   parsit("* * * 29 2 MON */3"),
+			from: ts,
+			want: mustParseTime("2072-02-29T00:00:00Z"),
+		},
+		{
+			name: "when leap day is a monday and the year is a multiple of 7 after 1970",
+			nt:   parsit("* * * 29 2 MON */3"),
+			from: ts,
+			want: mustParseTime("2072-02-29T00:00:00Z"),
 		},
 		{
 			name: "jan 1 falls on a monday and year is a multiple of 3 after 1970",
 			nt:   parsit("* * * 1 1 MON */3"),
 			from: ts,
-			want: mustParseTime("2046-01-01T00:00:00Z"),
+			want: mustParseTime("2024-01-01T00:00:00Z"),
 		},
 		{
 			name: "jan 1 on year is divisible by 2",

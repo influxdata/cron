@@ -1867,10 +1867,10 @@ tr22:
                     return nt, fmt.Errorf("invalid start second %d", start)
                 }
                 if end>=60 {
-                    return nt, fmt.Errorf("invalid end second %d", start)
+                    return nt, fmt.Errorf("invalid end second %d", end)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -1964,10 +1964,10 @@ d=m
                     return nt, fmt.Errorf("invalid start second %d", start)
                 }
                 if end>=60 {
-                    return nt, fmt.Errorf("invalid end second %d", start)
+                    return nt, fmt.Errorf("invalid end second %d", end)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -2061,10 +2061,10 @@ tr264:
                     return nt, fmt.Errorf("invalid start second %d", start)
                 }
                 if end>=60 {
-                    return nt, fmt.Errorf("invalid end second %d", start)
+                    return nt, fmt.Errorf("invalid end second %d", end)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -2158,10 +2158,10 @@ tr270:
                     return nt, fmt.Errorf("invalid start second %d", start)
                 }
                 if end>=60 {
-                    return nt, fmt.Errorf("invalid end second %d", start)
+                    return nt, fmt.Errorf("invalid end second %d", end)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -2286,10 +2286,10 @@ tr21:
                     return nt, fmt.Errorf("invalid start second %d", start)
                 }
                 if end>=60 {
-                    return nt, fmt.Errorf("invalid end second %d", start)
+                    return nt, fmt.Errorf("invalid end second %d", end)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -2383,10 +2383,10 @@ d=m
                     return nt, fmt.Errorf("invalid start second %d", start)
                 }
                 if end>=60 {
-                    return nt, fmt.Errorf("invalid end second %d", start)
+                    return nt, fmt.Errorf("invalid end second %d", end)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -2480,10 +2480,10 @@ tr263:
                     return nt, fmt.Errorf("invalid start second %d", start)
                 }
                 if end>=60 {
-                    return nt, fmt.Errorf("invalid end second %d", start)
+                    return nt, fmt.Errorf("invalid end second %d", end)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -2577,10 +2577,10 @@ tr269:
                     return nt, fmt.Errorf("invalid start second %d", start)
                 }
                 if end>=60 {
-                    return nt, fmt.Errorf("invalid end second %d", start)
+                    return nt, fmt.Errorf("invalid end second %d", end)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -2705,16 +2705,16 @@ tr27:
                     1|1<<59,
                 }
                 if d>=60 {
-                    return nt, fmt.Errorf("invalid second */%d", d)
+                    return nt, fmt.Errorf("invalid minute */%d", d)
                 }
                 if start>=60 {
-                    return nt, fmt.Errorf("invalid start second %d", start)
+                    return nt, fmt.Errorf("invalid start minute %d", start)
                 }
                 if end>=60 {
-                    return nt, fmt.Errorf("invalid end second %d", start)
+                    return nt, fmt.Errorf("invalid end minute %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -2803,16 +2803,16 @@ tr245:
                     1|1<<59,
                 }
                 if d>=60 {
-                    return nt, fmt.Errorf("invalid second */%d", d)
+                    return nt, fmt.Errorf("invalid minute */%d", d)
                 }
                 if start>=60 {
-                    return nt, fmt.Errorf("invalid start second %d", start)
+                    return nt, fmt.Errorf("invalid start minute %d", start)
                 }
                 if end>=60 {
-                    return nt, fmt.Errorf("invalid end second %d", start)
+                    return nt, fmt.Errorf("invalid end minute %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -2901,16 +2901,16 @@ tr251:
                     1|1<<59,
                 }
                 if d>=60 {
-                    return nt, fmt.Errorf("invalid second */%d", d)
+                    return nt, fmt.Errorf("invalid minute */%d", d)
                 }
                 if start>=60 {
-                    return nt, fmt.Errorf("invalid start second %d", start)
+                    return nt, fmt.Errorf("invalid start minute %d", start)
                 }
                 if end>=60 {
-                    return nt, fmt.Errorf("invalid end second %d", start)
+                    return nt, fmt.Errorf("invalid end minute %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -2999,16 +2999,16 @@ d=m
                     1|1<<59,
                 }
                 if d>=60 {
-                    return nt, fmt.Errorf("invalid second */%d", d)
+                    return nt, fmt.Errorf("invalid minute */%d", d)
                 }
                 if start>=60 {
-                    return nt, fmt.Errorf("invalid start second %d", start)
+                    return nt, fmt.Errorf("invalid start minute %d", start)
                 }
                 if end>=60 {
-                    return nt, fmt.Errorf("invalid end second %d", start)
+                    return nt, fmt.Errorf("invalid end minute %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -3105,7 +3105,7 @@ tr33:
                     return nt, fmt.Errorf("invalid end hour %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -3166,7 +3166,7 @@ tr231:
                     return nt, fmt.Errorf("invalid end hour %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -3227,7 +3227,7 @@ tr237:
                     return nt, fmt.Errorf("invalid end hour %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -3288,7 +3288,7 @@ d=m
                     return nt, fmt.Errorf("invalid end hour %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -3403,17 +3403,17 @@ tr44:
                     1<<29,
                     1<<30,
                 }
-                if d>31{
-                    return nt, fmt.Errorf("invalid month */%d", d)
+                if d>=31{
+                    return nt, fmt.Errorf("invalid day month */%d", d)
                 }
                 if start>30 {
                     return nt, fmt.Errorf("invalid start month %d", start)
                 }
-                if end>30 {
+                if end>31 {
                     return nt, fmt.Errorf("invalid end month %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -3472,17 +3472,17 @@ tr177:
                     1<<29,
                     1<<30,
                 }
-                if d>31{
-                    return nt, fmt.Errorf("invalid month */%d", d)
+                if d>=31{
+                    return nt, fmt.Errorf("invalid day month */%d", d)
                 }
                 if start>30 {
                     return nt, fmt.Errorf("invalid start month %d", start)
                 }
-                if end>30 {
+                if end>31 {
                     return nt, fmt.Errorf("invalid end month %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -3541,17 +3541,17 @@ tr188:
                     1<<29,
                     1<<30,
                 }
-                if d>31{
-                    return nt, fmt.Errorf("invalid month */%d", d)
+                if d>=31{
+                    return nt, fmt.Errorf("invalid day month */%d", d)
                 }
                 if start>30 {
                     return nt, fmt.Errorf("invalid start month %d", start)
                 }
-                if end>30 {
+                if end>31 {
                     return nt, fmt.Errorf("invalid end month %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -3610,17 +3610,17 @@ d=m
                     1<<29,
                     1<<30,
                 }
-                if d>31{
-                    return nt, fmt.Errorf("invalid month */%d", d)
+                if d>=31{
+                    return nt, fmt.Errorf("invalid day month */%d", d)
                 }
                 if start>30 {
                     return nt, fmt.Errorf("invalid start month %d", start)
                 }
-                if end>30 {
+                if end>31 {
                     return nt, fmt.Errorf("invalid end month %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -3672,17 +3672,17 @@ tr198:
                     1<<29,
                     1<<30,
                 }
-                if d>31{
-                    return nt, fmt.Errorf("invalid month */%d", d)
+                if d>=31{
+                    return nt, fmt.Errorf("invalid day month */%d", d)
                 }
                 if start>30 {
                     return nt, fmt.Errorf("invalid start month %d", start)
                 }
-                if end>30 {
+                if end>31 {
                     return nt, fmt.Errorf("invalid end month %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -3734,17 +3734,17 @@ tr215:
                     1<<29,
                     1<<30,
                 }
-                if d>31{
-                    return nt, fmt.Errorf("invalid month */%d", d)
+                if d>=31{
+                    return nt, fmt.Errorf("invalid day month */%d", d)
                 }
                 if start>30 {
                     return nt, fmt.Errorf("invalid start month %d", start)
                 }
-                if end>30 {
+                if end>31 {
                     return nt, fmt.Errorf("invalid end month %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -6576,17 +6576,17 @@ tr45:
                     1<<29,
                     1<<30,
                 }
-                if d>31{
-                    return nt, fmt.Errorf("invalid month */%d", d)
+                if d>=31{
+                    return nt, fmt.Errorf("invalid day month */%d", d)
                 }
                 if start>30 {
                     return nt, fmt.Errorf("invalid start month %d", start)
                 }
-                if end>30 {
+                if end>31 {
                     return nt, fmt.Errorf("invalid end month %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -6645,17 +6645,17 @@ tr178:
                     1<<29,
                     1<<30,
                 }
-                if d>31{
-                    return nt, fmt.Errorf("invalid month */%d", d)
+                if d>=31{
+                    return nt, fmt.Errorf("invalid day month */%d", d)
                 }
                 if start>30 {
                     return nt, fmt.Errorf("invalid start month %d", start)
                 }
-                if end>30 {
+                if end>31 {
                     return nt, fmt.Errorf("invalid end month %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -6714,17 +6714,17 @@ tr189:
                     1<<29,
                     1<<30,
                 }
-                if d>31{
-                    return nt, fmt.Errorf("invalid month */%d", d)
+                if d>=31{
+                    return nt, fmt.Errorf("invalid day month */%d", d)
                 }
                 if start>30 {
                     return nt, fmt.Errorf("invalid start month %d", start)
                 }
-                if end>30 {
+                if end>31 {
                     return nt, fmt.Errorf("invalid end month %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -6783,17 +6783,17 @@ d=m
                     1<<29,
                     1<<30,
                 }
-                if d>31{
-                    return nt, fmt.Errorf("invalid month */%d", d)
+                if d>=31{
+                    return nt, fmt.Errorf("invalid day month */%d", d)
                 }
                 if start>30 {
                     return nt, fmt.Errorf("invalid start month %d", start)
                 }
-                if end>30 {
+                if end>31 {
                     return nt, fmt.Errorf("invalid end month %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -6845,17 +6845,17 @@ tr199:
                     1<<29,
                     1<<30,
                 }
-                if d>31{
-                    return nt, fmt.Errorf("invalid month */%d", d)
+                if d>=31{
+                    return nt, fmt.Errorf("invalid day month */%d", d)
                 }
                 if start>30 {
                     return nt, fmt.Errorf("invalid start month %d", start)
                 }
-                if end>30 {
+                if end>31 {
                     return nt, fmt.Errorf("invalid end month %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -6907,17 +6907,17 @@ tr216:
                     1<<29,
                     1<<30,
                 }
-                if d>31{
-                    return nt, fmt.Errorf("invalid month */%d", d)
+                if d>=31{
+                    return nt, fmt.Errorf("invalid day month */%d", d)
                 }
                 if start>30 {
                     return nt, fmt.Errorf("invalid start month %d", start)
                 }
-                if end>30 {
+                if end>31 {
                     return nt, fmt.Errorf("invalid end month %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -7608,7 +7608,7 @@ tr34:
                     return nt, fmt.Errorf("invalid end hour %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -7669,7 +7669,7 @@ tr232:
                     return nt, fmt.Errorf("invalid end hour %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -7730,7 +7730,7 @@ tr238:
                     return nt, fmt.Errorf("invalid end hour %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -7791,7 +7791,7 @@ d=m
                     return nt, fmt.Errorf("invalid end hour %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -8032,16 +8032,16 @@ tr28:
                     1|1<<59,
                 }
                 if d>=60 {
-                    return nt, fmt.Errorf("invalid second */%d", d)
+                    return nt, fmt.Errorf("invalid minute */%d", d)
                 }
                 if start>=60 {
-                    return nt, fmt.Errorf("invalid start second %d", start)
+                    return nt, fmt.Errorf("invalid start minute %d", start)
                 }
                 if end>=60 {
-                    return nt, fmt.Errorf("invalid end second %d", start)
+                    return nt, fmt.Errorf("invalid end minute %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -8130,16 +8130,16 @@ tr246:
                     1|1<<59,
                 }
                 if d>=60 {
-                    return nt, fmt.Errorf("invalid second */%d", d)
+                    return nt, fmt.Errorf("invalid minute */%d", d)
                 }
                 if start>=60 {
-                    return nt, fmt.Errorf("invalid start second %d", start)
+                    return nt, fmt.Errorf("invalid start minute %d", start)
                 }
                 if end>=60 {
-                    return nt, fmt.Errorf("invalid end second %d", start)
+                    return nt, fmt.Errorf("invalid end minute %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -8228,16 +8228,16 @@ tr252:
                     1|1<<59,
                 }
                 if d>=60 {
-                    return nt, fmt.Errorf("invalid second */%d", d)
+                    return nt, fmt.Errorf("invalid minute */%d", d)
                 }
                 if start>=60 {
-                    return nt, fmt.Errorf("invalid start second %d", start)
+                    return nt, fmt.Errorf("invalid start minute %d", start)
                 }
                 if end>=60 {
-                    return nt, fmt.Errorf("invalid end second %d", start)
+                    return nt, fmt.Errorf("invalid end minute %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -8326,16 +8326,16 @@ d=m
                     1|1<<59,
                 }
                 if d>=60 {
-                    return nt, fmt.Errorf("invalid second */%d", d)
+                    return nt, fmt.Errorf("invalid minute */%d", d)
                 }
                 if start>=60 {
-                    return nt, fmt.Errorf("invalid start second %d", start)
+                    return nt, fmt.Errorf("invalid start minute %d", start)
                 }
                 if end>=60 {
-                    return nt, fmt.Errorf("invalid end second %d", start)
+                    return nt, fmt.Errorf("invalid end minute %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -8727,10 +8727,10 @@ tr276:
                     return nt, fmt.Errorf("invalid start second %d", start)
                 }
                 if end>=60 {
-                    return nt, fmt.Errorf("invalid end second %d", start)
+                    return nt, fmt.Errorf("invalid end second %d", end)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -8824,10 +8824,10 @@ d=m
                     return nt, fmt.Errorf("invalid start second %d", start)
                 }
                 if end>=60 {
-                    return nt, fmt.Errorf("invalid end second %d", start)
+                    return nt, fmt.Errorf("invalid end second %d", end)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -8921,10 +8921,10 @@ tr545:
                     return nt, fmt.Errorf("invalid start second %d", start)
                 }
                 if end>=60 {
-                    return nt, fmt.Errorf("invalid end second %d", start)
+                    return nt, fmt.Errorf("invalid end second %d", end)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -9018,10 +9018,10 @@ tr551:
                     return nt, fmt.Errorf("invalid start second %d", start)
                 }
                 if end>=60 {
-                    return nt, fmt.Errorf("invalid end second %d", start)
+                    return nt, fmt.Errorf("invalid end second %d", end)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -9146,10 +9146,10 @@ tr275:
                     return nt, fmt.Errorf("invalid start second %d", start)
                 }
                 if end>=60 {
-                    return nt, fmt.Errorf("invalid end second %d", start)
+                    return nt, fmt.Errorf("invalid end second %d", end)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -9243,10 +9243,10 @@ d=m
                     return nt, fmt.Errorf("invalid start second %d", start)
                 }
                 if end>=60 {
-                    return nt, fmt.Errorf("invalid end second %d", start)
+                    return nt, fmt.Errorf("invalid end second %d", end)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -9340,10 +9340,10 @@ tr544:
                     return nt, fmt.Errorf("invalid start second %d", start)
                 }
                 if end>=60 {
-                    return nt, fmt.Errorf("invalid end second %d", start)
+                    return nt, fmt.Errorf("invalid end second %d", end)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -9437,10 +9437,10 @@ tr550:
                     return nt, fmt.Errorf("invalid start second %d", start)
                 }
                 if end>=60 {
-                    return nt, fmt.Errorf("invalid end second %d", start)
+                    return nt, fmt.Errorf("invalid end second %d", end)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -9565,16 +9565,16 @@ tr281:
                     1|1<<59,
                 }
                 if d>=60 {
-                    return nt, fmt.Errorf("invalid second */%d", d)
+                    return nt, fmt.Errorf("invalid minute */%d", d)
                 }
                 if start>=60 {
-                    return nt, fmt.Errorf("invalid start second %d", start)
+                    return nt, fmt.Errorf("invalid start minute %d", start)
                 }
                 if end>=60 {
-                    return nt, fmt.Errorf("invalid end second %d", start)
+                    return nt, fmt.Errorf("invalid end minute %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -9663,16 +9663,16 @@ tr526:
                     1|1<<59,
                 }
                 if d>=60 {
-                    return nt, fmt.Errorf("invalid second */%d", d)
+                    return nt, fmt.Errorf("invalid minute */%d", d)
                 }
                 if start>=60 {
-                    return nt, fmt.Errorf("invalid start second %d", start)
+                    return nt, fmt.Errorf("invalid start minute %d", start)
                 }
                 if end>=60 {
-                    return nt, fmt.Errorf("invalid end second %d", start)
+                    return nt, fmt.Errorf("invalid end minute %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -9761,16 +9761,16 @@ tr532:
                     1|1<<59,
                 }
                 if d>=60 {
-                    return nt, fmt.Errorf("invalid second */%d", d)
+                    return nt, fmt.Errorf("invalid minute */%d", d)
                 }
                 if start>=60 {
-                    return nt, fmt.Errorf("invalid start second %d", start)
+                    return nt, fmt.Errorf("invalid start minute %d", start)
                 }
                 if end>=60 {
-                    return nt, fmt.Errorf("invalid end second %d", start)
+                    return nt, fmt.Errorf("invalid end minute %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -9859,16 +9859,16 @@ d=m
                     1|1<<59,
                 }
                 if d>=60 {
-                    return nt, fmt.Errorf("invalid second */%d", d)
+                    return nt, fmt.Errorf("invalid minute */%d", d)
                 }
                 if start>=60 {
-                    return nt, fmt.Errorf("invalid start second %d", start)
+                    return nt, fmt.Errorf("invalid start minute %d", start)
                 }
                 if end>=60 {
-                    return nt, fmt.Errorf("invalid end second %d", start)
+                    return nt, fmt.Errorf("invalid end minute %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -9965,7 +9965,7 @@ tr287:
                     return nt, fmt.Errorf("invalid end hour %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -10026,7 +10026,7 @@ tr512:
                     return nt, fmt.Errorf("invalid end hour %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -10087,7 +10087,7 @@ tr518:
                     return nt, fmt.Errorf("invalid end hour %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -10148,7 +10148,7 @@ d=m
                     return nt, fmt.Errorf("invalid end hour %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -10263,17 +10263,17 @@ tr298:
                     1<<29,
                     1<<30,
                 }
-                if d>31{
-                    return nt, fmt.Errorf("invalid month */%d", d)
+                if d>=31{
+                    return nt, fmt.Errorf("invalid day month */%d", d)
                 }
                 if start>30 {
                     return nt, fmt.Errorf("invalid start month %d", start)
                 }
-                if end>30 {
+                if end>31 {
                     return nt, fmt.Errorf("invalid end month %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -10332,17 +10332,17 @@ tr458:
                     1<<29,
                     1<<30,
                 }
-                if d>31{
-                    return nt, fmt.Errorf("invalid month */%d", d)
+                if d>=31{
+                    return nt, fmt.Errorf("invalid day month */%d", d)
                 }
                 if start>30 {
                     return nt, fmt.Errorf("invalid start month %d", start)
                 }
-                if end>30 {
+                if end>31 {
                     return nt, fmt.Errorf("invalid end month %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -10401,17 +10401,17 @@ tr469:
                     1<<29,
                     1<<30,
                 }
-                if d>31{
-                    return nt, fmt.Errorf("invalid month */%d", d)
+                if d>=31{
+                    return nt, fmt.Errorf("invalid day month */%d", d)
                 }
                 if start>30 {
                     return nt, fmt.Errorf("invalid start month %d", start)
                 }
-                if end>30 {
+                if end>31 {
                     return nt, fmt.Errorf("invalid end month %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -10470,17 +10470,17 @@ d=m
                     1<<29,
                     1<<30,
                 }
-                if d>31{
-                    return nt, fmt.Errorf("invalid month */%d", d)
+                if d>=31{
+                    return nt, fmt.Errorf("invalid day month */%d", d)
                 }
                 if start>30 {
                     return nt, fmt.Errorf("invalid start month %d", start)
                 }
-                if end>30 {
+                if end>31 {
                     return nt, fmt.Errorf("invalid end month %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -10532,17 +10532,17 @@ tr479:
                     1<<29,
                     1<<30,
                 }
-                if d>31{
-                    return nt, fmt.Errorf("invalid month */%d", d)
+                if d>=31{
+                    return nt, fmt.Errorf("invalid day month */%d", d)
                 }
                 if start>30 {
                     return nt, fmt.Errorf("invalid start month %d", start)
                 }
-                if end>30 {
+                if end>31 {
                     return nt, fmt.Errorf("invalid end month %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -10594,17 +10594,17 @@ tr496:
                     1<<29,
                     1<<30,
                 }
-                if d>31{
-                    return nt, fmt.Errorf("invalid month */%d", d)
+                if d>=31{
+                    return nt, fmt.Errorf("invalid day month */%d", d)
                 }
                 if start>30 {
                     return nt, fmt.Errorf("invalid start month %d", start)
                 }
-                if end>30 {
+                if end>31 {
                     return nt, fmt.Errorf("invalid end month %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -11373,12 +11373,12 @@ tr872:
             }
             if d==0{
                 nt.year.set(int(start))
-            }else if d==1{
+            }else if d==1&&start==end{
                 nt.year.low=^uint64(0)
                 nt.year.high=^uint64(0)
                 nt.year.end=^uint64(0)
             }else{
-                for i:=start-1970;i<=2099;i+=d{
+                for i:=start;i<=end;i+=d{
                         nt.year.set(int(i))
                 }
             }
@@ -11393,7 +11393,7 @@ tr876:
             }
         
 //line parse.rl:493
- start=m; end=2099;d=0;
+ start=m; end=m; d=0;
 //line parse.rl:356
 
             // short circuit for the most common cases.
@@ -11408,12 +11408,12 @@ tr876:
             }
             if d==0{
                 nt.year.set(int(start))
-            }else if d==1{
+            }else if d==1&&start==end{
                 nt.year.low=^uint64(0)
                 nt.year.high=^uint64(0)
                 nt.year.end=^uint64(0)
             }else{
-                for i:=start-1970;i<=2099;i+=d{
+                for i:=start;i<=end;i+=d{
                         nt.year.set(int(i))
                 }
             }
@@ -11443,12 +11443,12 @@ tr881:
             }
             if d==0{
                 nt.year.set(int(start))
-            }else if d==1{
+            }else if d==1&&start==end{
                 nt.year.low=^uint64(0)
                 nt.year.high=^uint64(0)
                 nt.year.end=^uint64(0)
             }else{
-                for i:=start-1970;i<=2099;i+=d{
+                for i:=start;i<=end;i+=d{
                         nt.year.set(int(i))
                 }
             }
@@ -11478,12 +11478,12 @@ d=m
             }
             if d==0{
                 nt.year.set(int(start))
-            }else if d==1{
+            }else if d==1&&start==end{
                 nt.year.low=^uint64(0)
                 nt.year.high=^uint64(0)
                 nt.year.end=^uint64(0)
             }else{
-                for i:=start-1970;i<=2099;i+=d{
+                for i:=start;i<=end;i+=d{
                         nt.year.set(int(i))
                 }
             }
@@ -11519,12 +11519,12 @@ tr873:
             }
             if d==0{
                 nt.year.set(int(start))
-            }else if d==1{
+            }else if d==1&&start==end{
                 nt.year.low=^uint64(0)
                 nt.year.high=^uint64(0)
                 nt.year.end=^uint64(0)
             }else{
-                for i:=start-1970;i<=2099;i+=d{
+                for i:=start;i<=end;i+=d{
                         nt.year.set(int(i))
                 }
             }
@@ -11539,7 +11539,7 @@ tr877:
             }
         
 //line parse.rl:493
- start=m; end=2099;d=0;
+ start=m; end=m; d=0;
 //line parse.rl:356
 
             // short circuit for the most common cases.
@@ -11554,12 +11554,12 @@ tr877:
             }
             if d==0{
                 nt.year.set(int(start))
-            }else if d==1{
+            }else if d==1&&start==end{
                 nt.year.low=^uint64(0)
                 nt.year.high=^uint64(0)
                 nt.year.end=^uint64(0)
             }else{
-                for i:=start-1970;i<=2099;i+=d{
+                for i:=start;i<=end;i+=d{
                         nt.year.set(int(i))
                 }
             }
@@ -11589,12 +11589,12 @@ tr882:
             }
             if d==0{
                 nt.year.set(int(start))
-            }else if d==1{
+            }else if d==1&&start==end{
                 nt.year.low=^uint64(0)
                 nt.year.high=^uint64(0)
                 nt.year.end=^uint64(0)
             }else{
-                for i:=start-1970;i<=2099;i+=d{
+                for i:=start;i<=end;i+=d{
                         nt.year.set(int(i))
                 }
             }
@@ -11624,12 +11624,12 @@ d=m
             }
             if d==0{
                 nt.year.set(int(start))
-            }else if d==1{
+            }else if d==1&&start==end{
                 nt.year.low=^uint64(0)
                 nt.year.high=^uint64(0)
                 nt.year.end=^uint64(0)
             }else{
-                for i:=start-1970;i<=2099;i+=d{
+                for i:=start;i<=end;i+=d{
                         nt.year.set(int(i))
                 }
             }
@@ -11690,7 +11690,7 @@ tr878:
             }
         
 //line parse.rl:493
- start=m; end=2099;d=0;
+ start=m; end=m; d=0;
 	goto st157
 	st157:
 		if p++; p == pe {
@@ -11744,7 +11744,7 @@ tr879:
             }
         
 //line parse.rl:493
- start=m; end=2099;d=0;
+ start=m; end=m; d=0;
 	goto st158
 tr883:
 //line parse.rl:447
@@ -13904,17 +13904,17 @@ tr299:
                     1<<29,
                     1<<30,
                 }
-                if d>31{
-                    return nt, fmt.Errorf("invalid month */%d", d)
+                if d>=31{
+                    return nt, fmt.Errorf("invalid day month */%d", d)
                 }
                 if start>30 {
                     return nt, fmt.Errorf("invalid start month %d", start)
                 }
-                if end>30 {
+                if end>31 {
                     return nt, fmt.Errorf("invalid end month %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -13973,17 +13973,17 @@ tr459:
                     1<<29,
                     1<<30,
                 }
-                if d>31{
-                    return nt, fmt.Errorf("invalid month */%d", d)
+                if d>=31{
+                    return nt, fmt.Errorf("invalid day month */%d", d)
                 }
                 if start>30 {
                     return nt, fmt.Errorf("invalid start month %d", start)
                 }
-                if end>30 {
+                if end>31 {
                     return nt, fmt.Errorf("invalid end month %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -14042,17 +14042,17 @@ tr470:
                     1<<29,
                     1<<30,
                 }
-                if d>31{
-                    return nt, fmt.Errorf("invalid month */%d", d)
+                if d>=31{
+                    return nt, fmt.Errorf("invalid day month */%d", d)
                 }
                 if start>30 {
                     return nt, fmt.Errorf("invalid start month %d", start)
                 }
-                if end>30 {
+                if end>31 {
                     return nt, fmt.Errorf("invalid end month %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -14111,17 +14111,17 @@ d=m
                     1<<29,
                     1<<30,
                 }
-                if d>31{
-                    return nt, fmt.Errorf("invalid month */%d", d)
+                if d>=31{
+                    return nt, fmt.Errorf("invalid day month */%d", d)
                 }
                 if start>30 {
                     return nt, fmt.Errorf("invalid start month %d", start)
                 }
-                if end>30 {
+                if end>31 {
                     return nt, fmt.Errorf("invalid end month %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -14173,17 +14173,17 @@ tr480:
                     1<<29,
                     1<<30,
                 }
-                if d>31{
-                    return nt, fmt.Errorf("invalid month */%d", d)
+                if d>=31{
+                    return nt, fmt.Errorf("invalid day month */%d", d)
                 }
                 if start>30 {
                     return nt, fmt.Errorf("invalid start month %d", start)
                 }
-                if end>30 {
+                if end>31 {
                     return nt, fmt.Errorf("invalid end month %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -14235,17 +14235,17 @@ tr497:
                     1<<29,
                     1<<30,
                 }
-                if d>31{
-                    return nt, fmt.Errorf("invalid month */%d", d)
+                if d>=31{
+                    return nt, fmt.Errorf("invalid day month */%d", d)
                 }
                 if start>30 {
                     return nt, fmt.Errorf("invalid start month %d", start)
                 }
-                if end>30 {
+                if end>31 {
                     return nt, fmt.Errorf("invalid end month %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -14936,7 +14936,7 @@ tr288:
                     return nt, fmt.Errorf("invalid end hour %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -14997,7 +14997,7 @@ tr513:
                     return nt, fmt.Errorf("invalid end hour %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -15058,7 +15058,7 @@ tr519:
                     return nt, fmt.Errorf("invalid end hour %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -15119,7 +15119,7 @@ d=m
                     return nt, fmt.Errorf("invalid end hour %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -15360,16 +15360,16 @@ tr282:
                     1|1<<59,
                 }
                 if d>=60 {
-                    return nt, fmt.Errorf("invalid second */%d", d)
+                    return nt, fmt.Errorf("invalid minute */%d", d)
                 }
                 if start>=60 {
-                    return nt, fmt.Errorf("invalid start second %d", start)
+                    return nt, fmt.Errorf("invalid start minute %d", start)
                 }
                 if end>=60 {
-                    return nt, fmt.Errorf("invalid end second %d", start)
+                    return nt, fmt.Errorf("invalid end minute %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -15458,16 +15458,16 @@ tr527:
                     1|1<<59,
                 }
                 if d>=60 {
-                    return nt, fmt.Errorf("invalid second */%d", d)
+                    return nt, fmt.Errorf("invalid minute */%d", d)
                 }
                 if start>=60 {
-                    return nt, fmt.Errorf("invalid start second %d", start)
+                    return nt, fmt.Errorf("invalid start minute %d", start)
                 }
                 if end>=60 {
-                    return nt, fmt.Errorf("invalid end second %d", start)
+                    return nt, fmt.Errorf("invalid end minute %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -15556,16 +15556,16 @@ tr533:
                     1|1<<59,
                 }
                 if d>=60 {
-                    return nt, fmt.Errorf("invalid second */%d", d)
+                    return nt, fmt.Errorf("invalid minute */%d", d)
                 }
                 if start>=60 {
-                    return nt, fmt.Errorf("invalid start second %d", start)
+                    return nt, fmt.Errorf("invalid start minute %d", start)
                 }
                 if end>=60 {
-                    return nt, fmt.Errorf("invalid end second %d", start)
+                    return nt, fmt.Errorf("invalid end minute %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -15654,16 +15654,16 @@ d=m
                     1|1<<59,
                 }
                 if d>=60 {
-                    return nt, fmt.Errorf("invalid second */%d", d)
+                    return nt, fmt.Errorf("invalid minute */%d", d)
                 }
                 if start>=60 {
-                    return nt, fmt.Errorf("invalid start second %d", start)
+                    return nt, fmt.Errorf("invalid start minute %d", start)
                 }
                 if end>=60 {
-                    return nt, fmt.Errorf("invalid end second %d", start)
+                    return nt, fmt.Errorf("invalid end minute %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -16050,16 +16050,16 @@ tr557:
                     1|1<<59,
                 }
                 if d>=60 {
-                    return nt, fmt.Errorf("invalid second */%d", d)
+                    return nt, fmt.Errorf("invalid minute */%d", d)
                 }
                 if start>=60 {
-                    return nt, fmt.Errorf("invalid start second %d", start)
+                    return nt, fmt.Errorf("invalid start minute %d", start)
                 }
                 if end>=60 {
-                    return nt, fmt.Errorf("invalid end second %d", start)
+                    return nt, fmt.Errorf("invalid end minute %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -16148,16 +16148,16 @@ tr779:
                     1|1<<59,
                 }
                 if d>=60 {
-                    return nt, fmt.Errorf("invalid second */%d", d)
+                    return nt, fmt.Errorf("invalid minute */%d", d)
                 }
                 if start>=60 {
-                    return nt, fmt.Errorf("invalid start second %d", start)
+                    return nt, fmt.Errorf("invalid start minute %d", start)
                 }
                 if end>=60 {
-                    return nt, fmt.Errorf("invalid end second %d", start)
+                    return nt, fmt.Errorf("invalid end minute %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -16246,16 +16246,16 @@ tr785:
                     1|1<<59,
                 }
                 if d>=60 {
-                    return nt, fmt.Errorf("invalid second */%d", d)
+                    return nt, fmt.Errorf("invalid minute */%d", d)
                 }
                 if start>=60 {
-                    return nt, fmt.Errorf("invalid start second %d", start)
+                    return nt, fmt.Errorf("invalid start minute %d", start)
                 }
                 if end>=60 {
-                    return nt, fmt.Errorf("invalid end second %d", start)
+                    return nt, fmt.Errorf("invalid end minute %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -16344,16 +16344,16 @@ d=m
                     1|1<<59,
                 }
                 if d>=60 {
-                    return nt, fmt.Errorf("invalid second */%d", d)
+                    return nt, fmt.Errorf("invalid minute */%d", d)
                 }
                 if start>=60 {
-                    return nt, fmt.Errorf("invalid start second %d", start)
+                    return nt, fmt.Errorf("invalid start minute %d", start)
                 }
                 if end>=60 {
-                    return nt, fmt.Errorf("invalid end second %d", start)
+                    return nt, fmt.Errorf("invalid end minute %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -16473,16 +16473,16 @@ tr556:
                     1|1<<59,
                 }
                 if d>=60 {
-                    return nt, fmt.Errorf("invalid second */%d", d)
+                    return nt, fmt.Errorf("invalid minute */%d", d)
                 }
                 if start>=60 {
-                    return nt, fmt.Errorf("invalid start second %d", start)
+                    return nt, fmt.Errorf("invalid start minute %d", start)
                 }
                 if end>=60 {
-                    return nt, fmt.Errorf("invalid end second %d", start)
+                    return nt, fmt.Errorf("invalid end minute %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -16571,16 +16571,16 @@ tr778:
                     1|1<<59,
                 }
                 if d>=60 {
-                    return nt, fmt.Errorf("invalid second */%d", d)
+                    return nt, fmt.Errorf("invalid minute */%d", d)
                 }
                 if start>=60 {
-                    return nt, fmt.Errorf("invalid start second %d", start)
+                    return nt, fmt.Errorf("invalid start minute %d", start)
                 }
                 if end>=60 {
-                    return nt, fmt.Errorf("invalid end second %d", start)
+                    return nt, fmt.Errorf("invalid end minute %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -16669,16 +16669,16 @@ tr784:
                     1|1<<59,
                 }
                 if d>=60 {
-                    return nt, fmt.Errorf("invalid second */%d", d)
+                    return nt, fmt.Errorf("invalid minute */%d", d)
                 }
                 if start>=60 {
-                    return nt, fmt.Errorf("invalid start second %d", start)
+                    return nt, fmt.Errorf("invalid start minute %d", start)
                 }
                 if end>=60 {
-                    return nt, fmt.Errorf("invalid end second %d", start)
+                    return nt, fmt.Errorf("invalid end minute %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -16767,16 +16767,16 @@ d=m
                     1|1<<59,
                 }
                 if d>=60 {
-                    return nt, fmt.Errorf("invalid second */%d", d)
+                    return nt, fmt.Errorf("invalid minute */%d", d)
                 }
                 if start>=60 {
-                    return nt, fmt.Errorf("invalid start second %d", start)
+                    return nt, fmt.Errorf("invalid start minute %d", start)
                 }
                 if end>=60 {
-                    return nt, fmt.Errorf("invalid end second %d", start)
+                    return nt, fmt.Errorf("invalid end minute %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -16873,7 +16873,7 @@ tr562:
                     return nt, fmt.Errorf("invalid end hour %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -16934,7 +16934,7 @@ tr760:
                     return nt, fmt.Errorf("invalid end hour %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -16995,7 +16995,7 @@ tr766:
                     return nt, fmt.Errorf("invalid end hour %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -17056,7 +17056,7 @@ d=m
                     return nt, fmt.Errorf("invalid end hour %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -17171,17 +17171,17 @@ tr573:
                     1<<29,
                     1<<30,
                 }
-                if d>31{
-                    return nt, fmt.Errorf("invalid month */%d", d)
+                if d>=31{
+                    return nt, fmt.Errorf("invalid day month */%d", d)
                 }
                 if start>30 {
                     return nt, fmt.Errorf("invalid start month %d", start)
                 }
-                if end>30 {
+                if end>31 {
                     return nt, fmt.Errorf("invalid end month %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -17240,17 +17240,17 @@ tr706:
                     1<<29,
                     1<<30,
                 }
-                if d>31{
-                    return nt, fmt.Errorf("invalid month */%d", d)
+                if d>=31{
+                    return nt, fmt.Errorf("invalid day month */%d", d)
                 }
                 if start>30 {
                     return nt, fmt.Errorf("invalid start month %d", start)
                 }
-                if end>30 {
+                if end>31 {
                     return nt, fmt.Errorf("invalid end month %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -17309,17 +17309,17 @@ tr717:
                     1<<29,
                     1<<30,
                 }
-                if d>31{
-                    return nt, fmt.Errorf("invalid month */%d", d)
+                if d>=31{
+                    return nt, fmt.Errorf("invalid day month */%d", d)
                 }
                 if start>30 {
                     return nt, fmt.Errorf("invalid start month %d", start)
                 }
-                if end>30 {
+                if end>31 {
                     return nt, fmt.Errorf("invalid end month %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -17378,17 +17378,17 @@ d=m
                     1<<29,
                     1<<30,
                 }
-                if d>31{
-                    return nt, fmt.Errorf("invalid month */%d", d)
+                if d>=31{
+                    return nt, fmt.Errorf("invalid day month */%d", d)
                 }
                 if start>30 {
                     return nt, fmt.Errorf("invalid start month %d", start)
                 }
-                if end>30 {
+                if end>31 {
                     return nt, fmt.Errorf("invalid end month %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -17440,17 +17440,17 @@ tr727:
                     1<<29,
                     1<<30,
                 }
-                if d>31{
-                    return nt, fmt.Errorf("invalid month */%d", d)
+                if d>=31{
+                    return nt, fmt.Errorf("invalid day month */%d", d)
                 }
                 if start>30 {
                     return nt, fmt.Errorf("invalid start month %d", start)
                 }
-                if end>30 {
+                if end>31 {
                     return nt, fmt.Errorf("invalid end month %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -17502,17 +17502,17 @@ tr744:
                     1<<29,
                     1<<30,
                 }
-                if d>31{
-                    return nt, fmt.Errorf("invalid month */%d", d)
+                if d>=31{
+                    return nt, fmt.Errorf("invalid day month */%d", d)
                 }
                 if start>30 {
                     return nt, fmt.Errorf("invalid start month %d", start)
                 }
-                if end>30 {
+                if end>31 {
                     return nt, fmt.Errorf("invalid end month %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -20344,17 +20344,17 @@ tr574:
                     1<<29,
                     1<<30,
                 }
-                if d>31{
-                    return nt, fmt.Errorf("invalid month */%d", d)
+                if d>=31{
+                    return nt, fmt.Errorf("invalid day month */%d", d)
                 }
                 if start>30 {
                     return nt, fmt.Errorf("invalid start month %d", start)
                 }
-                if end>30 {
+                if end>31 {
                     return nt, fmt.Errorf("invalid end month %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -20413,17 +20413,17 @@ tr707:
                     1<<29,
                     1<<30,
                 }
-                if d>31{
-                    return nt, fmt.Errorf("invalid month */%d", d)
+                if d>=31{
+                    return nt, fmt.Errorf("invalid day month */%d", d)
                 }
                 if start>30 {
                     return nt, fmt.Errorf("invalid start month %d", start)
                 }
-                if end>30 {
+                if end>31 {
                     return nt, fmt.Errorf("invalid end month %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -20482,17 +20482,17 @@ tr718:
                     1<<29,
                     1<<30,
                 }
-                if d>31{
-                    return nt, fmt.Errorf("invalid month */%d", d)
+                if d>=31{
+                    return nt, fmt.Errorf("invalid day month */%d", d)
                 }
                 if start>30 {
                     return nt, fmt.Errorf("invalid start month %d", start)
                 }
-                if end>30 {
+                if end>31 {
                     return nt, fmt.Errorf("invalid end month %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -20551,17 +20551,17 @@ d=m
                     1<<29,
                     1<<30,
                 }
-                if d>31{
-                    return nt, fmt.Errorf("invalid month */%d", d)
+                if d>=31{
+                    return nt, fmt.Errorf("invalid day month */%d", d)
                 }
                 if start>30 {
                     return nt, fmt.Errorf("invalid start month %d", start)
                 }
-                if end>30 {
+                if end>31 {
                     return nt, fmt.Errorf("invalid end month %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -20613,17 +20613,17 @@ tr728:
                     1<<29,
                     1<<30,
                 }
-                if d>31{
-                    return nt, fmt.Errorf("invalid month */%d", d)
+                if d>=31{
+                    return nt, fmt.Errorf("invalid day month */%d", d)
                 }
                 if start>30 {
                     return nt, fmt.Errorf("invalid start month %d", start)
                 }
-                if end>30 {
+                if end>31 {
                     return nt, fmt.Errorf("invalid end month %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -20675,17 +20675,17 @@ tr745:
                     1<<29,
                     1<<30,
                 }
-                if d>31{
-                    return nt, fmt.Errorf("invalid month */%d", d)
+                if d>=31{
+                    return nt, fmt.Errorf("invalid day month */%d", d)
                 }
                 if start>30 {
                     return nt, fmt.Errorf("invalid start month %d", start)
                 }
-                if end>30 {
+                if end>31 {
                     return nt, fmt.Errorf("invalid end month %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -21376,7 +21376,7 @@ tr563:
                     return nt, fmt.Errorf("invalid end hour %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -21437,7 +21437,7 @@ tr761:
                     return nt, fmt.Errorf("invalid end hour %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -21498,7 +21498,7 @@ tr767:
                     return nt, fmt.Errorf("invalid end hour %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -21559,7 +21559,7 @@ d=m
                     return nt, fmt.Errorf("invalid end hour %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -23248,12 +23248,12 @@ ts = p
             }
             if d==0{
                 nt.year.set(int(start))
-            }else if d==1{
+            }else if d==1&&start==end{
                 nt.year.low=^uint64(0)
                 nt.year.high=^uint64(0)
                 nt.year.end=^uint64(0)
             }else{
-                for i:=start-1970;i<=2099;i+=d{
+                for i:=start;i<=end;i+=d{
                         nt.year.set(int(i))
                 }
             }
@@ -23414,7 +23414,7 @@ d=m
             }
         
 //line parse.rl:493
- start=m; end=2099;d=0;
+ start=m; end=m; d=0;
 //line parse.rl:356
 
             // short circuit for the most common cases.
@@ -23429,12 +23429,12 @@ d=m
             }
             if d==0{
                 nt.year.set(int(start))
-            }else if d==1{
+            }else if d==1&&start==end{
                 nt.year.low=^uint64(0)
                 nt.year.high=^uint64(0)
                 nt.year.end=^uint64(0)
             }else{
-                for i:=start-1970;i<=2099;i+=d{
+                for i:=start;i<=end;i+=d{
                         nt.year.set(int(i))
                 }
             }
@@ -23463,12 +23463,12 @@ d=m
             }
             if d==0{
                 nt.year.set(int(start))
-            }else if d==1{
+            }else if d==1&&start==end{
                 nt.year.low=^uint64(0)
                 nt.year.high=^uint64(0)
                 nt.year.end=^uint64(0)
             }else{
-                for i:=start-1970;i<=2099;i+=d{
+                for i:=start;i<=end;i+=d{
                         nt.year.set(int(i))
                 }
             }
@@ -23497,12 +23497,12 @@ d=m
             }
             if d==0{
                 nt.year.set(int(start))
-            }else if d==1{
+            }else if d==1&&start==end{
                 nt.year.low=^uint64(0)
                 nt.year.high=^uint64(0)
                 nt.year.end=^uint64(0)
             }else{
-                for i:=start-1970;i<=2099;i+=d{
+                for i:=start;i<=end;i+=d{
                         nt.year.set(int(i))
                 }
             }
