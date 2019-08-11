@@ -247,6 +247,10 @@ func TestRange(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			nt, err := cron.ParseUTC(tt.cron)
+			if err != nil {
+				t.Error(err)
+			}
+
 			ts, err := nt.Next(tt.start)
 			if err != nil {
 				t.Error(err)
