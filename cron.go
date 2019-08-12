@@ -148,9 +148,9 @@ func (nt *Parsed) nextMonth(m, d uint64) int {
 	return int(m)
 }
 
-func (nt *Parsed) nextDay(y int, m time.Month, d uint64) int {
-	firstOfMonth := time.Date(y, m+1, 1, 0, 0, 0, 0, nt.loc)
-	days := nt.prepDays(firstOfMonth.Weekday())
+func (nt *Parsed) nextDay(y int, m int, d uint64) int {
+	firstOfMonth := time.Date(y, time.Month(m+1), 1, 0, 0, 0, 0, nt.loc)
+	days := nt.prepDays(firstOfMonth.Weekday(), m, y)
 	d++
 	d = uint64(bits.TrailingZeros64(days>>d)) + d
 	if m >= 12 {
@@ -191,8 +191,12 @@ func (nt *Parsed) nextSecond(s uint64) int {
 
 // undefined for shifts larger than 7
 // firstDayOfWeek is the 0 indexed day of first day of the month
-func (nt *Parsed) prepDays(firstDayOfWeek time.Weekday) uint64 {
-	return (nt.dow >> uint64(firstDayOfWeek)) & nt.dom
+func (nt *Parsed) prepDays(firstDayOfWeek time.Weekday, month int, year int) uint64 {
+	doms := uint64(1<<maxMonthLengths[month]) - 1
+	if month == 1 && isLeap(year) { // 0 indexed feb
+		doms = doms | (1 << 28)
+	}
+	return (nt.dow >> uint64(firstDayOfWeek)) & (doms & nt.dom)
 }
 
 // Next returns the next time a cron task should run given a Parsed cron string.
@@ -218,7 +222,7 @@ func (nt Parsed) Next(from time.Time) (time.Time, error) {
 		}
 	}
 	if updateMin {
-		if m2 := nt.nextMinute(uint64(m)); m < 0 {
+		if m2 := nt.nextMinute(uint64(m)); m2 < 0 {
 			m = bits.TrailingZeros64(nt.minute) // if not found set to first second and advance minute
 			updateHour = true
 		} else {
@@ -227,7 +231,7 @@ func (nt Parsed) Next(from time.Time) (time.Time, error) {
 		s = bits.TrailingZeros64(nt.second) // if not found set to first second and advance minute
 	}
 	if updateHour {
-		if h2 := nt.nextHour(uint64(h)); h < 0 {
+		if h2 := nt.nextHour(uint64(h)); h2 < 0 {
 			h = bits.TrailingZeros64(nt.hour) // if not found set to first hour and advance the day
 			d++
 		} else {
@@ -238,7 +242,7 @@ func (nt Parsed) Next(from time.Time) (time.Time, error) {
 	}
 	weekDayOfFirst := time.Date(y, time.Month(M+1), 1, 0, 0, 0, 0, from.Location()).Weekday()
 
-	if (d == 28 && M == 1 && !isLeap(y)) || !nt.year.in(y) || (nt.month&(1<<uint(M)) == 0) || nt.prepDays(weekDayOfFirst)&(1<<uint(d)) == 0 {
+	if (d == 28 && M == 1 && !isLeap(y)) || !nt.year.in(y) || (nt.month&(1<<uint(M)) == 0) || nt.prepDays(weekDayOfFirst, M, y)&(1<<uint(d)) == 0 {
 		h = bits.TrailingZeros64(nt.hour) // if not found set to first hour and advance the day
 		m = bits.TrailingZeros64(nt.minute)
 		s = bits.TrailingZeros64(nt.second)
@@ -246,11 +250,11 @@ func (nt Parsed) Next(from time.Time) (time.Time, error) {
 	oldYear, oldMonth, oldDay := y, M, d
 
 	for y <= 2099 {
-		if nt.prepDays(weekDayOfFirst)&(1<<uint(d)) == 0 {
-			if d2 := nt.nextDay(y, time.Month(M), uint64(d)); d2 < 0 {
+		if nt.prepDays(weekDayOfFirst, M, y)&(1<<uint(d)) == 0 {
+			if d2 := nt.nextDay(y, M, uint64(d)); d2 < 0 {
 				M++
 				weekDayOfFirst = time.Date(y, time.Month(M+1), 1, 0, 0, 0, 0, from.Location()).Weekday()
-				d = bits.TrailingZeros64(nt.prepDays(weekDayOfFirst))
+				d = bits.TrailingZeros64(nt.prepDays(weekDayOfFirst, M, y))
 			} else {
 				d = d2
 			}
@@ -261,12 +265,11 @@ func (nt Parsed) Next(from time.Time) (time.Time, error) {
 				M = bits.TrailingZeros64(nt.month)
 				y++
 				weekDayOfFirst = time.Date(y, time.Month(M+1), 1, 0, 0, 0, 0, from.Location()).Weekday()
-				d = bits.TrailingZeros64(nt.prepDays(weekDayOfFirst))
+				d = bits.TrailingZeros64(nt.prepDays(weekDayOfFirst, M, y))
 			} else {
 				M = M2
 			}
 		}
-
 		if !nt.year.in(y) || (d == 28 && M == 1 && !isLeap(y)) {
 			y2 := nt.nextYear(uint64(y), uint64(M), uint64(d))
 			if y2 < 0 {
@@ -276,11 +279,11 @@ func (nt Parsed) Next(from time.Time) (time.Time, error) {
 			y = y2
 			M = bits.TrailingZeros64(nt.month)
 			weekDayOfFirst = time.Date(y, time.Month(M+1), 1, 0, 0, 0, 0, from.Location()).Weekday()
-			d = bits.TrailingZeros64(nt.prepDays(weekDayOfFirst))
+			d = bits.TrailingZeros64(nt.prepDays(weekDayOfFirst, M, y))
 		}
 		// if no changes, return
 		if oldYear == y && oldMonth == M && oldDay == d {
-			if nt.prepDays(weekDayOfFirst)&(1<<uint(d)) != 0 && (nt.year.in(y) && (d != 28 || M != 1 || isLeap(y))) && nt.month&(1<<uint(M)) != 0 {
+			if nt.prepDays(weekDayOfFirst, M, y)&(1<<uint(d)) != 0 && (nt.year.in(y) && (d != 28 || M != 1 || isLeap(y))) && nt.month&(1<<uint(M)) != 0 {
 				return time.Date(y, time.Month(M+1), int(d+1), h, m, s, 0, from.Location()), nil // again we 0 index day of month, and the month but the actual date doesn't
 			}
 		}

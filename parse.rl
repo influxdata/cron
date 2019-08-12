@@ -122,10 +122,10 @@ func parse(s string, tz *time.Location)(Parsed, error){
                     return nt, fmt.Errorf("invalid start second %d", start)
                 }
                 if end>=60 {
-                    return nt, fmt.Errorf("invalid end second %d", start)
+                    return nt, fmt.Errorf("invalid end second %d", end)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -203,16 +203,16 @@ func parse(s string, tz *time.Location)(Parsed, error){
                     1|1<<59,
                 }
                 if d>=60 {
-                    return nt, fmt.Errorf("invalid second */%d", d)
+                    return nt, fmt.Errorf("invalid minute */%d", d)
                 }
                 if start>=60 {
-                    return nt, fmt.Errorf("invalid start second %d", start)
+                    return nt, fmt.Errorf("invalid start minute %d", start)
                 }
                 if end>=60 {
-                    return nt, fmt.Errorf("invalid end second %d", start)
+                    return nt, fmt.Errorf("invalid end minute %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -262,7 +262,7 @@ func parse(s string, tz *time.Location)(Parsed, error){
                     return nt, fmt.Errorf("invalid end hour %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -366,12 +366,12 @@ func parse(s string, tz *time.Location)(Parsed, error){
             }
             if d==0{
                 nt.year.set(int(start))
-            }else if d==1{
+            }else if d==1&&start==end{
                 nt.year.low=^uint64(0)
                 nt.year.high=^uint64(0)
                 nt.year.end=^uint64(0)
             }else{
-                for i:=start-1970;i<=2099;i+=d{
+                for i:=start;i<=end;i+=d{
                         nt.year.set(int(i))
                 }
             }
@@ -412,17 +412,17 @@ func parse(s string, tz *time.Location)(Parsed, error){
                     1<<29,
                     1<<30,
                 }
-                if d>31{
-                    return nt, fmt.Errorf("invalid month */%d", d)
+                if d>=31{
+                    return nt, fmt.Errorf("invalid day month */%d", d)
                 }
                 if start>30 {
                     return nt, fmt.Errorf("invalid start month %d", start)
                 }
-                if end>30 {
+                if end>31 {
                     return nt, fmt.Errorf("invalid end month %d", start)
                 }
                 // handle the case that isn't a 
-                endOp := 64-end
+                endOp := 64-end-1
                 if end==0{
                     endOp = 0
                 }
@@ -490,7 +490,7 @@ func parse(s string, tz *time.Location)(Parsed, error){
         dow = ( dowrange ("/" digits %{d=m})? ) %appendStarSlDoW;
         dows = dow ("," dow) *;
 
-        yearrange = ( ( "*" %{ start=1970;end=2099;m=0;d=1; } ) |  (( digits ) %{ start=m; end=2099;d=0;} ( "-" ( digits ) %{ end=m; d=1;} )? )) >{d=0;};
+        yearrange = ( ( "*" %{ start=1970;end=2099;m=0;d=1; } ) |  (( digits ) %{ start=m; end=m; d=0;} ( "-" ( digits ) %{ end=m; d=1;} )? )) >{d=0;};
         year = ( yearrange ("/" digits %{d=m})? ) %appendYears; 
         years = year ("," year) *;
         sixPos:= (seconds space+ minutes space+ hours space+ doms space+ months space+ dows) space*; 
