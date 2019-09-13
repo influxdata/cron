@@ -96,16 +96,19 @@ func (nt *Parsed) nextYear(y, m, d uint64) int {
 	} else if yBits >= 64 {
 		addToY += uint64(bits.TrailingZeros64(nt.year.high >> (yBits - 64)))
 		if addToY == 64 {
-			addToY += uint64(bits.TrailingZeros64(nt.year.high))
+			addToY -= yBits - 64
+			addToY += uint64(bits.TrailingZeros64(nt.year.end))
 		}
 	} else {
 		addToY = uint64(bits.TrailingZeros64(nt.year.low >> yBits))
+		var addToYHigh uint64
 		if addToY == 64 {
 			addToY -= yBits
-			addToY += uint64(bits.TrailingZeros64(nt.year.high))
-		}
-		if addToY == 128 {
-			addToY += uint64(bits.TrailingZeros64(nt.year.end))
+			addToYHigh = uint64(bits.TrailingZeros64(nt.year.high))
+			if addToYHigh == 128 {
+				addToY += uint64(bits.TrailingZeros64(nt.year.end))
+			}
+			addToY += addToYHigh
 		}
 	}
 	y += addToY
