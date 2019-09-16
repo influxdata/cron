@@ -14,16 +14,13 @@ A fast non-allocating ron parser in ragel and golang.
 - [ ] Quartz compatible L handling, i.e. `5L` in the day of week field meaning the last friday of a month, or `3L` in the day of month field meaning third to last day of the month
 
 # performance
-On a MacBook Pro (Retina, 15-inch, Mid 2014):
+On a 3.1 Ghz Core i7 MacBook Pro (Retina, 15-inch, Mid 2017):
 
 | | | | |
 |-|-|-|-|
-| `BenchmarkParse/0_*_*_*_*_*_*-8` | 20000000 |  97.9 ns/op |  0 B/op | 0 allocs/op |
-| `BenchmarkParse/1-6/2_*_*_*_Feb-Oct/3_*_*-8` | 10000000 |  184  ns/op |  0 B/op | 0 allocs/op |
-| `BenchmarkParse/1-6/2_*_*_*_Feb-Oct/3_*_2020/4-8` |  1000000 |  2262 ns/op |  0 B/op | 0 allocs/op |
-
-As you can see the parsing is pretty fast.  That being said, ranges over years are much slower to parse than basically anything else, as they were likely to be the least used so I didn't bother optimizing their bitmap generation.
+| `BenchmarkParse/0_*_*_*_*_*_*-8` | 20000000 |  65.0 ns/op |  0 B/op | 0 allocs/op |
+| `BenchmarkParse/1-6/2_*_*_*_Feb-Oct/3_*_*-8` | 10000000 |  135  ns/op |  0 B/op | 0 allocs/op |
+| `BenchmarkParse/1-6/2_*_*_*_Feb-Oct/3_*_2020/4-8` |  1000000 |  175 ns/op |  0 B/op | 0 allocs/op |
 
 # TODO
-- I'd like to make year ranges more performant.
 - Once we are done adding all of the Quartz cron features, to copy and pass all of Quartz's parsing tests.
