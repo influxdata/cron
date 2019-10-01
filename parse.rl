@@ -11,7 +11,6 @@
 package cron
 
 import (
-    "strconv"
     "fmt"
     "time"
     "errors"
@@ -121,7 +120,6 @@ func parse(s string, tz *time.Location)(Parsed, error){
     m, d, start, end:=uint64(0), uint64(0), uint64(0), uint64(0)
     _ = d
     // TODO(docmerlin): handle ranges
-    var err error
     %% write init;
     //m,h := 1<<0,1<<0
     %%{
@@ -349,9 +347,10 @@ func parse(s string, tz *time.Location)(Parsed, error){
         }
 
         digits = (digit+) >mark %{
-            m, err = strconv.ParseUint(s[mark:p], 10, 64)
-            if err!=nil {
-                return nt,  fmt.Errorf("unable to parse %s into a number", s[mark:p])
+            m=0
+            for _, x := range s[mark:p] {
+                m*=10
+                m+=uint64(x-'0') // since we know that x is a numerical digit we can subtract the rune '0' to convert to a number from 0 to 9
             }
         };
         allowedNonSpace = alnum|"/"|"*"|","|"-";
@@ -361,12 +360,6 @@ func parse(s string, tz *time.Location)(Parsed, error){
 
         dowName = ( /SUN/i @{m=0} | /MON/i @{m=1} | /TUE/i @{m=2} | /WED/i @{m=3} | /THU/i @{m=4} | /FRI/i @{m=5} | /SAT/i @{m=6} );
         monthName = ( /JAN/i @{m=1} | /FEB/i @{m=2} | /MAR/i @{m=3} | /APR/i @{m=4} | /MAY/i @{m=5} | /JUN/i @{m=6} | /JUL/i @{m=7} | /AUG/i @{m=8} | /SEP/i @{m=9} | /OCT/i @{m=10} | /NOV/i @{m=11} | /DEC/i @{m=12} ) ;
-        last = ( digit+ "L" ) >mark %{
-            m, err = strconv.ParseUint(s[mark:p-1], 10, 64)
-            if err!=nil {
-                return nt,  err
-            }
-        };
         digitlist = digits ("," space* digits)*;
         starSlashDigits = ( ("*" @{m=1})( slash %mark digits )? );
         digitsAndSlashList = ( starSlashDigits | digits ) ( ',' ( starSlashDigits | digits ) )*;
