@@ -12,8 +12,7 @@ package cron
 
 import (
     "fmt"
-    "time"
-    "errors"
+     "errors"
     "math/bits"
 )
 
@@ -101,11 +100,10 @@ const (
     mask12 = (^uint64(0))>>(64-12)
 )
 
-func parse(s string, tz *time.Location)(Parsed, error){
-    nt:=Parsed{loc:tz}
+func parse(s string)(Parsed, error){
+    nt:=Parsed{}
     cs, p, pe, eof:= 0, 0,len(s), len(s)
-
-
+    
     // init scanner vars
     act, ts, te := 0, 0, 0
     _, _, _ = act, ts, te // we have to do this.
@@ -197,7 +195,7 @@ func parse(s string, tz *time.Location)(Parsed, error){
                 if d==0{
                     nt.hour |= 1<<m
                 }else{
-                    nt.hour |= ((skips[d-1]&mask24)<<start)&endMask
+                    nt.hour |= uint32(((skips[d-1]&mask24)<<start)&endMask)
                 }
             }
         }
@@ -213,23 +211,23 @@ func parse(s string, tz *time.Location)(Parsed, error){
                 if  end>12 {
                     return nt, fmt.Errorf("invalid end month %d", start)
                 }
-                // handle the case that isn't a 
-                endOp := 64-end
+                // handle the case that isn't an error
+                endOp := 16-end
                 if end==0{
                     endOp = 0
                 }
-                endMask := (^uint64(0))<<endOp>>endOp
+                endMask := (^uint16(0))<<endOp>>endOp
                 if d==0{
                     nt.month |= 1<<(start-1)
                 }else{
-                    nt.month |= ((skips[d-1]&mask12)<<(start-1))&endMask
+                    nt.month |= (uint16(skips[d-1]&mask12)<<uint16(start-1))&endMask
                 }
             }
         }
 
         action appendStarSlDoW {
             {
-                const sundaysAtFirst = uint64(1 | 1<<7 | 1<<14 | 1<<21 | 1<<28 | 1<<35 | 1<<42)
+                //const sundaysAtFirst = uint64(1 | 1<<7 | 1<<14 | 1<<21 | 1<<28 | 1<<35 | 1<<42)
                 if d>7{
                     return nt, fmt.Errorf("invalid day of week */%d", d)
                 }
@@ -249,10 +247,11 @@ func parse(s string, tz *time.Location)(Parsed, error){
                 // handle the case that isn't a 
                 dayRange := (^uint64(0))<<(64 - (end-start+1))>>(64 - end-1)
                 if d==0{
-                    nt.dow |= sundaysAtFirst<<start
+                    //nt.dow |= uint32(sundaysAtFirst<<start)
+                    nt.dow |= uint8(1<<start)
                 }else{
                     dayRange&=skips[d-1]&mask7
-                    nt.dow |= sundaysAtFirst*dayRange
+                    nt.dow |= uint8(dayRange)
                 }
             }
         }
@@ -269,14 +268,14 @@ func parse(s string, tz *time.Location)(Parsed, error){
                 return nt, fmt.Errorf("invalid end year %d", end)
             }
             if d==0{
-                nt.year.set(int(start))
+                nt.setYear(int(start))
             }else if d==1&&start==end{
-                nt.year.low=^uint64(0)
-                nt.year.high=^uint64(0)
-                nt.year.end=^uint64(0)
+                nt.low=^uint64(0)
+                nt.high=^uint64(0)
+                nt.end=^uint8(0)
             }else if d >=64 {
                 for i:=start;i<=end;i+=d{
-                        nt.year.set(int(i))
+                        nt.setYear(int(i))
                 }
             } else {
                 s := start - 1970
@@ -285,29 +284,29 @@ func parse(s string, tz *time.Location)(Parsed, error){
                 sk := skips[repeat]
                 switch{
                 case end<=start:
-                    nt.year.set(int(start))
+                    nt.setYear(int(start))
                 case s < 64:
                     switch{
                     case e < 64:
-                    nt.year.low |= sk<<s & ((^uint64(0)) >> (63-e))
+                    nt.low |= sk<<s & ((^uint64(0)) >> (63-e))
                     case e < 128:
-                    nt.year.low |= sk<<s
-                    nt.year.high |= (sk << (repeat - uint64(bits.LeadingZeros64(nt.year.low)))) & ((^uint64(0)) >> ( 127 - e ))
+                    nt.low |= sk<<s
+                    nt.high |= (sk << (repeat - uint64(bits.LeadingZeros64(nt.low)))) & ((^uint64(0)) >> ( 127 - e ))
                     default:
-                    nt.year.low |= sk<<s
-                    nt.year.high |= (sk << (repeat - uint64(bits.LeadingZeros64(nt.year.low))))
-                    nt.year.end |= (sk << (repeat - uint64(bits.LeadingZeros64(nt.year.high)))) & ((^uint64(0)) >> ( 191 - e ))
+                    nt.low |= sk<<s
+                    nt.high |= (sk << (repeat - uint64(bits.LeadingZeros64(nt.low))))
+                    nt.end |= uint8((sk << (repeat - uint64(bits.LeadingZeros64(nt.high)))) & ((^uint64(0)) >> ( 191 - e )))
                     }
                 case s < 128:
                     switch{
                     case e < 128:
-                        nt.year.high |= sk<<( s - 64 ) & ((^uint64(0)) >> ( 127 - e ))
+                        nt.high |= sk<<( s - 64 ) & ((^uint64(0)) >> ( 127 - e ))
                     default:
-                        nt.year.high |= sk<<( s - 64)
-                        nt.year.end |= (sk << (repeat - uint64(bits.LeadingZeros64(nt.year.high)))) & ((^uint64(0)) >> ( 191 - e ))
+                        nt.high |= sk<<( s - 64)
+                        nt.end |= uint8((sk << (repeat - uint64(bits.LeadingZeros64(nt.high)))) & ((^uint64(0)) >> ( 191 - e )))
                     }
                 case s < 192:
-                    nt.year.end |= sk<<( s - 128 ) & ((^uint64(0)) >> ( 191 - e ))
+                    nt.end |= uint8(sk<<( s - 128 ) & ((^uint64(0)) >> ( 191 - e )))
                 }
             }
         }
@@ -332,7 +331,7 @@ func parse(s string, tz *time.Location)(Parsed, error){
                 if d==0{
                     nt.dom |= 1<<(m-1)
                 }else{
-                    nt.dom |= ((skips[d-1]&mask31)<<start)&endMask
+                    nt.dom |= uint32(((skips[d-1]&mask31)<<start)&endMask)
                 }
             }
         }
@@ -346,6 +345,9 @@ func parse(s string, tz *time.Location)(Parsed, error){
             return nt, fmt.Errorf("error in parsing at char %d, '%s'", p, s[p:p+1])
         }
 
+        decimal = "-"? %{;} (digit+) "."? (digit*) %{
+            
+        };
         digits = (digit+) >mark %{
             m=0
             for _, x := range s[mark:p] {
@@ -400,9 +402,10 @@ func parse(s string, tz *time.Location)(Parsed, error){
                 nt.hour=1
                 nt.dom=1
                 nt.month=1
-                nt.dow=^uint64(0)
-                nt.year.high=^uint64(0)
-                nt.year.low=^uint64(0)
+                nt.dow=^uint8(0)
+                nt.high=^uint64(0)
+                nt.low=^uint64(0)
+                nt.end=^uint8(0)
                 if p!=pe-1{return nt, fmt.Errorf("error in parsing at char %d, '%s'", p, s[p:p+1])}
             };
             "monthly" space* => {
@@ -411,67 +414,72 @@ func parse(s string, tz *time.Location)(Parsed, error){
                 nt.hour=1
                 nt.dom=1
                 nt.month=((1<<13) - 1) // every month
-                nt.dow=^uint64(0)
-                nt.year.high=^uint64(0)
-                nt.year.low=^uint64(0)
+                nt.dow=^uint8(0)
+                nt.high=^uint64(0)
+                nt.low=^uint64(0)
+                nt.end =^uint8(0)
                 if p!=pe-1{return nt, fmt.Errorf("error in parsing at char %d, '%s'", p, s[p:p+1])}
             };
             "weekly" space* => {
                 nt.second=1
                 nt.minute=1
                 nt.hour=1
-                nt.dom=^uint64(0)
+                nt.dom=^uint32(0)
                 nt.month=((1<<13) - 1) // every month
                 nt.dow=1
-                nt.year.high=^uint64(0)
-                nt.year.low=^uint64(0)
+                nt.high=^uint64(0)
+                nt.low=^uint64(0)
+                nt.end =^uint8(0)
                 if p!=pe-1{return nt, fmt.Errorf("error in parsing at char %d, '%s'", p, s[p:p+1])}
             };
             ("daily"|"midnight") space* => {
                 nt.second=1
                 nt.minute=1
                 nt.hour=1
-                nt.dom=^uint64(0)
+                nt.dom=^uint32(0)
                 nt.month=((1<<13) - 1) // every month
-                nt.dow=^uint64(0)
-                nt.year.high=^uint64(0)
-                nt.year.low=^uint64(0)
+                nt.dow=^uint8(0)
+                nt.high=^uint64(0)
+                nt.low=^uint64(0)
+                nt.end =^uint8(0)
                 if p!=pe-1{return nt, fmt.Errorf("error in parsing at char %d, '%s'", p, s[p:p+1])}
             };
             "hourly" space* => {
                 nt.second=1
                 nt.minute=1
-                nt.hour=^uint64(0)
-                nt.dom=^uint64(0)
+                nt.hour=^uint32(0)
+                nt.dom=^uint32(0)
                 nt.month=((1<<13) - 1) // every month
-                nt.dow=^uint64(0)
-                nt.year.high=^uint64(0)
-                nt.year.low=^uint64(0)
+                nt.dow=^uint8(0)
+                nt.high=^uint64(0)
+                nt.low=^uint64(0)
+                nt.end =^uint8(0)
                 if p!=pe-1{return nt, fmt.Errorf("error in parsing at char %d, '%s'", p, s[p:p+1])}
             };
             "every_minute" space* => {
                 nt.second=1
                 nt.minute=(1<<60)-1
-                nt.hour=^uint64(0)
-                nt.dom=^uint64(0)
+                nt.hour=^uint32(0)
+                nt.dom=^uint32(0)
                 nt.month=((1<<13) - 1) // every month
-                nt.dow=^uint64(0)
-                nt.year.high=^uint64(0)
-                nt.year.low=^uint64(0)
+                nt.dow=^uint8(0)
+                nt.high=^uint64(0)
+                nt.low=^uint64(0)
+                nt.end =^uint8(0)
                 if p!=pe-1{return nt, fmt.Errorf("error in parsing at char %d, '%s'", p, s[p:p+1])}
             };
             "every_second" space* => {
                 nt.second=(1<<60)-1
                 nt.minute=(1<<60)-1
-                nt.hour=^uint64(0)
-                nt.dom=^uint64(0)
+                nt.hour=^uint32(0)
+                nt.dom=^uint32(0)
                 nt.month=((1<<13) - 1) // every month
-                nt.dow=^uint64(0)
-                nt.year.high=^uint64(0)
-                nt.year.low=^uint64(0)
+                nt.dow=^uint8(0)
+                nt.high=^uint64(0)
+                nt.low=^uint64(0)
+                nt.end =^uint8(0)
                 if p!=pe-1{return nt, fmt.Errorf("error in parsing at char %d, '%s'", p, s[p:p+1])}
             };
-            #todo(docmerlin): @every
         *|; 
         main := |*
             space* => mark; # to get rid of extra leading white space
@@ -481,15 +489,15 @@ func parse(s string, tz *time.Location)(Parsed, error){
                 // set seconds to 0 second of minute
                 nt.second=1
                 // set year to be permissive
-                nt.year.high=^uint64(0)
-                nt.year.low=^uint64(0)
+                nt.high=^uint64(0)
+                nt.low=^uint64(0)
                 fexec mark;
                 fcall fivePos;
                 }; # 6 position cron with seconds but no year
             ((allowedNonSpace+ space+){5} allowedNonSpace+) >mark => {
                 _ = p // this is to make staticcheck happy
-                nt.year.high=^uint64(0) // set year to be permissive
-                nt.year.low=^uint64(0)
+                nt.high=^uint64(0) // set year to be permissive
+                nt.low=^uint64(0)
                 fexec mark;
                 fgoto sixPos;
                 }; # 7 position cron
@@ -504,7 +512,7 @@ func parse(s string, tz *time.Location)(Parsed, error){
     }%%
 
     %% write exec;
-    if nt.minute==0||nt.hour==0||nt.dom==0||nt.month==0||nt.dow==0||nt.year.isZero() {
+    if nt.minute==0||nt.hour==0||nt.dom==0||nt.month==0||nt.dow==0||nt.yearIsZero() {
         return nt, fmt.Errorf("failed to parse cron string '%s' %v %b :here", s, nt, mask12)
     }
     return nt,  nil

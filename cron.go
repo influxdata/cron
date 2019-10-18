@@ -4,58 +4,55 @@ package cron
 
 import (
 	"errors"
+	"fmt"
 	"math/bits"
 	"time"
 )
 
+const magicDOW2DOM = 0x8102040810204081 // multiplying by this number converts to a dow bitmap to dom bitmap
+
 // ParseUTC parses a cron string in UTC timezone.
 func ParseUTC(s string) (Parsed, error) {
-	return parse(s, time.UTC)
+	return parse(s)
 }
 
-type years struct {
-	low  uint64
-	high uint64
-	end  uint64 // this is here so we can support 2098 and 2099
+func (p *Parsed) yearIsZero() bool {
+	return p.low|p.high|uint64(p.end) == 0
 }
 
-func (ys years) isZero() bool {
-	return ys.low|ys.high|ys.end == 0
-}
-
-func (ys *years) set(year int) {
+func (ys *Parsed) setYear(year int) {
 	y := uint64(year - 1970)
 	switch {
 	case y > 128:
-		ys.end |= (1 << (y - 128))
+		ys.end |= 1 << (y - 128)
 	case y > 64:
-		ys.high |= (1 << (y - 64))
+		ys.high |= 1 << (y - 64)
 	default:
-		ys.low |= (1 << y)
+		ys.low |= 1 << y
 	}
 }
 
-func (ys years) TrailingZeros64() int {
+func (ys *Parsed) yearTrailingZeros64() int {
 	zeros := bits.TrailingZeros64(ys.low)
 	if zeros == 64 {
 		zeros += bits.TrailingZeros64(ys.high)
 		if zeros == 128 {
-			zeros += bits.TrailingZeros64(ys.end)
+			zeros += bits.TrailingZeros8(ys.end)
 		}
 	}
 	return zeros
 }
 
-func (ys years) Intersection(y2 years) years {
-	return years{
-		low:  ys.low & y2.low,
-		high: ys.high & y2.high,
-		end:  ys.end & y2.end,
-	}
-}
+// func (ys *Parsed) yearIntersection(y2 years) years {
+// 	return years{
+// 		low:  ys.low & y2.low,
+// 		high: ys.high & y2.high,
+// 		end:  ys.end & y2.end,
+// 	}
+// }
 
 // this is undefined if the year is above 2070 or below 1970
-func (ys years) in(year int) bool {
+func (ys *Parsed) yearIn(year int) bool {
 	y := uint64(year - 1970)
 	if y >= 128 {
 		return ys.end&(1<<(y-128)) > 0
@@ -70,16 +67,40 @@ func isLeap(y int) bool {
 	return (y&3 == 0 && y%100 != 0) || y%400 == 0
 }
 
+// wanted to keep this a private method useful for debugging
+func (p *Parsed) string() string {
+	return fmt.Sprintf(`s: %b
+m:%16b
+h:%24b
+dom:%8x
+dow:%8b
+year:%01x%016x%16x
+month:%016b`,
+		p.second,
+		p.minute,
+		p.hour,
+		p.dom,
+		p.dow,
+		p.end,
+		p.low,
+		p.high,
+		p.month)
+}
+
 // Parsed is a parsed cron string.  It can be used to find the next instance of a cron task.
 type Parsed struct {
 	second uint64
 	minute uint64
-	hour   uint64
-	dom    uint64
-	month  uint64
-	dow    uint64
-	year   years
-	loc    *time.Location
+	low    uint64
+	high   uint64
+	hour   uint32
+	dom    uint32
+	end    uint8 // this is here so we can support 2098 and 2099
+	ldow   uint8
+	month  uint16
+	ldom   uint32
+	dow    uint8
+	//TODO(docmerlin): add location once we support location
 }
 
 var maxMonthLengths = [13]uint64{31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31, 31} // we wrap back around from jan to jan to make stuff easy
@@ -92,21 +113,21 @@ func (nt *Parsed) nextYear(y, m, d uint64) int {
 	yBits := y - 1970
 	var addToY uint64
 	if yBits >= 128 {
-		y += uint64(bits.TrailingZeros64(nt.year.end >> (yBits - 128)))
+		y += uint64(bits.TrailingZeros8(nt.end >> (yBits - 128)))
 	} else if yBits >= 64 {
-		addToY += uint64(bits.TrailingZeros64(nt.year.high >> (yBits - 64)))
+		addToY += uint64(bits.TrailingZeros64(nt.high >> (yBits - 64)))
 		if addToY == 64 {
 			addToY -= yBits - 64
-			addToY += uint64(bits.TrailingZeros64(nt.year.end))
+			addToY += uint64(bits.TrailingZeros8(nt.end))
 		}
 	} else {
-		addToY = uint64(bits.TrailingZeros64(nt.year.low >> yBits))
+		addToY = uint64(bits.TrailingZeros64(nt.low >> yBits))
 		var addToYHigh uint64
 		if addToY == 64 {
 			addToY -= yBits
-			addToYHigh = uint64(bits.TrailingZeros64(nt.year.high))
+			addToYHigh = uint64(bits.TrailingZeros64(nt.high))
 			if addToYHigh == 128 {
-				addToY += uint64(bits.TrailingZeros64(nt.year.end))
+				addToY += uint64(bits.TrailingZeros8(nt.end))
 			}
 			addToY += addToYHigh
 		}
@@ -140,8 +161,8 @@ func (nt *Parsed) nextYear(y, m, d uint64) int {
 
 // returns the index for the month
 func (nt *Parsed) nextMonth(m, d uint64) int {
-	m = uint64(bits.TrailingZeros64(nt.month>>m)) + m
-	d = uint64(bits.TrailingZeros64(nt.dom>>d)) + d
+	m = uint64(bits.TrailingZeros16(nt.month>>m)) + m
+	d = uint64(bits.TrailingZeros32(nt.dom>>d)) + d
 	if m > 11 { // if there is no next avaliable months
 		return -1
 	}
@@ -152,7 +173,7 @@ func (nt *Parsed) nextMonth(m, d uint64) int {
 }
 
 func (nt *Parsed) nextDay(y int, m int, d uint64) int {
-	firstOfMonth := time.Date(y, time.Month(m+1), 1, 0, 0, 0, 0, nt.loc)
+	firstOfMonth := time.Date(y, time.Month(m+1), 1, 0, 0, 0, 0, time.UTC) // TODO(docmerlin): location support
 	days := nt.prepDays(firstOfMonth.Weekday(), m, y)
 	d++
 	d = uint64(bits.TrailingZeros64(days>>d)) + d
@@ -167,7 +188,7 @@ func (nt *Parsed) nextDay(y int, m int, d uint64) int {
 
 func (nt *Parsed) nextHour(h uint64) int {
 	h++
-	h = uint64(bits.TrailingZeros64(nt.hour>>h)) + h
+	h = uint64(bits.TrailingZeros32(nt.hour>>h)) + h
 	if h >= 24 {
 		return -1
 	}
@@ -199,7 +220,7 @@ func (nt *Parsed) prepDays(firstDayOfWeek time.Weekday, month int, year int) uin
 	if month == 1 && isLeap(year) { // 0 indexed feb
 		doms = doms | (1 << 28)
 	}
-	return (nt.dow >> uint64(firstDayOfWeek)) & (doms & nt.dom)
+	return (uint64(nt.dow) & mask7) * magicDOW2DOM >> uint64(firstDayOfWeek) & (doms & uint64(nt.dom))
 }
 
 // Next returns the next time a cron task should run given a Parsed cron string.
@@ -235,7 +256,7 @@ func (nt Parsed) Next(from time.Time) (time.Time, error) {
 	}
 	if updateHour {
 		if h2 := nt.nextHour(uint64(h)); h2 < 0 {
-			h = bits.TrailingZeros64(nt.hour) // if not found set to first hour and advance the day
+			h = bits.TrailingZeros32(nt.hour) // if not found set to first hour and advance the day
 			d++
 		} else {
 			h = h2
@@ -245,8 +266,8 @@ func (nt Parsed) Next(from time.Time) (time.Time, error) {
 	}
 	weekDayOfFirst := time.Date(y, time.Month(M+1), 1, 0, 0, 0, 0, from.Location()).Weekday()
 
-	if (d == 28 && M == 1 && !isLeap(y)) || !nt.year.in(y) || (nt.month&(1<<uint(M)) == 0) || nt.prepDays(weekDayOfFirst, M, y)&(1<<uint(d)) == 0 {
-		h = bits.TrailingZeros64(nt.hour) // if not found set to first hour and advance the day
+	if (d == 28 && M == 1 && !isLeap(y)) || !nt.yearIn(y) || (nt.month&(1<<uint(M)) == 0) || nt.prepDays(weekDayOfFirst, M, y)&(1<<uint(d)) == 0 {
+		h = bits.TrailingZeros32(nt.hour) // if not found set to first hour and advance the day
 		m = bits.TrailingZeros64(nt.minute)
 		s = bits.TrailingZeros64(nt.second)
 	}
@@ -265,28 +286,29 @@ func (nt Parsed) Next(from time.Time) (time.Time, error) {
 
 		if nt.month&(1<<uint(M)) == 0 {
 			if M2 := nt.nextMonth(uint64(M), uint64(d)); M2 < 0 {
-				M = bits.TrailingZeros64(nt.month)
+				M = bits.TrailingZeros16(nt.month)
 				y++
 				weekDayOfFirst = time.Date(y, time.Month(M+1), 1, 0, 0, 0, 0, from.Location()).Weekday()
-				d = bits.TrailingZeros64(nt.prepDays(weekDayOfFirst, M, y))
 			} else {
 				M = M2
 			}
+			d = bits.TrailingZeros64(nt.prepDays(weekDayOfFirst, M, y))
 		}
-		if !nt.year.in(y) || (d == 28 && M == 1 && !isLeap(y)) {
+
+		if !nt.yearIn(y) || (d == 28 && M == 1 && !isLeap(y)) {
 			y2 := nt.nextYear(uint64(y), uint64(M), uint64(d))
 			if y2 < 0 {
 				return time.Time{}, errors.New("could not fulfil schedule due to year")
 			}
 
 			y = y2
-			M = bits.TrailingZeros64(nt.month)
+			M = bits.TrailingZeros16(nt.month)
 			weekDayOfFirst = time.Date(y, time.Month(M+1), 1, 0, 0, 0, 0, from.Location()).Weekday()
 			d = bits.TrailingZeros64(nt.prepDays(weekDayOfFirst, M, y))
 		}
 		// if no changes, return
 		if oldYear == y && oldMonth == M && oldDay == d {
-			if nt.prepDays(weekDayOfFirst, M, y)&(1<<uint(d)) != 0 && (nt.year.in(y) && (d != 28 || M != 1 || isLeap(y))) && nt.month&(1<<uint(M)) != 0 {
+			if nt.prepDays(weekDayOfFirst, M, y)&(1<<uint(d)) != 0 && (nt.yearIn(y) && (d != 28 || M != 1 || isLeap(y))) && nt.month&(1<<uint(M)) != 0 {
 				return time.Date(y, time.Month(M+1), int(d+1), h, m, s, 0, from.Location()), nil // again we 0 index day of month, and the month but the actual date doesn't
 			}
 		}
