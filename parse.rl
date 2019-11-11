@@ -14,6 +14,7 @@ import (
     "fmt"
      "errors"
     "math/bits"
+    "time"
 )
 
 // the following comment is there so it will end up, in the generated code.
@@ -115,8 +116,11 @@ func parse(s string)(Parsed, error){
     mark, backtrack := 0,0
     _ = mark
     _ = backtrack
-    m, d, start, end:=uint64(0), uint64(0), uint64(0), uint64(0)
+    m, d,  start, end, dec, befDec, sign:=uint64(0), uint64(0), uint64(0), uint64(0), int64(0), int64(0), int64(0)
     _ = d
+    var dur time.Duration
+    _, _, _, _ = dec, sign, dur, befDec
+
     // TODO(docmerlin): handle ranges
     %% write init;
     //m,h := 1<<0,1<<0
@@ -204,6 +208,9 @@ func parse(s string)(Parsed, error){
             {
                 if d>12{
                     return nt, fmt.Errorf("invalid month */%d", d)
+                }
+                if d<0{
+                     return nt, fmt.Errorf("invalid month */%d", d-1)
                 }
                 if start>12 {
                     return nt, fmt.Errorf("invalid start month %d", start)
@@ -345,9 +352,6 @@ func parse(s string)(Parsed, error){
             return nt, fmt.Errorf("error in parsing at char %d, '%s'", p, s[p:p+1])
         }
 
-        decimal = "-"? %{;} (digit+) "."? (digit*) %{
-            
-        };
         digits = (digit+) >mark %{
             m=0
             for _, x := range s[mark:p] {
@@ -355,6 +359,9 @@ func parse(s string)(Parsed, error){
                 m+=uint64(x-'0') // since we know that x is a numerical digit we can subtract the rune '0' to convert to a number from 0 to 9
             }
         };
+        integer = ("-"? @{ sign = -1; }) digits %{ befDec = sign * int64(m); };
+        decimal = (( "-" @{ sign = -1; } )? (digits %{ befDec=int64(m)*sign;}) ("." digits %{ dec=int64(m)*sign; } )?) >{sign=1;befDec=0;dec=0;};
+
         allowedNonSpace = alnum|"/"|"*"|","|"-";
         slash = "/";
         comma = ",";
@@ -395,6 +402,22 @@ func parse(s string)(Parsed, error){
         sixPos:= (seconds space+ minutes space+ hours space+ doms space+ months space+ dows) space*; 
         sevenPos:= (seconds space+ minutes space+ hours space+ doms space+ months space+ dows space+ years) space*;
         fivePos := (minutes space+ hours space+ doms space+ months space+ dows) space*;
+        durationMacro := |* 
+                    decimal . (
+                    (/y/i %{ nt.setEveryYear(int(befDec));})
+                    | (/ms/i %{ nt.addEveryDur(time.Duration(befDec)*time.Millisecond); })
+                    | (/mo/i %{ nt.setEveryMonth(int(befDec)); })
+                    | ((/[µu]/i./s/i?) %{ nt.addEveryDur(time.Duration(befDec)*time.Microsecond); })
+                    | (/ns/i %{ nt.addEveryDur( time.Duration(befDec)) ;})
+                    | (/s/i %{nt.addEveryDur(time.Duration(befDec)*time.Second); })
+                    | ((/h/i./r/i?) %{ nt.addEveryDur(time.Duration(befDec)*time.Hour); })
+                    | (/m/i %{ nt.addEveryDur(time.Duration(befDec)*time.Minute); })
+                    | (/d/i %{ nt.setEveryDay(int(befDec)); })
+                ) => {};
+            space+ => {};
+            [0-9]| ^("y"|"m"|"µ"|"u"|"n"|"h"|"m"|"d") => parse_err;
+            #any+ => parse_err;
+        *|;
         atMacro := |*
             ("yearly"|"annually") space* => {
                 nt.second=1
@@ -480,6 +503,13 @@ func parse(s string)(Parsed, error){
                 nt.end =^uint8(0)
                 if p!=pe-1{return nt, fmt.Errorf("error in parsing at char %d, '%s'", p, s[p:p+1])}
             };
+            # this parser can also parse golang duration format
+            "every" space+ >mark=> {
+                nt.every = true;
+                p = mark
+                fcall durationMacro;
+            };
+            /.+/ => parse_err;
         *|; 
         main := |*
             space* => mark; # to get rid of extra leading white space
@@ -506,14 +536,18 @@ func parse(s string)(Parsed, error){
                 fexec mark;
                 fcall sevenPos;
                 };
-            ((allowedNonSpace+ space+){7} (allowedNonSpace+ space?)+) => parse_err;
             "@" => {fcall atMacro;};
+             ((allowedNonSpace+ space+){7} (allowedNonSpace+ space?)+) => parse_err;
+             /.+/ => parse_err;
+
         *|;
     }%%
 
     %% write exec;
-    if nt.minute==0||nt.hour==0||nt.dom==0||nt.month==0||nt.dow==0||nt.yearIsZero() {
-        return nt, fmt.Errorf("failed to parse cron string '%s' %v %b :here", s, nt, mask12)
+    if !nt.valid() {
+        return nt, fmt.Errorf("failed to parse cron string '%s' %v %b", s, nt, mask12)
     }
     return nt,  nil
 }
+
+

@@ -25,6 +25,27 @@ func mustParseTime(s string) time.Time {
 }
 
 func TestLongNext(t *testing.T) {
+	t.Run("@every advance 3 seconds a million times", func(t *testing.T) {
+		nt, err := cron.ParseUTC("@every 3s")
+		if err != nil {
+			t.Fatal(err)
+		}
+		t0, err := time.Parse(time.RFC3339Nano, "2019-06-27T06:00:00Z")
+		for i := 0; i < 1000000; i++ {
+			if err != nil {
+				t.Fatal(err)
+			}
+			t1, err := nt.Next(t0)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if t1.Sub(t0) != 3*time.Second {
+				t.Fatalf("every step should be 1 second long, but was %s, t0:%s t1:%s", t0.Sub(t1), t0, t1)
+			}
+			t0 = t1
+		}
+	})
+
 	t.Run("six position advance 1 second a million times", func(t *testing.T) {
 		nt, err := cron.ParseUTC("* * * * * *")
 		if err != nil {
@@ -94,6 +115,185 @@ func TestRange(t *testing.T) {
 		start   time.Time
 		results []time.Time
 	}{
+		{
+			name: "@every with subsecond parts that add over a second",
+			cron: "@every 10s400ms700000us",
+			start: mustParseTime("2001-01-01T12:10:10Z"),
+			results: []time.Time{
+				mustParseTime("2001-01-01T12:10:21Z"),
+				mustParseTime("2001-01-01T12:10:32Z"),
+				mustParseTime("2001-01-01T12:10:43Z"),
+				mustParseTime("2001-01-01T12:10:54Z"),
+				mustParseTime("2001-01-01T12:11:05Z"),
+			},
+		},
+		{
+			name: "@every with truncating",
+			cron: "@every 10s1us",
+			start: mustParseTime("2001-01-01T12:10:10Z"),
+			results: []time.Time{
+				mustParseTime("2001-01-01T12:10:20Z"),
+				mustParseTime("2001-01-01T12:10:30Z"),
+				mustParseTime("2001-01-01T12:10:40Z"),
+				mustParseTime("2001-01-01T12:10:50Z"),
+			},
+		},
+		{
+			name: "@every 7y1mo",
+			cron: "@every 7y1mo",
+			start: mustParseTime("2001-01-01T12:10:10Z"),
+			results: []time.Time{
+				mustParseTime("2008-02-01T12:10:10Z"),
+				mustParseTime("2015-03-01T12:10:10Z"),
+				mustParseTime("2022-04-01T12:10:10Z"),
+				mustParseTime("2029-05-01T12:10:10Z"),
+			},
+		},
+		{
+			name: "@every 3y1m1s",
+			cron: "@every 3y1m1s",
+			start: mustParseTime("2001-01-01T12:10:10Z"),
+			results: []time.Time{
+				mustParseTime("2004-01-01T12:11:11Z"),
+				mustParseTime("2007-01-01T12:12:12Z"),
+				mustParseTime("2010-01-01T12:13:13Z"),
+				mustParseTime("2013-01-01T12:14:14Z"),
+				mustParseTime("2016-01-01T12:15:15Z"),
+			},		
+		},
+		{
+			name: "@every 2d1s",
+			cron: "@every 2d1s",
+			start: mustParseTime("2001-01-01T12:10:10Z"),
+			results: []time.Time{
+				mustParseTime("2001-01-03T12:10:11Z"),
+				mustParseTime("2001-01-05T12:10:12Z"),
+				mustParseTime("2001-01-07T12:10:13Z"),
+				mustParseTime("2001-01-09T12:10:14Z"),
+				mustParseTime("2001-01-11T12:10:15Z"),
+				mustParseTime("2001-01-13T12:10:16Z"),
+				mustParseTime("2001-01-15T12:10:17Z"),
+				mustParseTime("2001-01-17T12:10:18Z"),
+				mustParseTime("2001-01-19T12:10:19Z"),
+				mustParseTime("2001-01-21T12:10:20Z"),
+				mustParseTime("2001-01-23T12:10:21Z"),
+				mustParseTime("2001-01-25T12:10:22Z"),
+				mustParseTime("2001-01-27T12:10:23Z"),
+				mustParseTime("2001-01-29T12:10:24Z"),
+				mustParseTime("2001-01-31T12:10:25Z"),
+				mustParseTime("2001-02-02T12:10:26Z"),
+				mustParseTime("2001-02-04T12:10:27Z"),
+				mustParseTime("2001-02-06T12:10:28Z"),
+				mustParseTime("2001-02-08T12:10:29Z"),
+				mustParseTime("2001-02-10T12:10:30Z"),
+				mustParseTime("2001-02-12T12:10:31Z"),
+				mustParseTime("2001-02-14T12:10:32Z"),
+				mustParseTime("2001-02-16T12:10:33Z"),
+				mustParseTime("2001-02-18T12:10:34Z"),
+
+			},
+		},
+		{
+			name: "@every 2h1s",
+			cron: "@every 2h1s",
+			start: mustParseTime("2001-01-01T12:10:10Z"),
+			results: []time.Time{
+				mustParseTime("2001-01-01T14:10:11Z"),
+				mustParseTime("2001-01-01T16:10:12Z"),
+				mustParseTime("2001-01-01T18:10:13Z"),
+				mustParseTime("2001-01-01T20:10:14Z"),
+				mustParseTime("2001-01-01T22:10:15Z"),
+				mustParseTime("2001-01-02T00:10:16Z"),
+				mustParseTime("2001-01-02T02:10:17Z"),
+				mustParseTime("2001-01-02T04:10:18Z"),
+			},
+		},
+		{
+			name: "@every 2hr1s",
+			cron: "@every 2hr1s",
+			start: mustParseTime("2001-01-01T12:10:10Z"),
+			results: []time.Time{
+				mustParseTime("2001-01-01T14:10:11Z"),
+				mustParseTime("2001-01-01T16:10:12Z"),
+				mustParseTime("2001-01-01T18:10:13Z"),
+				mustParseTime("2001-01-01T20:10:14Z"),
+				mustParseTime("2001-01-01T22:10:15Z"),
+				mustParseTime("2001-01-02T00:10:16Z"),
+				mustParseTime("2001-01-02T02:10:17Z"),
+				mustParseTime("2001-01-02T04:10:18Z"),
+			},
+		},	
+	{
+		name: "@every 90s",
+		cron: "@every 90s",
+		start: mustParseTime("2001-01-01T12:10:10Z"),
+		results: []time.Time{
+			mustParseTime("2001-01-01T12:11:40Z"),
+			mustParseTime("2001-01-01T12:13:10Z"),
+			mustParseTime("2001-01-01T12:14:40Z"),
+			mustParseTime("2001-01-01T12:16:10Z"),
+		},
+	},
+
+						{
+		name: "@every 2m10s",
+		cron: "@every 2m10s",
+		start: mustParseTime("2001-01-01T12:10:10Z"),
+		results: []time.Time{
+			mustParseTime("2001-01-01T12:12:20Z"),
+			mustParseTime("2001-01-01T12:14:30Z"),
+			mustParseTime("2001-01-01T12:16:40Z"),
+			mustParseTime("2001-01-01T12:18:50Z"),
+		},
+	},
+
+				{
+		name: "@every 2m",
+		cron: "@every 2m",
+		start: mustParseTime("2001-01-01T12:10:10Z"),
+		results: []time.Time{
+			mustParseTime("2001-01-01T12:12:10Z"),
+			mustParseTime("2001-01-01T12:14:10Z"),
+			mustParseTime("2001-01-01T12:16:10Z"),
+			mustParseTime("2001-01-01T12:18:10Z"),
+		},
+	},
+		{
+		name: "@every 3s",
+		cron: "@every 3s",
+		start: mustParseTime("2001-01-01T12:10:10Z"),
+		results: []time.Time{
+			mustParseTime("2001-01-01T12:10:13Z"),
+			mustParseTime("2001-01-01T12:10:16Z"),
+			mustParseTime("2001-01-01T12:10:19Z"),
+			mustParseTime("2001-01-01T12:10:22Z"),
+			mustParseTime("2001-01-01T12:10:25Z"),
+			mustParseTime("2001-01-01T12:10:28Z"),
+			mustParseTime("2001-01-01T12:10:31Z"),
+			mustParseTime("2001-01-01T12:10:34Z"),
+			mustParseTime("2001-01-01T12:10:37Z"),
+			mustParseTime("2001-01-01T12:10:40Z"),
+			mustParseTime("2001-01-01T12:10:43Z"),
+			mustParseTime("2001-01-01T12:10:46Z"),
+			mustParseTime("2001-01-01T12:10:49Z"),
+			mustParseTime("2001-01-01T12:10:52Z"),
+			mustParseTime("2001-01-01T12:10:55Z"),
+			mustParseTime("2001-01-01T12:10:58Z"),
+			mustParseTime("2001-01-01T12:11:01Z"),
+		},
+	},
+
+		{
+			name: "@every 1s",
+			cron: "@every 1s",
+			start: mustParseTime("2001-01-01T12:10:10Z"),
+			results: []time.Time{
+				mustParseTime("2001-01-01T12:10:11Z"),
+				mustParseTime("2001-01-01T12:10:12Z"),
+				mustParseTime("2001-01-01T12:10:13Z"),
+				mustParseTime("2001-01-01T12:10:14Z"),
+			},
+		},
 		{
 			name:  "year range",
 			cron:  "3 47 17 3 1 * 2003-2007",
@@ -322,6 +522,18 @@ func Test_Parsed_next(t *testing.T) {
 		wanterr      bool
 		wantParseErr bool
 	}{
+		{
+			name:         "bad @every",
+			nt:           parsit("@every food"),
+			from:         ts,
+			wantParseErr: true,
+		},
+		{
+			name:         "partially bad @every",
+			nt:           parsit("@every 1s food"),
+			from:         ts,
+			wantParseErr: true,
+		},
 		{
 			name:         "months > 31 days",
 			nt:           parsit(" * * * 30,32 * * * "),
@@ -732,6 +944,12 @@ func Test_Parsed_next(t *testing.T) {
 func BenchmarkParse(b *testing.B) {
 	nt := cron.Parsed{}
 	var err error
+	b.Run("@every 3y4mo2d1s", func(b *testing.B) {
+		for n := 0; n < b.N; n++ {
+			nt, err = cron.ParseUTC("0 * * * * * *")
+		}
+	})
+	_, _ = nt, err
 	b.Run("0 * * * * * *", func(b *testing.B) {
 		for n := 0; n < b.N; n++ {
 			nt, err = cron.ParseUTC("0 * * * * * *")

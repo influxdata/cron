@@ -43,14 +43,6 @@ func (ys *Parsed) yearTrailingZeros64() int {
 	return zeros
 }
 
-// func (ys *Parsed) yearIntersection(y2 years) years {
-// 	return years{
-// 		low:  ys.low & y2.low,
-// 		high: ys.high & y2.high,
-// 		end:  ys.end & y2.end,
-// 	}
-// }
-
 // this is undefined if the year is above 2070 or below 1970
 func (ys *Parsed) yearIn(year int) bool {
 	y := uint64(year - 1970)
@@ -89,18 +81,70 @@ month:%016b`,
 
 // Parsed is a parsed cron string.  It can be used to find the next instance of a cron task.
 type Parsed struct {
-	second uint64
-	minute uint64
-	low    uint64
-	high   uint64
+	// some fields are overloaded, because @every behaves very different from a normal cron string,
+	// and we want to keep this struct under 64 bytes, so it fits in a cache line, on most machines
+	second uint64 // also serves as the total time-like duration (hours, minutes, seconds) for every
+	minute uint64 // also serves as the month count for every
+	low    uint64 // also serves as the year count for every
+	high   uint64 
 	hour   uint32
-	dom    uint32
+	dom    uint32 // also serves as the day count for every queries
 	end    uint8 // this is here so we can support 2098 and 2099
 	ldow   uint8
-	month  uint16
+	month  uint16 
 	ldom   uint32
 	dow    uint8
+	every  bool	
 	//TODO(docmerlin): add location once we support location
+}
+
+func (p *Parsed) everyYear() int{
+	if !p.every{
+		return 0
+	}
+	return int(p.low) // we overload this field to also store year counts in the every case
+}
+
+func (p *Parsed) setEveryYear(d int){
+	p.low = uint64(d) // we overload this field to also store seconds for every
+}
+
+func (p *Parsed) everyMonth() int{
+	if !p.every{
+		return 0
+	}
+	return int(p.minute) // we overload this field to also store months in the every case
+}
+
+func (p *Parsed) setEveryMonth(m int){
+	p.minute = uint64(m) // we overload this field to also store seconds for every
+}
+
+
+func (p *Parsed) everyDay() int{
+	if !p.every{
+		return 0
+	}
+	return int(p.dom)
+}
+
+func (p *Parsed) setEveryDay(d int){
+	p.dom = uint32(d) // we overload this field to also store seconds for every
+}
+
+func (p *Parsed) everySeconds() time.Duration {
+	if !p.every{
+		return 0
+	}
+	return time.Duration(p.second)/time.Second // we overload this field to also store seconds for every
+}
+
+func (p *Parsed) addEveryDur(s time.Duration){
+	p.second += uint64(s) // we overload this field to also store time-like duration (hour minutes seconds, in nanosecond count) for every
+}
+
+func (p *Parsed) everyZero() bool{
+	return p.every && (p.low==0 && p.minute==0 && p.second ==0 && p.dow==0)
 }
 
 var maxMonthLengths = [13]uint64{31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31, 31} // we wrap back around from jan to jan to make stuff easy
@@ -213,6 +257,10 @@ func (nt *Parsed) nextSecond(s uint64) int {
 	return int(s)
 }
 
+func (nt *Parsed) valid() bool{
+	 return !(nt.everyZero() || (!nt.every) && (nt.minute==0||nt.hour==0||nt.dom==0||nt.month==0||nt.dow==0||nt.yearIsZero()))
+}
+
 // undefined for shifts larger than 7
 // firstDayOfWeek is the 0 indexed day of first day of the month
 func (nt *Parsed) prepDays(firstDayOfWeek time.Weekday, month int, year int) uint64 {
@@ -226,6 +274,16 @@ func (nt *Parsed) prepDays(firstDayOfWeek time.Weekday, month int, year int) uin
 // Next returns the next time a cron task should run given a Parsed cron string.
 // It will error if the Parsed is not from a zero value.
 func (nt Parsed) Next(from time.Time) (time.Time, error) {
+	// handle case where we have an @every query 
+	if nt.every {
+		ts := from.AddDate(nt.everyYear(), nt.everyMonth(), nt.everyDay())
+		ts = ts.Add(time.Duration(nt.everySeconds()) * time.Second)
+		if !ts.After(from) {
+			return time.Time{}, errors.New("next time must be later than from time")
+		}
+		return ts, nil
+	}
+	// handle the non @every case
 	y, MTime, dTime := from.Date()
 	d := int(dTime - 1) //time's day is 1 indexed but our day is zero indexed
 	M := int(MTime - 1) //time's month is 1 indexed in time but ours is 0 indexed
