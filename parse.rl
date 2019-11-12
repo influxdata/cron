@@ -360,8 +360,6 @@ func parse(s string)(Parsed, error){
                 m+=uint64(x-'0') // since we know that x is a numerical digit we can subtract the rune '0' to convert to a number from 0 to 9
             }
         };
-        integer = ("-"? @{ sign = -1; }) digits %{ befDec = sign * int64(m); };
-        decimal = (( "-" @{ sign = -1; } )? (digits %{ befDec=int64(m)*sign;}) ("." digits %{ dec=int64(m)*sign; } )?) >{sign=1;befDec=0;dec=0;};
 
         allowedNonSpace = alnum|"/"|"*"|","|"-";
         slash = "/";
@@ -404,20 +402,19 @@ func parse(s string)(Parsed, error){
         sevenPos:= (seconds space+ minutes space+ hours space+ doms space+ months space+ dows space+ years) space*;
         fivePos := (minutes space+ hours space+ doms space+ months space+ dows) space*;
         durationMacro := |* 
-                    decimal . (
-                    (/y/i %{ nt.setEveryYear(int(befDec));})
-                    | (/ms/i %{ nt.addEveryDur(time.Duration(befDec)*time.Millisecond); })
-                    | (/mo/i %{ nt.setEveryMonth(int(befDec)); })
-                    | ((/[µu]/i./s/i?) %{ nt.addEveryDur(time.Duration(befDec)*time.Microsecond); })
-                    | (/ns/i %{ nt.addEveryDur( time.Duration(befDec)) ;})
-                    | (/s/i %{nt.addEveryDur(time.Duration(befDec)*time.Second); })
-                    | ((/h/i./r/i?) %{ nt.addEveryDur(time.Duration(befDec)*time.Hour); })
-                    | (/m/i %{ nt.addEveryDur(time.Duration(befDec)*time.Minute); })
-                    | (/d/i %{ nt.setEveryDay(int(befDec)); })
+                    digits . (
+                    (/y/i %{ nt.setEveryYear(int(m));})
+                    | (/ms/i %{ nt.addEveryDur(time.Duration(m)*time.Millisecond); })
+                    | (/mo/i %{ nt.setEveryMonth(int(m)); })
+                    | ((/[µu]/i./s/i?) %{ nt.addEveryDur(time.Duration(m)*time.Microsecond); })
+                    | (/ns/i %{ nt.addEveryDur( time.Duration(m)) ;})
+                    | (/s/i %{nt.addEveryDur(time.Duration(m)*time.Second); })
+                    | ((/h/i./r/i?) %{ nt.addEveryDur(time.Duration(m)*time.Hour); })
+                    | (/m/i %{ nt.addEveryDur(time.Duration(m)*time.Minute); })
+                    | (/d/i %{ nt.setEveryDay(int(m)); })
                 ) => {};
             space+ => {};
             [0-9]| ^("y"|"m"|"µ"|"u"|"n"|"h"|"m"|"d") => parse_err;
-            #any+ => parse_err;
         *|;
         atMacro := |*
             ("yearly"|"annually") space* => {

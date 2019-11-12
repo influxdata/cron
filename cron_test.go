@@ -234,7 +234,6 @@ func TestRange(t *testing.T) {
 			mustParseTime("2001-01-01T12:16:10Z"),
 		},
 	},
-
 						{
 		name: "@every 2m10s",
 		cron: "@every 2m10s",
@@ -522,6 +521,12 @@ func Test_Parsed_next(t *testing.T) {
 		wanterr      bool
 		wantParseErr bool
 	}{
+		{
+			name:         "negative @every",
+			nt:           parsit("@every -1s"),
+			from:         ts,
+			wantParseErr: true,
+		},
 		{
 			name:         "bad @every",
 			nt:           parsit("@every food"),
