@@ -32,17 +32,6 @@ func (ys *Parsed) setYear(year int) {
 	}
 }
 
-func (ys *Parsed) yearTrailingZeros64() int {
-	zeros := bits.TrailingZeros64(ys.low)
-	if zeros == 64 {
-		zeros += bits.TrailingZeros64(ys.high)
-		if zeros == 128 {
-			zeros += bits.TrailingZeros8(ys.end)
-		}
-	}
-	return zeros
-}
-
 // this is undefined if the year is above 2070 or below 1970
 func (ys *Parsed) yearIn(year int) bool {
 	y := uint64(year - 1970)
@@ -78,6 +67,8 @@ month:%016b`,
 		p.high,
 		p.month)
 }
+// to keep staticcheck happy
+var _ = (&Parsed{}).string
 
 // Parsed is a parsed cron string.  It can be used to find the next instance of a cron task.
 type Parsed struct {
@@ -90,9 +81,9 @@ type Parsed struct {
 	hour   uint32
 	dom    uint32 // also serves as the day count for every queries
 	end    uint8 // this is here so we can support 2098 and 2099
-	ldow   uint8
+	ldow   uint8 //lint:ignore U1000 we plan on using this field once we add L crons
 	month  uint16 
-	ldom   uint32
+	ldom   uint32 //lint:ignore U1000 we plan on using this field once we add L crons
 	dow    uint8
 	every  bool	
 	//TODO(docmerlin): add location once we support location
