@@ -8,6 +8,101 @@ import (
 	"github.com/influxdata/cron"
 )
 
+func BenchmarkCount(b *testing.B) {
+	cases := []struct {
+		cron string
+		from time.Time
+		to   time.Time
+	}{
+		{
+			cron: "20,44 7 5 * * * *",
+			from: mustParseTime("2019-12-02T00:00:00Z"),
+			to:   mustParseTime("2020-03-30T00:00:00Z"),
+		},
+		{
+			cron: "20,44 7 * * * * 2018",
+			from: mustParseTime("2019-12-02T00:00:00Z"),
+			to:   mustParseTime("2019-12-03T00:00:00Z"),
+		},
+		{
+			cron: "* */2 * * * * 2023",
+			from: mustParseTime("2013-02-03T01:02:04Z"),
+			to:   mustParseTime("2013-02-03T01:20:55Z"),
+		},
+		{
+			cron: "20,44 7 * * * *",
+			from: mustParseTime("2019-12-02T00:00:00Z"),
+			to:   mustParseTime("2019-12-03T00:00:00Z"),
+		},
+		{
+			cron: "20,44 * * * * *",
+			from: mustParseTime("2019-12-02T00:00:00Z"),
+			to:   mustParseTime("2019-12-03T00:00:00Z"),
+		},
+		{
+			cron: "*/7 * * * * Thu",
+			from: mustParseTime("2019-12-02T00:00:00Z"),
+			to:   mustParseTime("2019-12-09T05:01:03Z"),
+		},
+		{
+			cron: "* * * * Thu",
+			from: mustParseTime("2019-12-02T00:00:00Z"),
+			to:   mustParseTime("2019-12-09T05:01:03Z"),
+		},
+		{
+			cron: "* * * * * *",
+			from: mustParseTime("2013-02-03T01:02:04Z"),
+			to:   mustParseTime("2013-03-15T05:01:03Z"),
+		},
+
+		{
+			cron: "* */2 * * * * 2023",
+			from: mustParseTime("2013-02-03T01:02:04Z"),
+			to:   mustParseTime("2013-02-03T01:20:55Z"),
+		},
+		{
+			cron: "@every 1s",
+			from: mustParseTime("2013-02-03T01:02:04Z"),
+			to:   mustParseTime("2013-02-04T01:02:04Z"),
+		},
+		{
+			cron: "@every 1d1h",
+			from: mustParseTime("2013-02-03T01:02:04Z"),
+			to:   mustParseTime("2013-02-04T01:02:04Z"),
+		},
+		{
+			cron: "@every 1d100ms",
+			from: mustParseTime("2013-02-03T00:00:00Z"),
+			to:   mustParseTime("2013-02-04T01:02:04Z"),
+		},
+		{
+			cron: "@every 1mo100d",
+			from: mustParseTime("2013-01-03T00:00:00Z"),
+			to:   mustParseTime("2013-11-20T01:02:04Z"),
+		},
+		{
+			cron: "@every 2y",
+			from: mustParseTime("2013-01-03T00:00:00Z"),
+			to:   mustParseTime("2019-11-20T01:02:04Z"),
+		},
+	}
+
+	for _, tt := range cases {
+		b.Run(fmt.Sprintf("%s, [%s, %s)", tt.cron, tt.from, tt.to), func(b *testing.B) {
+			nt, err := cron.ParseUTC(tt.cron)
+
+			if err != nil {
+				b.Fatal(err)
+			}
+
+			b.ResetTimer()
+			for i := 0; i < b.N; i++ {
+				nt.Count(tt.from, tt.to)
+			}
+		})
+	}
+}
+
 func TestParsed_Count(t *testing.T) {
 	tests := []struct {
 		cron      string
