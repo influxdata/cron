@@ -67,6 +67,7 @@ month:%016b`,
 		p.high,
 		p.month)
 }
+
 // to keep staticcheck happy
 var _ = (&Parsed{}).string
 
@@ -77,65 +78,81 @@ type Parsed struct {
 	second uint64 // also serves as the total time-like duration (hours, minutes, seconds) for every
 	minute uint64 // also serves as the month count for every
 	low    uint64 // also serves as the year count for every
-	high   uint64 
+	high   uint64
 	hour   uint32
 	dom    uint32 // also serves as the day count for every queries
-	end    uint8 // this is here so we can support 2098 and 2099
-	ldow   uint8 //lint:ignore U1000 we plan on using this field once we add L crons
-	month  uint16 
+	end    uint8  // this is here so we can support 2098 and 2099
+	ldow   uint8  //lint:ignore U1000 we plan on using this field once we add L crons
+	month  uint16
 	ldom   uint32 //lint:ignore U1000 we plan on using this field once we add L crons
 	dow    uint8
-	every  bool	
+	every  bool
 	//TODO(docmerlin): add location once we support location
 }
 
-func (p *Parsed) everyYear() int{
-	if !p.every{
+func (p *Parsed) everyYear() int {
+	if !p.every {
 		return 0
 	}
 	return int(p.low) // we overload this field to also store year counts in the every case
 }
 
-func (p *Parsed) setEveryYear(d int){
+func (p *Parsed) setEveryYear(d int) {
 	p.low = uint64(d) // we overload this field to also store seconds for every
 }
 
-func (p *Parsed) everyMonth() int{
-	if !p.every{
+func (p *Parsed) everyMonth() int {
+	if !p.every {
 		return 0
 	}
 	return int(p.minute) // we overload this field to also store months in the every case
 }
 
-func (p *Parsed) setEveryMonth(m int){
+func (p *Parsed) setEveryMonth(m int) {
 	p.minute = uint64(m) // we overload this field to also store seconds for every
 }
 
-
-func (p *Parsed) everyDay() int{
-	if !p.every{
+func (p *Parsed) everyDay() int {
+	if !p.every {
 		return 0
 	}
 	return int(p.dom)
 }
 
-func (p *Parsed) setEveryDay(d int){
+func (p *Parsed) setEveryDay(d int) {
 	p.dom = uint32(d) // we overload this field to also store seconds for every
 }
 
 func (p *Parsed) everySeconds() time.Duration {
-	if !p.every{
+	if !p.every {
 		return 0
 	}
-	return time.Duration(p.second)/time.Second // we overload this field to also store seconds for every
+	return time.Duration(p.second) / time.Second // we overload this field to also store seconds for every
 }
 
-func (p *Parsed) addEveryDur(s time.Duration){
+func (p *Parsed) addEveryDur(s time.Duration) {
 	p.second += uint64(s) // we overload this field to also store time-like duration (hour minutes seconds, in nanosecond count) for every
 }
 
-func (p *Parsed) everyZero() bool{
-	return p.every && (p.low==0 && p.minute==0 && p.second ==0 && p.dow==0)
+func (p *Parsed) everyZero() bool {
+	return p.every && (p.low == 0 && p.minute == 0 && p.second == 0 && p.dom == 0)
+}
+
+func (p *Parsed) monthIn(m time.Month) bool {
+	if m < 1 || m > 12 {
+		return false
+	}
+	m-- //to change to zero indexed month from 1 indexed month, since the formula below requires zero indexing
+	return (1<<uint16(m))&p.month == (1 << uint16(m))
+}
+
+// 1 if hour is in Parsed 0 otherwise
+func (p *Parsed) hourIn(d int) int {
+	return int((1 << uint(d)) & p.hour >> uint(d))
+}
+
+func (p *Parsed) minuteIn(m int) bool {
+	return (1<<uint64(m))&p.minute == (1 << uint64(m))
 }
 
 var maxMonthLengths = [13]uint64{31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31, 31} // we wrap back around from jan to jan to make stuff easy
@@ -248,12 +265,13 @@ func (nt *Parsed) nextSecond(s uint64) int {
 	return int(s)
 }
 
-func (nt *Parsed) valid() bool{
-	 return !(nt.everyZero() || (!nt.every) && (nt.minute==0||nt.hour==0||nt.dom==0||nt.month==0||nt.dow==0||nt.yearIsZero()))
+func (nt *Parsed) valid() bool {
+	return !(nt.everyZero() || (!nt.every) && (nt.minute == 0 || nt.hour == 0 || nt.dom == 0 || nt.month == 0 || nt.dow == 0 || nt.yearIsZero()))
 }
 
 // undefined for shifts larger than 7
 // firstDayOfWeek is the 0 indexed day of first day of the month
+// month is zero indexed instead of 1 indexed. (i.e.: Jan is month 0)
 func (nt *Parsed) prepDays(firstDayOfWeek time.Weekday, month int, year int) uint64 {
 	doms := uint64(1<<maxMonthLengths[month]) - 1
 	if month == 1 && isLeap(year) { // 0 indexed feb
@@ -265,7 +283,7 @@ func (nt *Parsed) prepDays(firstDayOfWeek time.Weekday, month int, year int) uin
 // Next returns the next time a cron task should run given a Parsed cron string.
 // It will error if the Parsed is not from a zero value.
 func (nt Parsed) Next(from time.Time) (time.Time, error) {
-	// handle case where we have an @every query 
+	// handle case where we have an @every query
 	if nt.every {
 		ts := from.AddDate(nt.everyYear(), nt.everyMonth(), nt.everyDay())
 		ts = ts.Add(time.Duration(nt.everySeconds()) * time.Second)
