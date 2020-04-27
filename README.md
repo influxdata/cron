@@ -1,5 +1,5 @@
 # cron
-A fast non-allocating ron parser in ragel and golang.
+A fast non-allocating cron parser in ragel and golang.
 
 
 # features
