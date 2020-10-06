@@ -87,7 +87,7 @@ type Parsed struct {
 	ldom   uint32 //lint:ignore U1000 we plan on using this field once we add L crons
 	dow    uint8
 	every  bool
-	//TODO(docmerlin): add location once we support location
+	loc    *time.Location
 }
 
 func (p *Parsed) everyYear() int {
@@ -283,6 +283,111 @@ func (nt *Parsed) prepDays(firstDayOfWeek time.Weekday, month int, year int) uin
 // Next returns the next time a cron task should run given a Parsed cron string.
 // It will error if the Parsed is not from a zero value.
 func (nt Parsed) Next(from time.Time) (time.Time, error) {
+	// handle case where we have an @every query
+	if nt.every {
+		ts := from.AddDate(nt.everyYear(), nt.everyMonth(), nt.everyDay())
+		ts = ts.Add(time.Duration(nt.everySeconds()) * time.Second)
+		if !ts.After(from) {
+			return time.Time{}, errors.New("next time must be later than from time")
+		}
+		return ts, nil
+	}
+	// handle the non @every case
+	y, MTime, dTime := from.Date()
+	d := int(dTime - 1) //time's day is 1 indexed but our day is zero indexed
+	M := int(MTime - 1) //time's month is 1 indexed in time but ours is 0 indexed
+	h := from.Hour()
+	m := from.Minute()
+	s := from.Second()
+
+	updateHour := nt.hour&(1<<uint(h)) == 0
+	updateMin := nt.minute&(1<<uint64(m)) == 0
+	updateSec := nt.second&(1<<uint64(s)) == 0 || !(updateMin && updateHour)
+
+	if updateSec {
+		if s2 := nt.nextSecond(uint64(s)); s2 < 0 {
+			s = bits.TrailingZeros64(nt.second) // if not found set to first second and advance minute
+			updateMin = true
+		} else {
+			s = s2
+		}
+	}
+	if updateMin {
+		if m2 := nt.nextMinute(uint64(m)); m2 < 0 {
+			m = bits.TrailingZeros64(nt.minute) // if not found set to first second and advance minute
+			updateHour = true
+		} else {
+			m = m2
+		}
+		s = bits.TrailingZeros64(nt.second) // if not found set to first second and advance minute
+	}
+	if updateHour {
+		if h2 := nt.nextHour(uint64(h)); h2 < 0 {
+			h = bits.TrailingZeros32(nt.hour) // if not found set to first hour and advance the day
+			d++
+		} else {
+			h = h2
+		}
+		m = bits.TrailingZeros64(nt.minute)
+		s = bits.TrailingZeros64(nt.second)
+	}
+	weekDayOfFirst := time.Date(y, time.Month(M+1), 1, 0, 0, 0, 0, from.Location()).Weekday()
+
+	if (d == 28 && M == 1 && !isLeap(y)) || !nt.yearIn(y) || (nt.month&(1<<uint(M)) == 0) || nt.prepDays(weekDayOfFirst, M, y)&(1<<uint(d)) == 0 {
+		h = bits.TrailingZeros32(nt.hour) // if not found set to first hour and advance the day
+		m = bits.TrailingZeros64(nt.minute)
+		s = bits.TrailingZeros64(nt.second)
+	}
+	oldYear, oldMonth, oldDay := y, M, d
+
+	for y <= 2099 {
+		if nt.prepDays(weekDayOfFirst, M, y)&(1<<uint(d)) == 0 {
+			if d2 := nt.nextDay(y, M, uint64(d)); d2 < 0 {
+				M++
+				weekDayOfFirst = time.Date(y, time.Month(M+1), 1, 0, 0, 0, 0, from.Location()).Weekday()
+				d = bits.TrailingZeros64(nt.prepDays(weekDayOfFirst, M, y))
+			} else {
+				d = d2
+			}
+		}
+
+		if nt.month&(1<<uint(M)) == 0 {
+			if M2 := nt.nextMonth(uint64(M), uint64(d)); M2 < 0 {
+				M = bits.TrailingZeros16(nt.month)
+				y++
+				weekDayOfFirst = time.Date(y, time.Month(M+1), 1, 0, 0, 0, 0, from.Location()).Weekday()
+			} else {
+				M = M2
+			}
+			d = bits.TrailingZeros64(nt.prepDays(weekDayOfFirst, M, y))
+		}
+
+		if !nt.yearIn(y) || (d == 28 && M == 1 && !isLeap(y)) {
+			y2 := nt.nextYear(uint64(y), uint64(M), uint64(d))
+			if y2 < 0 {
+				return time.Time{}, errors.New("could not fulfil schedule due to year")
+			}
+
+			y = y2
+			M = bits.TrailingZeros16(nt.month)
+			weekDayOfFirst = time.Date(y, time.Month(M+1), 1, 0, 0, 0, 0, from.Location()).Weekday()
+			d = bits.TrailingZeros64(nt.prepDays(weekDayOfFirst, M, y))
+		}
+		// if no changes, return
+		if oldYear == y && oldMonth == M && oldDay == d {
+			if nt.prepDays(weekDayOfFirst, M, y)&(1<<uint(d)) != 0 && (nt.yearIn(y) && (d != 28 || M != 1 || isLeap(y))) && nt.month&(1<<uint(M)) != 0 {
+				return time.Date(y, time.Month(M+1), int(d+1), h, m, s, 0, from.Location()), nil // again we 0 index day of month, and the month but the actual date doesn't
+			}
+		}
+		oldYear, oldMonth, oldDay = y, M, d
+	}
+	return time.Time{}, errors.New("could not fulfil schedule before 2100")
+}
+
+
+
+func (nt Parsed) nextComplexLoc(from time.Time) (time.Time, error) {
+	from = from.In(nt.loc)
 	// handle case where we have an @every query
 	if nt.every {
 		ts := from.AddDate(nt.everyYear(), nt.everyMonth(), nt.everyDay())
