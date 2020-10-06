@@ -42,7 +42,7 @@ const parse_en_sixPos int = 14
 const parse_en_sevenPos int = 145
 const parse_en_fivePos int = 286
 const parse_en_durationMacro int = 492
-const parse_en_atMacro int = 506
+const parse_en_atMacro int = 507
 const parse_en_main int = 464
 
 
@@ -157,7 +157,7 @@ func parse(s string)(Parsed, error){
 //line parse.rl:130
     //m,h := 1<<0,1<<0
     
-//line parse.rl:542
+//line parse.rl:543
 
 
     
@@ -1075,6 +1075,8 @@ func parse(s string)(Parsed, error){
 		goto st_case_505
 	case 506:
 		goto st_case_506
+	case 507:
+		goto st_case_507
 	case 411:
 		goto st_case_411
 	case 412:
@@ -1091,8 +1093,8 @@ func parse(s string)(Parsed, error){
 		goto st_case_417
 	case 418:
 		goto st_case_418
-	case 507:
-		goto st_case_507
+	case 508:
+		goto st_case_508
 	case 419:
 		goto st_case_419
 	case 420:
@@ -1101,8 +1103,8 @@ func parse(s string)(Parsed, error){
 		goto st_case_421
 	case 422:
 		goto st_case_422
-	case 508:
-		goto st_case_508
+	case 509:
+		goto st_case_509
 	case 423:
 		goto st_case_423
 	case 424:
@@ -1113,8 +1115,8 @@ func parse(s string)(Parsed, error){
 		goto st_case_426
 	case 427:
 		goto st_case_427
-	case 509:
-		goto st_case_509
+	case 510:
+		goto st_case_510
 	case 428:
 		goto st_case_428
 	case 429:
@@ -1127,8 +1129,8 @@ func parse(s string)(Parsed, error){
 		goto st_case_432
 	case 433:
 		goto st_case_433
-	case 510:
-		goto st_case_510
+	case 511:
+		goto st_case_511
 	case 434:
 		goto st_case_434
 	case 435:
@@ -1139,8 +1141,8 @@ func parse(s string)(Parsed, error){
 		goto st_case_437
 	case 438:
 		goto st_case_438
-	case 511:
-		goto st_case_511
+	case 512:
+		goto st_case_512
 	case 439:
 		goto st_case_439
 	case 440:
@@ -1151,8 +1153,8 @@ func parse(s string)(Parsed, error){
 		goto st_case_442
 	case 443:
 		goto st_case_443
-	case 512:
-		goto st_case_512
+	case 513:
+		goto st_case_513
 	case 444:
 		goto st_case_444
 	case 445:
@@ -1177,8 +1179,8 @@ func parse(s string)(Parsed, error){
 		goto st_case_454
 	case 455:
 		goto st_case_455
-	case 513:
-		goto st_case_513
+	case 514:
+		goto st_case_514
 	case 456:
 		goto st_case_456
 	case 457:
@@ -1189,8 +1191,8 @@ func parse(s string)(Parsed, error){
 		goto st_case_459
 	case 460:
 		goto st_case_460
-	case 514:
-		goto st_case_514
+	case 515:
+		goto st_case_515
 	case 461:
 		goto st_case_461
 	case 462:
@@ -1209,7 +1211,7 @@ te = p+1
         }
 	goto st464
 tr11:
-//line parse.rl:515
+//line parse.rl:516
 p = (te) - 1
 {
                 _ = p // this is to make staticcheck happy
@@ -1224,7 +1226,7 @@ p = (te) - 1
                 }
 	goto st464
 tr14:
-//line parse.rl:525
+//line parse.rl:526
 p = (te) - 1
 {
                 _ = p // this is to make staticcheck happy
@@ -1236,7 +1238,7 @@ p = (te) - 1
                 }
 	goto st464
 tr17:
-//line parse.rl:532
+//line parse.rl:533
 p = (te) - 1
 {
                 _ = p // this is to make staticcheck happy
@@ -1245,7 +1247,7 @@ p = (te) - 1
                 {stack[top] = 464; top++; goto st145 }
                 }
 	goto st464
-tr857:
+tr858:
 //line parse.rl:132
 te = p
 p--
@@ -1253,8 +1255,8 @@ p--
             mark = p;
         }
 	goto st464
-tr859:
-//line parse.rl:515
+tr860:
+//line parse.rl:516
 te = p
 p--
 {
@@ -1269,8 +1271,8 @@ p--
                 {stack[top] = 464; top++; goto st286 }
                 }
 	goto st464
-tr860:
-//line parse.rl:525
+tr861:
+//line parse.rl:526
 te = p
 p--
 {
@@ -1282,8 +1284,8 @@ p--
                 {goto st14 }
                 }
 	goto st464
-tr861:
-//line parse.rl:532
+tr862:
+//line parse.rl:533
 te = p
 p--
 {
@@ -1293,7 +1295,7 @@ p--
                 {stack[top] = 464; top++; goto st145 }
                 }
 	goto st464
-tr862:
+tr863:
 //line parse.rl:351
 te = p
 p--
@@ -1303,11 +1305,11 @@ p--
             return nt, fmt.Errorf("error in parsing at char %d, '%s'", p, s[p:p+1])
         }
 	goto st464
-tr864:
-//line parse.rl:537
+tr865:
+//line parse.rl:538
 te = p
 p--
-{{stack[top] = 464; top++; goto st506 }}
+{{stack[top] = 464; top++; goto st507 }}
 	goto st464
 	st464:
 //line NONE:1
@@ -1320,12 +1322,12 @@ ts = 0
 //line NONE:1
 ts = p
 
-//line parse.go:1324
+//line parse.go:1326
 		switch ( s)[p] {
 		case 32:
 			goto st465
 		case 42:
-			goto tr855
+			goto tr856
 		case 64:
 			goto st472
 		}
@@ -1334,7 +1336,7 @@ ts = p
 			switch {
 			case ( s)[p] > 13:
 				if 44 <= ( s)[p] && ( s)[p] <= 45 {
-					goto tr855
+					goto tr856
 				}
 			case ( s)[p] >= 9:
 				goto st465
@@ -1343,13 +1345,13 @@ ts = p
 			switch {
 			case ( s)[p] > 90:
 				if 97 <= ( s)[p] && ( s)[p] <= 122 {
-					goto tr855
+					goto tr856
 				}
 			case ( s)[p] >= 65:
-				goto tr855
+				goto tr856
 			}
 		default:
-			goto tr855
+			goto tr856
 		}
 		goto st1
 	st1:
@@ -1379,7 +1381,7 @@ st_case_0:
 		if 9 <= ( s)[p] && ( s)[p] <= 13 {
 			goto st466
 		}
-		goto tr857
+		goto tr858
 	st466:
 		if p++; p == pe {
 			goto _test_eof466
@@ -1391,8 +1393,8 @@ st_case_0:
 		if 9 <= ( s)[p] && ( s)[p] <= 13 {
 			goto st466
 		}
-		goto tr857
-tr855:
+		goto tr858
+tr856:
 //line parse.rl:132
 
             mark = p;
@@ -1403,7 +1405,7 @@ tr855:
 			goto _test_eof2
 		}
 	st_case_2:
-//line parse.go:1407
+//line parse.go:1409
 		switch ( s)[p] {
 		case 32:
 			goto st3
@@ -1681,7 +1683,7 @@ te = p+1
 			goto _test_eof467
 		}
 	st_case_467:
-//line parse.go:1685
+//line parse.go:1687
 		switch ( s)[p] {
 		case 32:
 			goto st10
@@ -1710,7 +1712,7 @@ te = p+1
 		default:
 			goto tr10
 		}
-		goto tr859
+		goto tr860
 	st10:
 		if p++; p == pe {
 			goto _test_eof10
@@ -1755,7 +1757,7 @@ te = p+1
 			goto _test_eof468
 		}
 	st_case_468:
-//line parse.go:1759
+//line parse.go:1761
 		switch ( s)[p] {
 		case 32:
 			goto st11
@@ -1784,7 +1786,7 @@ te = p+1
 		default:
 			goto tr13
 		}
-		goto tr860
+		goto tr861
 	st11:
 		if p++; p == pe {
 			goto _test_eof11
@@ -1829,7 +1831,7 @@ te = p+1
 			goto _test_eof469
 		}
 	st_case_469:
-//line parse.go:1833
+//line parse.go:1835
 		switch ( s)[p] {
 		case 32:
 			goto st12
@@ -1858,7 +1860,7 @@ te = p+1
 		default:
 			goto tr16
 		}
-		goto tr861
+		goto tr862
 	st12:
 		if p++; p == pe {
 			goto _test_eof12
@@ -1926,7 +1928,7 @@ te = p+1
 		default:
 			goto st470
 		}
-		goto tr862
+		goto tr863
 	st471:
 		if p++; p == pe {
 			goto _test_eof471
@@ -1952,7 +1954,7 @@ te = p+1
 		default:
 			goto st470
 		}
-		goto tr862
+		goto tr863
 	st13:
 		if p++; p == pe {
 			goto _test_eof13
@@ -1995,7 +1997,7 @@ te = p+1
 		if ( s)[p] == 43 {
 			goto tr0
 		}
-		goto tr864
+		goto tr865
 tr23:
 //line parse.rl:375
  start=0;end=59;m=1;d=1; 
@@ -2144,7 +2146,7 @@ ts = 0
 			goto _test_eof14
 		}
 	st_case_14:
-//line parse.go:2148
+//line parse.go:2150
 		if ( s)[p] == 42 {
 			goto tr20
 		}
@@ -2161,7 +2163,7 @@ d=0;
 			goto _test_eof15
 		}
 	st_case_15:
-//line parse.go:2165
+//line parse.go:2167
 		switch ( s)[p] {
 		case 32:
 			goto tr22
@@ -2319,7 +2321,7 @@ tr270:
 			goto _test_eof16
 		}
 	st_case_16:
-//line parse.go:2323
+//line parse.go:2325
 		switch ( s)[p] {
 		case 32:
 			goto st16
@@ -2344,7 +2346,7 @@ d=0;
 			goto _test_eof17
 		}
 	st_case_17:
-//line parse.go:2348
+//line parse.go:2350
 		switch ( s)[p] {
 		case 32:
 			goto tr28
@@ -2502,7 +2504,7 @@ d=m
 			goto _test_eof18
 		}
 	st_case_18:
-//line parse.go:2506
+//line parse.go:2508
 		switch ( s)[p] {
 		case 32:
 			goto st18
@@ -2527,7 +2529,7 @@ d=0;
 			goto _test_eof19
 		}
 	st_case_19:
-//line parse.go:2531
+//line parse.go:2533
 		switch ( s)[p] {
 		case 32:
 			goto tr34
@@ -2685,7 +2687,7 @@ d=m
 			goto _test_eof20
 		}
 	st_case_20:
-//line parse.go:2689
+//line parse.go:2691
 		switch ( s)[p] {
 		case 32:
 			goto st20
@@ -2730,7 +2732,7 @@ d=0;
 			goto _test_eof21
 		}
 	st_case_21:
-//line parse.go:2734
+//line parse.go:2736
 		switch ( s)[p] {
 		case 32:
 			goto tr45
@@ -2946,7 +2948,7 @@ tr216:
 			goto _test_eof22
 		}
 	st_case_22:
-//line parse.go:2950
+//line parse.go:2952
 		switch ( s)[p] {
 		case 32:
 			goto st22
@@ -3003,7 +3005,7 @@ d=0;
 			goto _test_eof23
 		}
 	st_case_23:
-//line parse.go:3007
+//line parse.go:3009
 		switch ( s)[p] {
 		case 32:
 			goto tr59
@@ -3219,7 +3221,7 @@ tr155:
 			goto _test_eof24
 		}
 	st_case_24:
-//line parse.go:3223
+//line parse.go:3225
 		switch ( s)[p] {
 		case 32:
 			goto st24
@@ -3264,264 +3266,17 @@ d=0;
 			goto _test_eof473
 		}
 	st_case_473:
-//line parse.go:3268
+//line parse.go:3270
 		switch ( s)[p] {
 		case 32:
-			goto tr865
-		case 44:
 			goto tr866
-		case 47:
+		case 44:
 			goto tr867
+		case 47:
+			goto tr868
 		}
 		if 9 <= ( s)[p] && ( s)[p] <= 13 {
-			goto tr865
-		}
-		goto st0
-tr865:
-//line parse.rl:394
- start=0;end=6;m=0;d=1; 
-//line parse.rl:236
-
-            {
-                //const sundaysAtFirst = uint64(1 | 1<<7 | 1<<14 | 1<<21 | 1<<28 | 1<<35 | 1<<42)
-                if d>7{
-                    return nt, fmt.Errorf("invalid day of week */%d", d)
-                }
-                if start>7 {
-                    return nt, fmt.Errorf("invalid start day of week %d", start)
-                }
-                if end==7{
-                    end=6 // for compatibility with older crons
-                }
-                if end>6 {
-                    return nt, fmt.Errorf("invalid end day of week %d", start)
-                }
-                if start>end {
-                    return nt, errors.New("invalid day of week range start must be before end")
-                }
-
-                // handle the case that isn't a 
-                dayRange := (^uint64(0))<<(64 - (end-start+1))>>(64 - end-1)
-                if d==0{
-                    //nt.dow |= uint32(sundaysAtFirst<<start)
-                    nt.dow |= uint8(1<<start)
-                }else{
-                    dayRange&=skips[d-1]&mask7
-                    nt.dow |= uint8(dayRange)
-                }
-            }
-        
-	goto st474
-tr869:
-//line parse.rl:356
-
-            m=0
-            for _, x := range s[mark:p] {
-                m*=10
-                m+=uint64(x-'0') // since we know that x is a numerical digit we can subtract the rune '0' to convert to a number from 0 to 9
-            }
-        
-//line parse.rl:394
- start=m; end=6;d=0;
-//line parse.rl:236
-
-            {
-                //const sundaysAtFirst = uint64(1 | 1<<7 | 1<<14 | 1<<21 | 1<<28 | 1<<35 | 1<<42)
-                if d>7{
-                    return nt, fmt.Errorf("invalid day of week */%d", d)
-                }
-                if start>7 {
-                    return nt, fmt.Errorf("invalid start day of week %d", start)
-                }
-                if end==7{
-                    end=6 // for compatibility with older crons
-                }
-                if end>6 {
-                    return nt, fmt.Errorf("invalid end day of week %d", start)
-                }
-                if start>end {
-                    return nt, errors.New("invalid day of week range start must be before end")
-                }
-
-                // handle the case that isn't a 
-                dayRange := (^uint64(0))<<(64 - (end-start+1))>>(64 - end-1)
-                if d==0{
-                    //nt.dow |= uint32(sundaysAtFirst<<start)
-                    nt.dow |= uint8(1<<start)
-                }else{
-                    dayRange&=skips[d-1]&mask7
-                    nt.dow |= uint8(dayRange)
-                }
-            }
-        
-	goto st474
-tr874:
-//line parse.rl:356
-
-            m=0
-            for _, x := range s[mark:p] {
-                m*=10
-                m+=uint64(x-'0') // since we know that x is a numerical digit we can subtract the rune '0' to convert to a number from 0 to 9
-            }
-        
-//line parse.rl:394
- end=m; d=1;
-//line parse.rl:236
-
-            {
-                //const sundaysAtFirst = uint64(1 | 1<<7 | 1<<14 | 1<<21 | 1<<28 | 1<<35 | 1<<42)
-                if d>7{
-                    return nt, fmt.Errorf("invalid day of week */%d", d)
-                }
-                if start>7 {
-                    return nt, fmt.Errorf("invalid start day of week %d", start)
-                }
-                if end==7{
-                    end=6 // for compatibility with older crons
-                }
-                if end>6 {
-                    return nt, fmt.Errorf("invalid end day of week %d", start)
-                }
-                if start>end {
-                    return nt, errors.New("invalid day of week range start must be before end")
-                }
-
-                // handle the case that isn't a 
-                dayRange := (^uint64(0))<<(64 - (end-start+1))>>(64 - end-1)
-                if d==0{
-                    //nt.dow |= uint32(sundaysAtFirst<<start)
-                    nt.dow |= uint8(1<<start)
-                }else{
-                    dayRange&=skips[d-1]&mask7
-                    nt.dow |= uint8(dayRange)
-                }
-            }
-        
-	goto st474
-tr878:
-//line parse.rl:356
-
-            m=0
-            for _, x := range s[mark:p] {
-                m*=10
-                m+=uint64(x-'0') // since we know that x is a numerical digit we can subtract the rune '0' to convert to a number from 0 to 9
-            }
-        
-//line parse.rl:395
-d=m
-//line parse.rl:236
-
-            {
-                //const sundaysAtFirst = uint64(1 | 1<<7 | 1<<14 | 1<<21 | 1<<28 | 1<<35 | 1<<42)
-                if d>7{
-                    return nt, fmt.Errorf("invalid day of week */%d", d)
-                }
-                if start>7 {
-                    return nt, fmt.Errorf("invalid start day of week %d", start)
-                }
-                if end==7{
-                    end=6 // for compatibility with older crons
-                }
-                if end>6 {
-                    return nt, fmt.Errorf("invalid end day of week %d", start)
-                }
-                if start>end {
-                    return nt, errors.New("invalid day of week range start must be before end")
-                }
-
-                // handle the case that isn't a 
-                dayRange := (^uint64(0))<<(64 - (end-start+1))>>(64 - end-1)
-                if d==0{
-                    //nt.dow |= uint32(sundaysAtFirst<<start)
-                    nt.dow |= uint8(1<<start)
-                }else{
-                    dayRange&=skips[d-1]&mask7
-                    nt.dow |= uint8(dayRange)
-                }
-            }
-        
-	goto st474
-tr881:
-//line parse.rl:394
- end=m; d=1;
-//line parse.rl:236
-
-            {
-                //const sundaysAtFirst = uint64(1 | 1<<7 | 1<<14 | 1<<21 | 1<<28 | 1<<35 | 1<<42)
-                if d>7{
-                    return nt, fmt.Errorf("invalid day of week */%d", d)
-                }
-                if start>7 {
-                    return nt, fmt.Errorf("invalid start day of week %d", start)
-                }
-                if end==7{
-                    end=6 // for compatibility with older crons
-                }
-                if end>6 {
-                    return nt, fmt.Errorf("invalid end day of week %d", start)
-                }
-                if start>end {
-                    return nt, errors.New("invalid day of week range start must be before end")
-                }
-
-                // handle the case that isn't a 
-                dayRange := (^uint64(0))<<(64 - (end-start+1))>>(64 - end-1)
-                if d==0{
-                    //nt.dow |= uint32(sundaysAtFirst<<start)
-                    nt.dow |= uint8(1<<start)
-                }else{
-                    dayRange&=skips[d-1]&mask7
-                    nt.dow |= uint8(dayRange)
-                }
-            }
-        
-	goto st474
-tr884:
-//line parse.rl:394
- start=m; end=6;d=0;
-//line parse.rl:236
-
-            {
-                //const sundaysAtFirst = uint64(1 | 1<<7 | 1<<14 | 1<<21 | 1<<28 | 1<<35 | 1<<42)
-                if d>7{
-                    return nt, fmt.Errorf("invalid day of week */%d", d)
-                }
-                if start>7 {
-                    return nt, fmt.Errorf("invalid start day of week %d", start)
-                }
-                if end==7{
-                    end=6 // for compatibility with older crons
-                }
-                if end>6 {
-                    return nt, fmt.Errorf("invalid end day of week %d", start)
-                }
-                if start>end {
-                    return nt, errors.New("invalid day of week range start must be before end")
-                }
-
-                // handle the case that isn't a 
-                dayRange := (^uint64(0))<<(64 - (end-start+1))>>(64 - end-1)
-                if d==0{
-                    //nt.dow |= uint32(sundaysAtFirst<<start)
-                    nt.dow |= uint8(1<<start)
-                }else{
-                    dayRange&=skips[d-1]&mask7
-                    nt.dow |= uint8(dayRange)
-                }
-            }
-        
-	goto st474
-	st474:
-		if p++; p == pe {
-			goto _test_eof474
-		}
-	st_case_474:
-//line parse.go:3520
-		if ( s)[p] == 32 {
-			goto st474
-		}
-		if 9 <= ( s)[p] && ( s)[p] <= 13 {
-			goto st474
+			goto tr866
 		}
 		goto st0
 tr866:
@@ -3558,7 +3313,7 @@ tr866:
                 }
             }
         
-	goto st25
+	goto st474
 tr870:
 //line parse.rl:356
 
@@ -3601,7 +3356,7 @@ tr870:
                 }
             }
         
-	goto st25
+	goto st474
 tr875:
 //line parse.rl:356
 
@@ -3644,7 +3399,7 @@ tr875:
                 }
             }
         
-	goto st25
+	goto st474
 tr879:
 //line parse.rl:356
 
@@ -3687,7 +3442,7 @@ d=m
                 }
             }
         
-	goto st25
+	goto st474
 tr882:
 //line parse.rl:394
  end=m; d=1;
@@ -3722,8 +3477,255 @@ tr882:
                 }
             }
         
-	goto st25
+	goto st474
 tr885:
+//line parse.rl:394
+ start=m; end=6;d=0;
+//line parse.rl:236
+
+            {
+                //const sundaysAtFirst = uint64(1 | 1<<7 | 1<<14 | 1<<21 | 1<<28 | 1<<35 | 1<<42)
+                if d>7{
+                    return nt, fmt.Errorf("invalid day of week */%d", d)
+                }
+                if start>7 {
+                    return nt, fmt.Errorf("invalid start day of week %d", start)
+                }
+                if end==7{
+                    end=6 // for compatibility with older crons
+                }
+                if end>6 {
+                    return nt, fmt.Errorf("invalid end day of week %d", start)
+                }
+                if start>end {
+                    return nt, errors.New("invalid day of week range start must be before end")
+                }
+
+                // handle the case that isn't a 
+                dayRange := (^uint64(0))<<(64 - (end-start+1))>>(64 - end-1)
+                if d==0{
+                    //nt.dow |= uint32(sundaysAtFirst<<start)
+                    nt.dow |= uint8(1<<start)
+                }else{
+                    dayRange&=skips[d-1]&mask7
+                    nt.dow |= uint8(dayRange)
+                }
+            }
+        
+	goto st474
+	st474:
+		if p++; p == pe {
+			goto _test_eof474
+		}
+	st_case_474:
+//line parse.go:3522
+		if ( s)[p] == 32 {
+			goto st474
+		}
+		if 9 <= ( s)[p] && ( s)[p] <= 13 {
+			goto st474
+		}
+		goto st0
+tr867:
+//line parse.rl:394
+ start=0;end=6;m=0;d=1; 
+//line parse.rl:236
+
+            {
+                //const sundaysAtFirst = uint64(1 | 1<<7 | 1<<14 | 1<<21 | 1<<28 | 1<<35 | 1<<42)
+                if d>7{
+                    return nt, fmt.Errorf("invalid day of week */%d", d)
+                }
+                if start>7 {
+                    return nt, fmt.Errorf("invalid start day of week %d", start)
+                }
+                if end==7{
+                    end=6 // for compatibility with older crons
+                }
+                if end>6 {
+                    return nt, fmt.Errorf("invalid end day of week %d", start)
+                }
+                if start>end {
+                    return nt, errors.New("invalid day of week range start must be before end")
+                }
+
+                // handle the case that isn't a 
+                dayRange := (^uint64(0))<<(64 - (end-start+1))>>(64 - end-1)
+                if d==0{
+                    //nt.dow |= uint32(sundaysAtFirst<<start)
+                    nt.dow |= uint8(1<<start)
+                }else{
+                    dayRange&=skips[d-1]&mask7
+                    nt.dow |= uint8(dayRange)
+                }
+            }
+        
+	goto st25
+tr871:
+//line parse.rl:356
+
+            m=0
+            for _, x := range s[mark:p] {
+                m*=10
+                m+=uint64(x-'0') // since we know that x is a numerical digit we can subtract the rune '0' to convert to a number from 0 to 9
+            }
+        
+//line parse.rl:394
+ start=m; end=6;d=0;
+//line parse.rl:236
+
+            {
+                //const sundaysAtFirst = uint64(1 | 1<<7 | 1<<14 | 1<<21 | 1<<28 | 1<<35 | 1<<42)
+                if d>7{
+                    return nt, fmt.Errorf("invalid day of week */%d", d)
+                }
+                if start>7 {
+                    return nt, fmt.Errorf("invalid start day of week %d", start)
+                }
+                if end==7{
+                    end=6 // for compatibility with older crons
+                }
+                if end>6 {
+                    return nt, fmt.Errorf("invalid end day of week %d", start)
+                }
+                if start>end {
+                    return nt, errors.New("invalid day of week range start must be before end")
+                }
+
+                // handle the case that isn't a 
+                dayRange := (^uint64(0))<<(64 - (end-start+1))>>(64 - end-1)
+                if d==0{
+                    //nt.dow |= uint32(sundaysAtFirst<<start)
+                    nt.dow |= uint8(1<<start)
+                }else{
+                    dayRange&=skips[d-1]&mask7
+                    nt.dow |= uint8(dayRange)
+                }
+            }
+        
+	goto st25
+tr876:
+//line parse.rl:356
+
+            m=0
+            for _, x := range s[mark:p] {
+                m*=10
+                m+=uint64(x-'0') // since we know that x is a numerical digit we can subtract the rune '0' to convert to a number from 0 to 9
+            }
+        
+//line parse.rl:394
+ end=m; d=1;
+//line parse.rl:236
+
+            {
+                //const sundaysAtFirst = uint64(1 | 1<<7 | 1<<14 | 1<<21 | 1<<28 | 1<<35 | 1<<42)
+                if d>7{
+                    return nt, fmt.Errorf("invalid day of week */%d", d)
+                }
+                if start>7 {
+                    return nt, fmt.Errorf("invalid start day of week %d", start)
+                }
+                if end==7{
+                    end=6 // for compatibility with older crons
+                }
+                if end>6 {
+                    return nt, fmt.Errorf("invalid end day of week %d", start)
+                }
+                if start>end {
+                    return nt, errors.New("invalid day of week range start must be before end")
+                }
+
+                // handle the case that isn't a 
+                dayRange := (^uint64(0))<<(64 - (end-start+1))>>(64 - end-1)
+                if d==0{
+                    //nt.dow |= uint32(sundaysAtFirst<<start)
+                    nt.dow |= uint8(1<<start)
+                }else{
+                    dayRange&=skips[d-1]&mask7
+                    nt.dow |= uint8(dayRange)
+                }
+            }
+        
+	goto st25
+tr880:
+//line parse.rl:356
+
+            m=0
+            for _, x := range s[mark:p] {
+                m*=10
+                m+=uint64(x-'0') // since we know that x is a numerical digit we can subtract the rune '0' to convert to a number from 0 to 9
+            }
+        
+//line parse.rl:395
+d=m
+//line parse.rl:236
+
+            {
+                //const sundaysAtFirst = uint64(1 | 1<<7 | 1<<14 | 1<<21 | 1<<28 | 1<<35 | 1<<42)
+                if d>7{
+                    return nt, fmt.Errorf("invalid day of week */%d", d)
+                }
+                if start>7 {
+                    return nt, fmt.Errorf("invalid start day of week %d", start)
+                }
+                if end==7{
+                    end=6 // for compatibility with older crons
+                }
+                if end>6 {
+                    return nt, fmt.Errorf("invalid end day of week %d", start)
+                }
+                if start>end {
+                    return nt, errors.New("invalid day of week range start must be before end")
+                }
+
+                // handle the case that isn't a 
+                dayRange := (^uint64(0))<<(64 - (end-start+1))>>(64 - end-1)
+                if d==0{
+                    //nt.dow |= uint32(sundaysAtFirst<<start)
+                    nt.dow |= uint8(1<<start)
+                }else{
+                    dayRange&=skips[d-1]&mask7
+                    nt.dow |= uint8(dayRange)
+                }
+            }
+        
+	goto st25
+tr883:
+//line parse.rl:394
+ end=m; d=1;
+//line parse.rl:236
+
+            {
+                //const sundaysAtFirst = uint64(1 | 1<<7 | 1<<14 | 1<<21 | 1<<28 | 1<<35 | 1<<42)
+                if d>7{
+                    return nt, fmt.Errorf("invalid day of week */%d", d)
+                }
+                if start>7 {
+                    return nt, fmt.Errorf("invalid start day of week %d", start)
+                }
+                if end==7{
+                    end=6 // for compatibility with older crons
+                }
+                if end>6 {
+                    return nt, fmt.Errorf("invalid end day of week %d", start)
+                }
+                if start>end {
+                    return nt, errors.New("invalid day of week range start must be before end")
+                }
+
+                // handle the case that isn't a 
+                dayRange := (^uint64(0))<<(64 - (end-start+1))>>(64 - end-1)
+                if d==0{
+                    //nt.dow |= uint32(sundaysAtFirst<<start)
+                    nt.dow |= uint8(1<<start)
+                }else{
+                    dayRange&=skips[d-1]&mask7
+                    nt.dow |= uint8(dayRange)
+                }
+            }
+        
+	goto st25
+tr886:
 //line parse.rl:394
  start=m; end=6;d=0;
 //line parse.rl:236
@@ -3763,7 +3765,7 @@ tr885:
 			goto _test_eof25
 		}
 	st_case_25:
-//line parse.go:3767
+//line parse.go:3769
 		switch ( s)[p] {
 		case 42:
 			goto tr63
@@ -3805,16 +3807,16 @@ d=0;
 			goto _test_eof475
 		}
 	st_case_475:
-//line parse.go:3809
+//line parse.go:3811
 		switch ( s)[p] {
 		case 32:
-			goto tr869
-		case 44:
 			goto tr870
-		case 45:
+		case 44:
 			goto tr871
-		case 47:
+		case 45:
 			goto tr872
+		case 47:
+			goto tr873
 		}
 		switch {
 		case ( s)[p] > 13:
@@ -3822,10 +3824,10 @@ d=0;
 				goto st475
 			}
 		case ( s)[p] >= 9:
-			goto tr869
+			goto tr870
 		}
 		goto st0
-tr871:
+tr872:
 //line parse.rl:356
 
             m=0
@@ -3837,7 +3839,7 @@ tr871:
 //line parse.rl:394
  start=m; end=6;d=0;
 	goto st26
-tr886:
+tr887:
 //line parse.rl:394
  start=m; end=6;d=0;
 	goto st26
@@ -3846,7 +3848,7 @@ tr886:
 			goto _test_eof26
 		}
 	st_case_26:
-//line parse.go:3850
+//line parse.go:3852
 		switch ( s)[p] {
 		case 70:
 			goto st28
@@ -3884,14 +3886,14 @@ tr70:
 			goto _test_eof476
 		}
 	st_case_476:
-//line parse.go:3888
+//line parse.go:3890
 		switch ( s)[p] {
 		case 32:
-			goto tr874
-		case 44:
 			goto tr875
-		case 47:
+		case 44:
 			goto tr876
+		case 47:
+			goto tr877
 		}
 		switch {
 		case ( s)[p] > 13:
@@ -3899,14 +3901,14 @@ tr70:
 				goto st476
 			}
 		case ( s)[p] >= 9:
-			goto tr874
+			goto tr875
 		}
 		goto st0
-tr867:
+tr868:
 //line parse.rl:394
  start=0;end=6;m=0;d=1; 
 	goto st27
-tr872:
+tr873:
 //line parse.rl:356
 
             m=0
@@ -3918,7 +3920,7 @@ tr872:
 //line parse.rl:394
  start=m; end=6;d=0;
 	goto st27
-tr876:
+tr877:
 //line parse.rl:356
 
             m=0
@@ -3930,11 +3932,11 @@ tr876:
 //line parse.rl:394
  end=m; d=1;
 	goto st27
-tr883:
+tr884:
 //line parse.rl:394
  end=m; d=1;
 	goto st27
-tr887:
+tr888:
 //line parse.rl:394
  start=m; end=6;d=0;
 	goto st27
@@ -3943,7 +3945,7 @@ tr887:
 			goto _test_eof27
 		}
 	st_case_27:
-//line parse.go:3947
+//line parse.go:3949
 		if 48 <= ( s)[p] && ( s)[p] <= 57 {
 			goto tr76
 		}
@@ -3959,12 +3961,12 @@ tr76:
 			goto _test_eof477
 		}
 	st_case_477:
-//line parse.go:3963
+//line parse.go:3965
 		switch ( s)[p] {
 		case 32:
-			goto tr878
-		case 44:
 			goto tr879
+		case 44:
+			goto tr880
 		}
 		switch {
 		case ( s)[p] > 13:
@@ -3972,7 +3974,7 @@ tr76:
 				goto st477
 			}
 		case ( s)[p] >= 9:
-			goto tr878
+			goto tr879
 		}
 		goto st0
 	st28:
@@ -4032,17 +4034,17 @@ m=3
 			goto _test_eof478
 		}
 	st_case_478:
-//line parse.go:4036
+//line parse.go:4038
 		switch ( s)[p] {
 		case 32:
-			goto tr881
-		case 44:
 			goto tr882
-		case 47:
+		case 44:
 			goto tr883
+		case 47:
+			goto tr884
 		}
 		if 9 <= ( s)[p] && ( s)[p] <= 13 {
-			goto tr881
+			goto tr882
 		}
 		goto st0
 	st30:
@@ -4182,7 +4184,7 @@ d=0;
 			goto _test_eof40
 		}
 	st_case_40:
-//line parse.go:4186
+//line parse.go:4188
 		switch ( s)[p] {
 		case 82:
 			goto st41
@@ -4235,19 +4237,19 @@ m=3
 			goto _test_eof479
 		}
 	st_case_479:
-//line parse.go:4239
+//line parse.go:4241
 		switch ( s)[p] {
 		case 32:
-			goto tr884
-		case 44:
 			goto tr885
-		case 45:
+		case 44:
 			goto tr886
-		case 47:
+		case 45:
 			goto tr887
+		case 47:
+			goto tr888
 		}
 		if 9 <= ( s)[p] && ( s)[p] <= 13 {
-			goto tr884
+			goto tr885
 		}
 		goto st0
 tr66:
@@ -4259,7 +4261,7 @@ d=0;
 			goto _test_eof42
 		}
 	st_case_42:
-//line parse.go:4263
+//line parse.go:4265
 		switch ( s)[p] {
 		case 79:
 			goto st43
@@ -4288,7 +4290,7 @@ d=0;
 			goto _test_eof44
 		}
 	st_case_44:
-//line parse.go:4292
+//line parse.go:4294
 		switch ( s)[p] {
 		case 65:
 			goto st45
@@ -4333,7 +4335,7 @@ d=0;
 			goto _test_eof47
 		}
 	st_case_47:
-//line parse.go:4337
+//line parse.go:4339
 		switch ( s)[p] {
 		case 72:
 			goto st48
@@ -4378,7 +4380,7 @@ d=0;
 			goto _test_eof50
 		}
 	st_case_50:
-//line parse.go:4382
+//line parse.go:4384
 		switch ( s)[p] {
 		case 69:
 			goto st51
@@ -4601,7 +4603,7 @@ tr156:
 			goto _test_eof52
 		}
 	st_case_52:
-//line parse.go:4605
+//line parse.go:4607
 		switch ( s)[p] {
 		case 42:
 			goto tr49
@@ -4655,7 +4657,7 @@ d=0;
 			goto _test_eof53
 		}
 	st_case_53:
-//line parse.go:4659
+//line parse.go:4661
 		switch ( s)[p] {
 		case 32:
 			goto tr105
@@ -4696,7 +4698,7 @@ tr157:
 			goto _test_eof54
 		}
 	st_case_54:
-//line parse.go:4700
+//line parse.go:4702
 		switch ( s)[p] {
 		case 65:
 			goto st58
@@ -4746,7 +4748,7 @@ tr110:
 			goto _test_eof55
 		}
 	st_case_55:
-//line parse.go:4750
+//line parse.go:4752
 		switch ( s)[p] {
 		case 32:
 			goto tr119
@@ -4805,7 +4807,7 @@ tr158:
 			goto _test_eof56
 		}
 	st_case_56:
-//line parse.go:4809
+//line parse.go:4811
 		if 48 <= ( s)[p] && ( s)[p] <= 57 {
 			goto tr123
 		}
@@ -4821,7 +4823,7 @@ tr123:
 			goto _test_eof57
 		}
 	st_case_57:
-//line parse.go:4825
+//line parse.go:4827
 		switch ( s)[p] {
 		case 32:
 			goto tr124
@@ -4918,7 +4920,7 @@ m=9
 			goto _test_eof60
 		}
 	st_case_60:
-//line parse.go:4922
+//line parse.go:4924
 		switch ( s)[p] {
 		case 32:
 			goto tr130
@@ -5144,7 +5146,7 @@ d=0;
 			goto _test_eof77
 		}
 	st_case_77:
-//line parse.go:5148
+//line parse.go:5150
 		switch ( s)[p] {
 		case 80:
 			goto st78
@@ -5221,7 +5223,7 @@ m=9
 			goto _test_eof79
 		}
 	st_case_79:
-//line parse.go:5225
+//line parse.go:5227
 		switch ( s)[p] {
 		case 32:
 			goto tr155
@@ -5257,7 +5259,7 @@ d=0;
 			goto _test_eof81
 		}
 	st_case_81:
-//line parse.go:5261
+//line parse.go:5263
 		switch ( s)[p] {
 		case 69:
 			goto st82
@@ -5286,7 +5288,7 @@ d=0;
 			goto _test_eof83
 		}
 	st_case_83:
-//line parse.go:5290
+//line parse.go:5292
 		switch ( s)[p] {
 		case 69:
 			goto st84
@@ -5315,7 +5317,7 @@ d=0;
 			goto _test_eof85
 		}
 	st_case_85:
-//line parse.go:5319
+//line parse.go:5321
 		switch ( s)[p] {
 		case 65:
 			goto st86
@@ -5364,7 +5366,7 @@ d=0;
 			goto _test_eof88
 		}
 	st_case_88:
-//line parse.go:5368
+//line parse.go:5370
 		switch ( s)[p] {
 		case 65:
 			goto st89
@@ -5397,7 +5399,7 @@ d=0;
 			goto _test_eof90
 		}
 	st_case_90:
-//line parse.go:5401
+//line parse.go:5403
 		switch ( s)[p] {
 		case 79:
 			goto st91
@@ -5426,7 +5428,7 @@ d=0;
 			goto _test_eof92
 		}
 	st_case_92:
-//line parse.go:5430
+//line parse.go:5432
 		switch ( s)[p] {
 		case 67:
 			goto st93
@@ -5455,7 +5457,7 @@ d=0;
 			goto _test_eof94
 		}
 	st_case_94:
-//line parse.go:5459
+//line parse.go:5461
 		switch ( s)[p] {
 		case 69:
 			goto st95
@@ -5678,7 +5680,7 @@ tr217:
 			goto _test_eof96
 		}
 	st_case_96:
-//line parse.go:5682
+//line parse.go:5684
 		switch ( s)[p] {
 		case 42:
 			goto tr38
@@ -5720,7 +5722,7 @@ d=0;
 			goto _test_eof97
 		}
 	st_case_97:
-//line parse.go:5724
+//line parse.go:5726
 		switch ( s)[p] {
 		case 32:
 			goto tr178
@@ -5761,7 +5763,7 @@ tr218:
 			goto _test_eof98
 		}
 	st_case_98:
-//line parse.go:5765
+//line parse.go:5767
 		switch ( s)[p] {
 		case 70:
 			goto st102
@@ -5799,7 +5801,7 @@ tr183:
 			goto _test_eof99
 		}
 	st_case_99:
-//line parse.go:5803
+//line parse.go:5805
 		switch ( s)[p] {
 		case 32:
 			goto tr189
@@ -5858,7 +5860,7 @@ tr219:
 			goto _test_eof100
 		}
 	st_case_100:
-//line parse.go:5862
+//line parse.go:5864
 		if 48 <= ( s)[p] && ( s)[p] <= 57 {
 			goto tr193
 		}
@@ -5874,7 +5876,7 @@ tr193:
 			goto _test_eof101
 		}
 	st_case_101:
-//line parse.go:5878
+//line parse.go:5880
 		switch ( s)[p] {
 		case 32:
 			goto tr194
@@ -5947,7 +5949,7 @@ m=3
 			goto _test_eof104
 		}
 	st_case_104:
-//line parse.go:5951
+//line parse.go:5953
 		switch ( s)[p] {
 		case 32:
 			goto tr199
@@ -6097,7 +6099,7 @@ d=0;
 			goto _test_eof115
 		}
 	st_case_115:
-//line parse.go:6101
+//line parse.go:6103
 		switch ( s)[p] {
 		case 82:
 			goto st116
@@ -6150,7 +6152,7 @@ m=3
 			goto _test_eof117
 		}
 	st_case_117:
-//line parse.go:6154
+//line parse.go:6156
 		switch ( s)[p] {
 		case 32:
 			goto tr216
@@ -6174,7 +6176,7 @@ d=0;
 			goto _test_eof118
 		}
 	st_case_118:
-//line parse.go:6178
+//line parse.go:6180
 		switch ( s)[p] {
 		case 79:
 			goto st119
@@ -6203,7 +6205,7 @@ d=0;
 			goto _test_eof120
 		}
 	st_case_120:
-//line parse.go:6207
+//line parse.go:6209
 		switch ( s)[p] {
 		case 65:
 			goto st121
@@ -6248,7 +6250,7 @@ d=0;
 			goto _test_eof123
 		}
 	st_case_123:
-//line parse.go:6252
+//line parse.go:6254
 		switch ( s)[p] {
 		case 72:
 			goto st124
@@ -6293,7 +6295,7 @@ d=0;
 			goto _test_eof126
 		}
 	st_case_126:
-//line parse.go:6297
+//line parse.go:6299
 		switch ( s)[p] {
 		case 69:
 			goto st127
@@ -6458,7 +6460,7 @@ d=m
 			goto _test_eof128
 		}
 	st_case_128:
-//line parse.go:6462
+//line parse.go:6464
 		if ( s)[p] == 42 {
 			goto tr32
 		}
@@ -6479,7 +6481,7 @@ d=0;
 			goto _test_eof129
 		}
 	st_case_129:
-//line parse.go:6483
+//line parse.go:6485
 		switch ( s)[p] {
 		case 32:
 			goto tr232
@@ -6516,7 +6518,7 @@ tr234:
 			goto _test_eof130
 		}
 	st_case_130:
-//line parse.go:6520
+//line parse.go:6522
 		if 48 <= ( s)[p] && ( s)[p] <= 57 {
 			goto tr237
 		}
@@ -6532,7 +6534,7 @@ tr237:
 			goto _test_eof131
 		}
 	st_case_131:
-//line parse.go:6536
+//line parse.go:6538
 		switch ( s)[p] {
 		case 32:
 			goto tr238
@@ -6583,7 +6585,7 @@ tr240:
 			goto _test_eof132
 		}
 	st_case_132:
-//line parse.go:6587
+//line parse.go:6589
 		if 48 <= ( s)[p] && ( s)[p] <= 57 {
 			goto tr242
 		}
@@ -6599,7 +6601,7 @@ tr242:
 			goto _test_eof133
 		}
 	st_case_133:
-//line parse.go:6603
+//line parse.go:6605
 		switch ( s)[p] {
 		case 32:
 			goto tr243
@@ -6760,7 +6762,7 @@ d=m
 			goto _test_eof134
 		}
 	st_case_134:
-//line parse.go:6764
+//line parse.go:6766
 		if ( s)[p] == 42 {
 			goto tr26
 		}
@@ -6781,7 +6783,7 @@ d=0;
 			goto _test_eof135
 		}
 	st_case_135:
-//line parse.go:6785
+//line parse.go:6787
 		switch ( s)[p] {
 		case 32:
 			goto tr246
@@ -6818,7 +6820,7 @@ tr248:
 			goto _test_eof136
 		}
 	st_case_136:
-//line parse.go:6822
+//line parse.go:6824
 		if 48 <= ( s)[p] && ( s)[p] <= 57 {
 			goto tr251
 		}
@@ -6834,7 +6836,7 @@ tr251:
 			goto _test_eof137
 		}
 	st_case_137:
-//line parse.go:6838
+//line parse.go:6840
 		switch ( s)[p] {
 		case 32:
 			goto tr252
@@ -6885,7 +6887,7 @@ tr254:
 			goto _test_eof138
 		}
 	st_case_138:
-//line parse.go:6889
+//line parse.go:6891
 		if 48 <= ( s)[p] && ( s)[p] <= 57 {
 			goto tr256
 		}
@@ -6901,7 +6903,7 @@ tr256:
 			goto _test_eof139
 		}
 	st_case_139:
-//line parse.go:6905
+//line parse.go:6907
 		switch ( s)[p] {
 		case 32:
 			goto tr257
@@ -6950,7 +6952,7 @@ tr272:
 			goto _test_eof140
 		}
 	st_case_140:
-//line parse.go:6954
+//line parse.go:6956
 		if 48 <= ( s)[p] && ( s)[p] <= 57 {
 			goto tr260
 		}
@@ -6966,7 +6968,7 @@ tr260:
 			goto _test_eof141
 		}
 	st_case_141:
-//line parse.go:6970
+//line parse.go:6972
 		switch ( s)[p] {
 		case 32:
 			goto tr261
@@ -6995,7 +6997,7 @@ d=0;
 			goto _test_eof142
 		}
 	st_case_142:
-//line parse.go:6999
+//line parse.go:7001
 		switch ( s)[p] {
 		case 32:
 			goto tr264
@@ -7032,7 +7034,7 @@ tr266:
 			goto _test_eof143
 		}
 	st_case_143:
-//line parse.go:7036
+//line parse.go:7038
 		if 48 <= ( s)[p] && ( s)[p] <= 57 {
 			goto tr269
 		}
@@ -7048,7 +7050,7 @@ tr269:
 			goto _test_eof144
 		}
 	st_case_144:
-//line parse.go:7052
+//line parse.go:7054
 		switch ( s)[p] {
 		case 32:
 			goto tr270
@@ -7214,7 +7216,7 @@ ts = 0
 			goto _test_eof145
 		}
 	st_case_145:
-//line parse.go:7218
+//line parse.go:7220
 		if ( s)[p] == 42 {
 			goto tr274
 		}
@@ -7231,7 +7233,7 @@ d=0;
 			goto _test_eof146
 		}
 	st_case_146:
-//line parse.go:7235
+//line parse.go:7237
 		switch ( s)[p] {
 		case 32:
 			goto tr276
@@ -7389,7 +7391,7 @@ tr551:
 			goto _test_eof147
 		}
 	st_case_147:
-//line parse.go:7393
+//line parse.go:7395
 		switch ( s)[p] {
 		case 32:
 			goto st147
@@ -7414,7 +7416,7 @@ d=0;
 			goto _test_eof148
 		}
 	st_case_148:
-//line parse.go:7418
+//line parse.go:7420
 		switch ( s)[p] {
 		case 32:
 			goto tr282
@@ -7572,7 +7574,7 @@ d=m
 			goto _test_eof149
 		}
 	st_case_149:
-//line parse.go:7576
+//line parse.go:7578
 		switch ( s)[p] {
 		case 32:
 			goto st149
@@ -7597,7 +7599,7 @@ d=0;
 			goto _test_eof150
 		}
 	st_case_150:
-//line parse.go:7601
+//line parse.go:7603
 		switch ( s)[p] {
 		case 32:
 			goto tr288
@@ -7755,7 +7757,7 @@ d=m
 			goto _test_eof151
 		}
 	st_case_151:
-//line parse.go:7759
+//line parse.go:7761
 		switch ( s)[p] {
 		case 32:
 			goto st151
@@ -7800,7 +7802,7 @@ d=0;
 			goto _test_eof152
 		}
 	st_case_152:
-//line parse.go:7804
+//line parse.go:7806
 		switch ( s)[p] {
 		case 32:
 			goto tr299
@@ -8016,7 +8018,7 @@ tr497:
 			goto _test_eof153
 		}
 	st_case_153:
-//line parse.go:8020
+//line parse.go:8022
 		switch ( s)[p] {
 		case 32:
 			goto st153
@@ -8073,7 +8075,7 @@ d=0;
 			goto _test_eof154
 		}
 	st_case_154:
-//line parse.go:8077
+//line parse.go:8079
 		switch ( s)[p] {
 		case 32:
 			goto tr313
@@ -8289,7 +8291,7 @@ tr436:
 			goto _test_eof155
 		}
 	st_case_155:
-//line parse.go:8293
+//line parse.go:8295
 		switch ( s)[p] {
 		case 32:
 			goto st155
@@ -8334,7 +8336,7 @@ d=0;
 			goto _test_eof156
 		}
 	st_case_156:
-//line parse.go:8338
+//line parse.go:8340
 		switch ( s)[p] {
 		case 32:
 			goto tr324
@@ -8586,7 +8588,7 @@ tr370:
 			goto _test_eof157
 		}
 	st_case_157:
-//line parse.go:8590
+//line parse.go:8592
 		switch ( s)[p] {
 		case 32:
 			goto st157
@@ -8611,20 +8613,20 @@ d=0;
 			goto _test_eof480
 		}
 	st_case_480:
-//line parse.go:8615
+//line parse.go:8617
 		switch ( s)[p] {
 		case 32:
-			goto tr888
-		case 44:
 			goto tr889
-		case 47:
+		case 44:
 			goto tr890
+		case 47:
+			goto tr891
 		}
 		if 9 <= ( s)[p] && ( s)[p] <= 13 {
-			goto tr888
+			goto tr889
 		}
 		goto st0
-tr888:
+tr889:
 //line parse.rl:398
  start=1970;end=2099;m=0;d=1; 
 //line parse.rl:267
@@ -8683,7 +8685,7 @@ tr888:
             }
         
 	goto st481
-tr892:
+tr893:
 //line parse.rl:356
 
             m=0
@@ -8750,7 +8752,7 @@ tr892:
             }
         
 	goto st481
-tr897:
+tr898:
 //line parse.rl:356
 
             m=0
@@ -8817,7 +8819,7 @@ tr897:
             }
         
 	goto st481
-tr901:
+tr902:
 //line parse.rl:356
 
             m=0
@@ -8889,7 +8891,7 @@ d=m
 			goto _test_eof481
 		}
 	st_case_481:
-//line parse.go:8893
+//line parse.go:8895
 		if ( s)[p] == 32 {
 			goto st481
 		}
@@ -8897,7 +8899,7 @@ d=m
 			goto st481
 		}
 		goto st0
-tr889:
+tr890:
 //line parse.rl:398
  start=1970;end=2099;m=0;d=1; 
 //line parse.rl:267
@@ -8956,7 +8958,7 @@ tr889:
             }
         
 	goto st158
-tr893:
+tr894:
 //line parse.rl:356
 
             m=0
@@ -9023,7 +9025,7 @@ tr893:
             }
         
 	goto st158
-tr898:
+tr899:
 //line parse.rl:356
 
             m=0
@@ -9090,7 +9092,7 @@ tr898:
             }
         
 	goto st158
-tr902:
+tr903:
 //line parse.rl:356
 
             m=0
@@ -9162,7 +9164,7 @@ d=m
 			goto _test_eof158
 		}
 	st_case_158:
-//line parse.go:9166
+//line parse.go:9168
 		if ( s)[p] == 42 {
 			goto tr328
 		}
@@ -9183,16 +9185,16 @@ d=0;
 			goto _test_eof482
 		}
 	st_case_482:
-//line parse.go:9187
+//line parse.go:9189
 		switch ( s)[p] {
 		case 32:
-			goto tr892
-		case 44:
 			goto tr893
-		case 45:
+		case 44:
 			goto tr894
-		case 47:
+		case 45:
 			goto tr895
+		case 47:
+			goto tr896
 		}
 		switch {
 		case ( s)[p] > 13:
@@ -9200,10 +9202,10 @@ d=0;
 				goto st482
 			}
 		case ( s)[p] >= 9:
-			goto tr892
+			goto tr893
 		}
 		goto st0
-tr894:
+tr895:
 //line parse.rl:356
 
             m=0
@@ -9220,7 +9222,7 @@ tr894:
 			goto _test_eof159
 		}
 	st_case_159:
-//line parse.go:9224
+//line parse.go:9226
 		if 48 <= ( s)[p] && ( s)[p] <= 57 {
 			goto tr330
 		}
@@ -9236,14 +9238,14 @@ tr330:
 			goto _test_eof483
 		}
 	st_case_483:
-//line parse.go:9240
+//line parse.go:9242
 		switch ( s)[p] {
 		case 32:
-			goto tr897
-		case 44:
 			goto tr898
-		case 47:
+		case 44:
 			goto tr899
+		case 47:
+			goto tr900
 		}
 		switch {
 		case ( s)[p] > 13:
@@ -9251,14 +9253,14 @@ tr330:
 				goto st483
 			}
 		case ( s)[p] >= 9:
-			goto tr897
+			goto tr898
 		}
 		goto st0
-tr890:
+tr891:
 //line parse.rl:398
  start=1970;end=2099;m=0;d=1; 
 	goto st160
-tr895:
+tr896:
 //line parse.rl:356
 
             m=0
@@ -9270,7 +9272,7 @@ tr895:
 //line parse.rl:398
  start=m; end=m; d=0;
 	goto st160
-tr899:
+tr900:
 //line parse.rl:356
 
             m=0
@@ -9287,7 +9289,7 @@ tr899:
 			goto _test_eof160
 		}
 	st_case_160:
-//line parse.go:9291
+//line parse.go:9293
 		if 48 <= ( s)[p] && ( s)[p] <= 57 {
 			goto tr331
 		}
@@ -9303,12 +9305,12 @@ tr331:
 			goto _test_eof484
 		}
 	st_case_484:
-//line parse.go:9307
+//line parse.go:9309
 		switch ( s)[p] {
 		case 32:
-			goto tr901
-		case 44:
 			goto tr902
+		case 44:
+			goto tr903
 		}
 		switch {
 		case ( s)[p] > 13:
@@ -9316,7 +9318,7 @@ tr331:
 				goto st484
 			}
 		case ( s)[p] >= 9:
-			goto tr901
+			goto tr902
 		}
 		goto st0
 tr325:
@@ -9558,7 +9560,7 @@ tr371:
 			goto _test_eof161
 		}
 	st_case_161:
-//line parse.go:9562
+//line parse.go:9564
 		switch ( s)[p] {
 		case 42:
 			goto tr317
@@ -9600,7 +9602,7 @@ d=0;
 			goto _test_eof162
 		}
 	st_case_162:
-//line parse.go:9604
+//line parse.go:9606
 		switch ( s)[p] {
 		case 32:
 			goto tr332
@@ -9641,7 +9643,7 @@ tr372:
 			goto _test_eof163
 		}
 	st_case_163:
-//line parse.go:9645
+//line parse.go:9647
 		switch ( s)[p] {
 		case 70:
 			goto st167
@@ -9679,7 +9681,7 @@ tr337:
 			goto _test_eof164
 		}
 	st_case_164:
-//line parse.go:9683
+//line parse.go:9685
 		switch ( s)[p] {
 		case 32:
 			goto tr343
@@ -9738,7 +9740,7 @@ tr373:
 			goto _test_eof165
 		}
 	st_case_165:
-//line parse.go:9742
+//line parse.go:9744
 		if 48 <= ( s)[p] && ( s)[p] <= 57 {
 			goto tr347
 		}
@@ -9754,7 +9756,7 @@ tr347:
 			goto _test_eof166
 		}
 	st_case_166:
-//line parse.go:9758
+//line parse.go:9760
 		switch ( s)[p] {
 		case 32:
 			goto tr348
@@ -9827,7 +9829,7 @@ m=3
 			goto _test_eof169
 		}
 	st_case_169:
-//line parse.go:9831
+//line parse.go:9833
 		switch ( s)[p] {
 		case 32:
 			goto tr353
@@ -9977,7 +9979,7 @@ d=0;
 			goto _test_eof180
 		}
 	st_case_180:
-//line parse.go:9981
+//line parse.go:9983
 		switch ( s)[p] {
 		case 82:
 			goto st181
@@ -10030,7 +10032,7 @@ m=3
 			goto _test_eof182
 		}
 	st_case_182:
-//line parse.go:10034
+//line parse.go:10036
 		switch ( s)[p] {
 		case 32:
 			goto tr370
@@ -10054,7 +10056,7 @@ d=0;
 			goto _test_eof183
 		}
 	st_case_183:
-//line parse.go:10058
+//line parse.go:10060
 		switch ( s)[p] {
 		case 79:
 			goto st184
@@ -10083,7 +10085,7 @@ d=0;
 			goto _test_eof185
 		}
 	st_case_185:
-//line parse.go:10087
+//line parse.go:10089
 		switch ( s)[p] {
 		case 65:
 			goto st186
@@ -10128,7 +10130,7 @@ d=0;
 			goto _test_eof188
 		}
 	st_case_188:
-//line parse.go:10132
+//line parse.go:10134
 		switch ( s)[p] {
 		case 72:
 			goto st189
@@ -10173,7 +10175,7 @@ d=0;
 			goto _test_eof191
 		}
 	st_case_191:
-//line parse.go:10177
+//line parse.go:10179
 		switch ( s)[p] {
 		case 69:
 			goto st192
@@ -10396,7 +10398,7 @@ tr437:
 			goto _test_eof193
 		}
 	st_case_193:
-//line parse.go:10400
+//line parse.go:10402
 		switch ( s)[p] {
 		case 42:
 			goto tr303
@@ -10450,7 +10452,7 @@ d=0;
 			goto _test_eof194
 		}
 	st_case_194:
-//line parse.go:10454
+//line parse.go:10456
 		switch ( s)[p] {
 		case 32:
 			goto tr386
@@ -10491,7 +10493,7 @@ tr438:
 			goto _test_eof195
 		}
 	st_case_195:
-//line parse.go:10495
+//line parse.go:10497
 		switch ( s)[p] {
 		case 65:
 			goto st199
@@ -10541,7 +10543,7 @@ tr391:
 			goto _test_eof196
 		}
 	st_case_196:
-//line parse.go:10545
+//line parse.go:10547
 		switch ( s)[p] {
 		case 32:
 			goto tr400
@@ -10600,7 +10602,7 @@ tr439:
 			goto _test_eof197
 		}
 	st_case_197:
-//line parse.go:10604
+//line parse.go:10606
 		if 48 <= ( s)[p] && ( s)[p] <= 57 {
 			goto tr404
 		}
@@ -10616,7 +10618,7 @@ tr404:
 			goto _test_eof198
 		}
 	st_case_198:
-//line parse.go:10620
+//line parse.go:10622
 		switch ( s)[p] {
 		case 32:
 			goto tr405
@@ -10713,7 +10715,7 @@ m=9
 			goto _test_eof201
 		}
 	st_case_201:
-//line parse.go:10717
+//line parse.go:10719
 		switch ( s)[p] {
 		case 32:
 			goto tr411
@@ -10939,7 +10941,7 @@ d=0;
 			goto _test_eof218
 		}
 	st_case_218:
-//line parse.go:10943
+//line parse.go:10945
 		switch ( s)[p] {
 		case 80:
 			goto st219
@@ -11016,7 +11018,7 @@ m=9
 			goto _test_eof220
 		}
 	st_case_220:
-//line parse.go:11020
+//line parse.go:11022
 		switch ( s)[p] {
 		case 32:
 			goto tr436
@@ -11052,7 +11054,7 @@ d=0;
 			goto _test_eof222
 		}
 	st_case_222:
-//line parse.go:11056
+//line parse.go:11058
 		switch ( s)[p] {
 		case 69:
 			goto st223
@@ -11081,7 +11083,7 @@ d=0;
 			goto _test_eof224
 		}
 	st_case_224:
-//line parse.go:11085
+//line parse.go:11087
 		switch ( s)[p] {
 		case 69:
 			goto st225
@@ -11110,7 +11112,7 @@ d=0;
 			goto _test_eof226
 		}
 	st_case_226:
-//line parse.go:11114
+//line parse.go:11116
 		switch ( s)[p] {
 		case 65:
 			goto st227
@@ -11159,7 +11161,7 @@ d=0;
 			goto _test_eof229
 		}
 	st_case_229:
-//line parse.go:11163
+//line parse.go:11165
 		switch ( s)[p] {
 		case 65:
 			goto st230
@@ -11192,7 +11194,7 @@ d=0;
 			goto _test_eof231
 		}
 	st_case_231:
-//line parse.go:11196
+//line parse.go:11198
 		switch ( s)[p] {
 		case 79:
 			goto st232
@@ -11221,7 +11223,7 @@ d=0;
 			goto _test_eof233
 		}
 	st_case_233:
-//line parse.go:11225
+//line parse.go:11227
 		switch ( s)[p] {
 		case 67:
 			goto st234
@@ -11250,7 +11252,7 @@ d=0;
 			goto _test_eof235
 		}
 	st_case_235:
-//line parse.go:11254
+//line parse.go:11256
 		switch ( s)[p] {
 		case 69:
 			goto st236
@@ -11473,7 +11475,7 @@ tr498:
 			goto _test_eof237
 		}
 	st_case_237:
-//line parse.go:11477
+//line parse.go:11479
 		switch ( s)[p] {
 		case 42:
 			goto tr292
@@ -11515,7 +11517,7 @@ d=0;
 			goto _test_eof238
 		}
 	st_case_238:
-//line parse.go:11519
+//line parse.go:11521
 		switch ( s)[p] {
 		case 32:
 			goto tr459
@@ -11556,7 +11558,7 @@ tr499:
 			goto _test_eof239
 		}
 	st_case_239:
-//line parse.go:11560
+//line parse.go:11562
 		switch ( s)[p] {
 		case 70:
 			goto st243
@@ -11594,7 +11596,7 @@ tr464:
 			goto _test_eof240
 		}
 	st_case_240:
-//line parse.go:11598
+//line parse.go:11600
 		switch ( s)[p] {
 		case 32:
 			goto tr470
@@ -11653,7 +11655,7 @@ tr500:
 			goto _test_eof241
 		}
 	st_case_241:
-//line parse.go:11657
+//line parse.go:11659
 		if 48 <= ( s)[p] && ( s)[p] <= 57 {
 			goto tr474
 		}
@@ -11669,7 +11671,7 @@ tr474:
 			goto _test_eof242
 		}
 	st_case_242:
-//line parse.go:11673
+//line parse.go:11675
 		switch ( s)[p] {
 		case 32:
 			goto tr475
@@ -11742,7 +11744,7 @@ m=3
 			goto _test_eof245
 		}
 	st_case_245:
-//line parse.go:11746
+//line parse.go:11748
 		switch ( s)[p] {
 		case 32:
 			goto tr480
@@ -11892,7 +11894,7 @@ d=0;
 			goto _test_eof256
 		}
 	st_case_256:
-//line parse.go:11896
+//line parse.go:11898
 		switch ( s)[p] {
 		case 82:
 			goto st257
@@ -11945,7 +11947,7 @@ m=3
 			goto _test_eof258
 		}
 	st_case_258:
-//line parse.go:11949
+//line parse.go:11951
 		switch ( s)[p] {
 		case 32:
 			goto tr497
@@ -11969,7 +11971,7 @@ d=0;
 			goto _test_eof259
 		}
 	st_case_259:
-//line parse.go:11973
+//line parse.go:11975
 		switch ( s)[p] {
 		case 79:
 			goto st260
@@ -11998,7 +12000,7 @@ d=0;
 			goto _test_eof261
 		}
 	st_case_261:
-//line parse.go:12002
+//line parse.go:12004
 		switch ( s)[p] {
 		case 65:
 			goto st262
@@ -12043,7 +12045,7 @@ d=0;
 			goto _test_eof264
 		}
 	st_case_264:
-//line parse.go:12047
+//line parse.go:12049
 		switch ( s)[p] {
 		case 72:
 			goto st265
@@ -12088,7 +12090,7 @@ d=0;
 			goto _test_eof267
 		}
 	st_case_267:
-//line parse.go:12092
+//line parse.go:12094
 		switch ( s)[p] {
 		case 69:
 			goto st268
@@ -12253,7 +12255,7 @@ d=m
 			goto _test_eof269
 		}
 	st_case_269:
-//line parse.go:12257
+//line parse.go:12259
 		if ( s)[p] == 42 {
 			goto tr286
 		}
@@ -12274,7 +12276,7 @@ d=0;
 			goto _test_eof270
 		}
 	st_case_270:
-//line parse.go:12278
+//line parse.go:12280
 		switch ( s)[p] {
 		case 32:
 			goto tr513
@@ -12311,7 +12313,7 @@ tr515:
 			goto _test_eof271
 		}
 	st_case_271:
-//line parse.go:12315
+//line parse.go:12317
 		if 48 <= ( s)[p] && ( s)[p] <= 57 {
 			goto tr518
 		}
@@ -12327,7 +12329,7 @@ tr518:
 			goto _test_eof272
 		}
 	st_case_272:
-//line parse.go:12331
+//line parse.go:12333
 		switch ( s)[p] {
 		case 32:
 			goto tr519
@@ -12378,7 +12380,7 @@ tr521:
 			goto _test_eof273
 		}
 	st_case_273:
-//line parse.go:12382
+//line parse.go:12384
 		if 48 <= ( s)[p] && ( s)[p] <= 57 {
 			goto tr523
 		}
@@ -12394,7 +12396,7 @@ tr523:
 			goto _test_eof274
 		}
 	st_case_274:
-//line parse.go:12398
+//line parse.go:12400
 		switch ( s)[p] {
 		case 32:
 			goto tr524
@@ -12555,7 +12557,7 @@ d=m
 			goto _test_eof275
 		}
 	st_case_275:
-//line parse.go:12559
+//line parse.go:12561
 		if ( s)[p] == 42 {
 			goto tr280
 		}
@@ -12576,7 +12578,7 @@ d=0;
 			goto _test_eof276
 		}
 	st_case_276:
-//line parse.go:12580
+//line parse.go:12582
 		switch ( s)[p] {
 		case 32:
 			goto tr527
@@ -12613,7 +12615,7 @@ tr529:
 			goto _test_eof277
 		}
 	st_case_277:
-//line parse.go:12617
+//line parse.go:12619
 		if 48 <= ( s)[p] && ( s)[p] <= 57 {
 			goto tr532
 		}
@@ -12629,7 +12631,7 @@ tr532:
 			goto _test_eof278
 		}
 	st_case_278:
-//line parse.go:12633
+//line parse.go:12635
 		switch ( s)[p] {
 		case 32:
 			goto tr533
@@ -12680,7 +12682,7 @@ tr535:
 			goto _test_eof279
 		}
 	st_case_279:
-//line parse.go:12684
+//line parse.go:12686
 		if 48 <= ( s)[p] && ( s)[p] <= 57 {
 			goto tr537
 		}
@@ -12696,7 +12698,7 @@ tr537:
 			goto _test_eof280
 		}
 	st_case_280:
-//line parse.go:12700
+//line parse.go:12702
 		switch ( s)[p] {
 		case 32:
 			goto tr538
@@ -12745,7 +12747,7 @@ tr553:
 			goto _test_eof281
 		}
 	st_case_281:
-//line parse.go:12749
+//line parse.go:12751
 		if 48 <= ( s)[p] && ( s)[p] <= 57 {
 			goto tr541
 		}
@@ -12761,7 +12763,7 @@ tr541:
 			goto _test_eof282
 		}
 	st_case_282:
-//line parse.go:12765
+//line parse.go:12767
 		switch ( s)[p] {
 		case 32:
 			goto tr542
@@ -12790,7 +12792,7 @@ d=0;
 			goto _test_eof283
 		}
 	st_case_283:
-//line parse.go:12794
+//line parse.go:12796
 		switch ( s)[p] {
 		case 32:
 			goto tr545
@@ -12827,7 +12829,7 @@ tr547:
 			goto _test_eof284
 		}
 	st_case_284:
-//line parse.go:12831
+//line parse.go:12833
 		if 48 <= ( s)[p] && ( s)[p] <= 57 {
 			goto tr550
 		}
@@ -12843,7 +12845,7 @@ tr550:
 			goto _test_eof285
 		}
 	st_case_285:
-//line parse.go:12847
+//line parse.go:12849
 		switch ( s)[p] {
 		case 32:
 			goto tr551
@@ -13009,7 +13011,7 @@ ts = 0
 			goto _test_eof286
 		}
 	st_case_286:
-//line parse.go:13013
+//line parse.go:13015
 		if ( s)[p] == 42 {
 			goto tr555
 		}
@@ -13026,7 +13028,7 @@ d=0;
 			goto _test_eof287
 		}
 	st_case_287:
-//line parse.go:13030
+//line parse.go:13032
 		switch ( s)[p] {
 		case 32:
 			goto tr557
@@ -13184,7 +13186,7 @@ d=m
 			goto _test_eof288
 		}
 	st_case_288:
-//line parse.go:13188
+//line parse.go:13190
 		switch ( s)[p] {
 		case 32:
 			goto st288
@@ -13209,7 +13211,7 @@ d=0;
 			goto _test_eof289
 		}
 	st_case_289:
-//line parse.go:13213
+//line parse.go:13215
 		switch ( s)[p] {
 		case 32:
 			goto tr563
@@ -13367,7 +13369,7 @@ d=m
 			goto _test_eof290
 		}
 	st_case_290:
-//line parse.go:13371
+//line parse.go:13373
 		switch ( s)[p] {
 		case 32:
 			goto st290
@@ -13412,7 +13414,7 @@ d=0;
 			goto _test_eof291
 		}
 	st_case_291:
-//line parse.go:13416
+//line parse.go:13418
 		switch ( s)[p] {
 		case 32:
 			goto tr574
@@ -13628,7 +13630,7 @@ tr745:
 			goto _test_eof292
 		}
 	st_case_292:
-//line parse.go:13632
+//line parse.go:13634
 		switch ( s)[p] {
 		case 32:
 			goto st292
@@ -13685,7 +13687,7 @@ d=0;
 			goto _test_eof293
 		}
 	st_case_293:
-//line parse.go:13689
+//line parse.go:13691
 		switch ( s)[p] {
 		case 32:
 			goto tr588
@@ -13901,7 +13903,7 @@ tr684:
 			goto _test_eof294
 		}
 	st_case_294:
-//line parse.go:13905
+//line parse.go:13907
 		switch ( s)[p] {
 		case 32:
 			goto st294
@@ -13946,264 +13948,17 @@ d=0;
 			goto _test_eof485
 		}
 	st_case_485:
-//line parse.go:13950
+//line parse.go:13952
 		switch ( s)[p] {
 		case 32:
-			goto tr904
-		case 44:
 			goto tr905
-		case 47:
+		case 44:
 			goto tr906
+		case 47:
+			goto tr907
 		}
 		if 9 <= ( s)[p] && ( s)[p] <= 13 {
-			goto tr904
-		}
-		goto st0
-tr904:
-//line parse.rl:394
- start=0;end=6;m=0;d=1; 
-//line parse.rl:236
-
-            {
-                //const sundaysAtFirst = uint64(1 | 1<<7 | 1<<14 | 1<<21 | 1<<28 | 1<<35 | 1<<42)
-                if d>7{
-                    return nt, fmt.Errorf("invalid day of week */%d", d)
-                }
-                if start>7 {
-                    return nt, fmt.Errorf("invalid start day of week %d", start)
-                }
-                if end==7{
-                    end=6 // for compatibility with older crons
-                }
-                if end>6 {
-                    return nt, fmt.Errorf("invalid end day of week %d", start)
-                }
-                if start>end {
-                    return nt, errors.New("invalid day of week range start must be before end")
-                }
-
-                // handle the case that isn't a 
-                dayRange := (^uint64(0))<<(64 - (end-start+1))>>(64 - end-1)
-                if d==0{
-                    //nt.dow |= uint32(sundaysAtFirst<<start)
-                    nt.dow |= uint8(1<<start)
-                }else{
-                    dayRange&=skips[d-1]&mask7
-                    nt.dow |= uint8(dayRange)
-                }
-            }
-        
-	goto st486
-tr908:
-//line parse.rl:356
-
-            m=0
-            for _, x := range s[mark:p] {
-                m*=10
-                m+=uint64(x-'0') // since we know that x is a numerical digit we can subtract the rune '0' to convert to a number from 0 to 9
-            }
-        
-//line parse.rl:394
- start=m; end=6;d=0;
-//line parse.rl:236
-
-            {
-                //const sundaysAtFirst = uint64(1 | 1<<7 | 1<<14 | 1<<21 | 1<<28 | 1<<35 | 1<<42)
-                if d>7{
-                    return nt, fmt.Errorf("invalid day of week */%d", d)
-                }
-                if start>7 {
-                    return nt, fmt.Errorf("invalid start day of week %d", start)
-                }
-                if end==7{
-                    end=6 // for compatibility with older crons
-                }
-                if end>6 {
-                    return nt, fmt.Errorf("invalid end day of week %d", start)
-                }
-                if start>end {
-                    return nt, errors.New("invalid day of week range start must be before end")
-                }
-
-                // handle the case that isn't a 
-                dayRange := (^uint64(0))<<(64 - (end-start+1))>>(64 - end-1)
-                if d==0{
-                    //nt.dow |= uint32(sundaysAtFirst<<start)
-                    nt.dow |= uint8(1<<start)
-                }else{
-                    dayRange&=skips[d-1]&mask7
-                    nt.dow |= uint8(dayRange)
-                }
-            }
-        
-	goto st486
-tr913:
-//line parse.rl:356
-
-            m=0
-            for _, x := range s[mark:p] {
-                m*=10
-                m+=uint64(x-'0') // since we know that x is a numerical digit we can subtract the rune '0' to convert to a number from 0 to 9
-            }
-        
-//line parse.rl:394
- end=m; d=1;
-//line parse.rl:236
-
-            {
-                //const sundaysAtFirst = uint64(1 | 1<<7 | 1<<14 | 1<<21 | 1<<28 | 1<<35 | 1<<42)
-                if d>7{
-                    return nt, fmt.Errorf("invalid day of week */%d", d)
-                }
-                if start>7 {
-                    return nt, fmt.Errorf("invalid start day of week %d", start)
-                }
-                if end==7{
-                    end=6 // for compatibility with older crons
-                }
-                if end>6 {
-                    return nt, fmt.Errorf("invalid end day of week %d", start)
-                }
-                if start>end {
-                    return nt, errors.New("invalid day of week range start must be before end")
-                }
-
-                // handle the case that isn't a 
-                dayRange := (^uint64(0))<<(64 - (end-start+1))>>(64 - end-1)
-                if d==0{
-                    //nt.dow |= uint32(sundaysAtFirst<<start)
-                    nt.dow |= uint8(1<<start)
-                }else{
-                    dayRange&=skips[d-1]&mask7
-                    nt.dow |= uint8(dayRange)
-                }
-            }
-        
-	goto st486
-tr917:
-//line parse.rl:356
-
-            m=0
-            for _, x := range s[mark:p] {
-                m*=10
-                m+=uint64(x-'0') // since we know that x is a numerical digit we can subtract the rune '0' to convert to a number from 0 to 9
-            }
-        
-//line parse.rl:395
-d=m
-//line parse.rl:236
-
-            {
-                //const sundaysAtFirst = uint64(1 | 1<<7 | 1<<14 | 1<<21 | 1<<28 | 1<<35 | 1<<42)
-                if d>7{
-                    return nt, fmt.Errorf("invalid day of week */%d", d)
-                }
-                if start>7 {
-                    return nt, fmt.Errorf("invalid start day of week %d", start)
-                }
-                if end==7{
-                    end=6 // for compatibility with older crons
-                }
-                if end>6 {
-                    return nt, fmt.Errorf("invalid end day of week %d", start)
-                }
-                if start>end {
-                    return nt, errors.New("invalid day of week range start must be before end")
-                }
-
-                // handle the case that isn't a 
-                dayRange := (^uint64(0))<<(64 - (end-start+1))>>(64 - end-1)
-                if d==0{
-                    //nt.dow |= uint32(sundaysAtFirst<<start)
-                    nt.dow |= uint8(1<<start)
-                }else{
-                    dayRange&=skips[d-1]&mask7
-                    nt.dow |= uint8(dayRange)
-                }
-            }
-        
-	goto st486
-tr920:
-//line parse.rl:394
- end=m; d=1;
-//line parse.rl:236
-
-            {
-                //const sundaysAtFirst = uint64(1 | 1<<7 | 1<<14 | 1<<21 | 1<<28 | 1<<35 | 1<<42)
-                if d>7{
-                    return nt, fmt.Errorf("invalid day of week */%d", d)
-                }
-                if start>7 {
-                    return nt, fmt.Errorf("invalid start day of week %d", start)
-                }
-                if end==7{
-                    end=6 // for compatibility with older crons
-                }
-                if end>6 {
-                    return nt, fmt.Errorf("invalid end day of week %d", start)
-                }
-                if start>end {
-                    return nt, errors.New("invalid day of week range start must be before end")
-                }
-
-                // handle the case that isn't a 
-                dayRange := (^uint64(0))<<(64 - (end-start+1))>>(64 - end-1)
-                if d==0{
-                    //nt.dow |= uint32(sundaysAtFirst<<start)
-                    nt.dow |= uint8(1<<start)
-                }else{
-                    dayRange&=skips[d-1]&mask7
-                    nt.dow |= uint8(dayRange)
-                }
-            }
-        
-	goto st486
-tr923:
-//line parse.rl:394
- start=m; end=6;d=0;
-//line parse.rl:236
-
-            {
-                //const sundaysAtFirst = uint64(1 | 1<<7 | 1<<14 | 1<<21 | 1<<28 | 1<<35 | 1<<42)
-                if d>7{
-                    return nt, fmt.Errorf("invalid day of week */%d", d)
-                }
-                if start>7 {
-                    return nt, fmt.Errorf("invalid start day of week %d", start)
-                }
-                if end==7{
-                    end=6 // for compatibility with older crons
-                }
-                if end>6 {
-                    return nt, fmt.Errorf("invalid end day of week %d", start)
-                }
-                if start>end {
-                    return nt, errors.New("invalid day of week range start must be before end")
-                }
-
-                // handle the case that isn't a 
-                dayRange := (^uint64(0))<<(64 - (end-start+1))>>(64 - end-1)
-                if d==0{
-                    //nt.dow |= uint32(sundaysAtFirst<<start)
-                    nt.dow |= uint8(1<<start)
-                }else{
-                    dayRange&=skips[d-1]&mask7
-                    nt.dow |= uint8(dayRange)
-                }
-            }
-        
-	goto st486
-	st486:
-		if p++; p == pe {
-			goto _test_eof486
-		}
-	st_case_486:
-//line parse.go:14202
-		if ( s)[p] == 32 {
-			goto st486
-		}
-		if 9 <= ( s)[p] && ( s)[p] <= 13 {
-			goto st486
+			goto tr905
 		}
 		goto st0
 tr905:
@@ -14240,7 +13995,7 @@ tr905:
                 }
             }
         
-	goto st295
+	goto st486
 tr909:
 //line parse.rl:356
 
@@ -14283,7 +14038,7 @@ tr909:
                 }
             }
         
-	goto st295
+	goto st486
 tr914:
 //line parse.rl:356
 
@@ -14326,7 +14081,7 @@ tr914:
                 }
             }
         
-	goto st295
+	goto st486
 tr918:
 //line parse.rl:356
 
@@ -14369,7 +14124,7 @@ d=m
                 }
             }
         
-	goto st295
+	goto st486
 tr921:
 //line parse.rl:394
  end=m; d=1;
@@ -14404,8 +14159,255 @@ tr921:
                 }
             }
         
-	goto st295
+	goto st486
 tr924:
+//line parse.rl:394
+ start=m; end=6;d=0;
+//line parse.rl:236
+
+            {
+                //const sundaysAtFirst = uint64(1 | 1<<7 | 1<<14 | 1<<21 | 1<<28 | 1<<35 | 1<<42)
+                if d>7{
+                    return nt, fmt.Errorf("invalid day of week */%d", d)
+                }
+                if start>7 {
+                    return nt, fmt.Errorf("invalid start day of week %d", start)
+                }
+                if end==7{
+                    end=6 // for compatibility with older crons
+                }
+                if end>6 {
+                    return nt, fmt.Errorf("invalid end day of week %d", start)
+                }
+                if start>end {
+                    return nt, errors.New("invalid day of week range start must be before end")
+                }
+
+                // handle the case that isn't a 
+                dayRange := (^uint64(0))<<(64 - (end-start+1))>>(64 - end-1)
+                if d==0{
+                    //nt.dow |= uint32(sundaysAtFirst<<start)
+                    nt.dow |= uint8(1<<start)
+                }else{
+                    dayRange&=skips[d-1]&mask7
+                    nt.dow |= uint8(dayRange)
+                }
+            }
+        
+	goto st486
+	st486:
+		if p++; p == pe {
+			goto _test_eof486
+		}
+	st_case_486:
+//line parse.go:14204
+		if ( s)[p] == 32 {
+			goto st486
+		}
+		if 9 <= ( s)[p] && ( s)[p] <= 13 {
+			goto st486
+		}
+		goto st0
+tr906:
+//line parse.rl:394
+ start=0;end=6;m=0;d=1; 
+//line parse.rl:236
+
+            {
+                //const sundaysAtFirst = uint64(1 | 1<<7 | 1<<14 | 1<<21 | 1<<28 | 1<<35 | 1<<42)
+                if d>7{
+                    return nt, fmt.Errorf("invalid day of week */%d", d)
+                }
+                if start>7 {
+                    return nt, fmt.Errorf("invalid start day of week %d", start)
+                }
+                if end==7{
+                    end=6 // for compatibility with older crons
+                }
+                if end>6 {
+                    return nt, fmt.Errorf("invalid end day of week %d", start)
+                }
+                if start>end {
+                    return nt, errors.New("invalid day of week range start must be before end")
+                }
+
+                // handle the case that isn't a 
+                dayRange := (^uint64(0))<<(64 - (end-start+1))>>(64 - end-1)
+                if d==0{
+                    //nt.dow |= uint32(sundaysAtFirst<<start)
+                    nt.dow |= uint8(1<<start)
+                }else{
+                    dayRange&=skips[d-1]&mask7
+                    nt.dow |= uint8(dayRange)
+                }
+            }
+        
+	goto st295
+tr910:
+//line parse.rl:356
+
+            m=0
+            for _, x := range s[mark:p] {
+                m*=10
+                m+=uint64(x-'0') // since we know that x is a numerical digit we can subtract the rune '0' to convert to a number from 0 to 9
+            }
+        
+//line parse.rl:394
+ start=m; end=6;d=0;
+//line parse.rl:236
+
+            {
+                //const sundaysAtFirst = uint64(1 | 1<<7 | 1<<14 | 1<<21 | 1<<28 | 1<<35 | 1<<42)
+                if d>7{
+                    return nt, fmt.Errorf("invalid day of week */%d", d)
+                }
+                if start>7 {
+                    return nt, fmt.Errorf("invalid start day of week %d", start)
+                }
+                if end==7{
+                    end=6 // for compatibility with older crons
+                }
+                if end>6 {
+                    return nt, fmt.Errorf("invalid end day of week %d", start)
+                }
+                if start>end {
+                    return nt, errors.New("invalid day of week range start must be before end")
+                }
+
+                // handle the case that isn't a 
+                dayRange := (^uint64(0))<<(64 - (end-start+1))>>(64 - end-1)
+                if d==0{
+                    //nt.dow |= uint32(sundaysAtFirst<<start)
+                    nt.dow |= uint8(1<<start)
+                }else{
+                    dayRange&=skips[d-1]&mask7
+                    nt.dow |= uint8(dayRange)
+                }
+            }
+        
+	goto st295
+tr915:
+//line parse.rl:356
+
+            m=0
+            for _, x := range s[mark:p] {
+                m*=10
+                m+=uint64(x-'0') // since we know that x is a numerical digit we can subtract the rune '0' to convert to a number from 0 to 9
+            }
+        
+//line parse.rl:394
+ end=m; d=1;
+//line parse.rl:236
+
+            {
+                //const sundaysAtFirst = uint64(1 | 1<<7 | 1<<14 | 1<<21 | 1<<28 | 1<<35 | 1<<42)
+                if d>7{
+                    return nt, fmt.Errorf("invalid day of week */%d", d)
+                }
+                if start>7 {
+                    return nt, fmt.Errorf("invalid start day of week %d", start)
+                }
+                if end==7{
+                    end=6 // for compatibility with older crons
+                }
+                if end>6 {
+                    return nt, fmt.Errorf("invalid end day of week %d", start)
+                }
+                if start>end {
+                    return nt, errors.New("invalid day of week range start must be before end")
+                }
+
+                // handle the case that isn't a 
+                dayRange := (^uint64(0))<<(64 - (end-start+1))>>(64 - end-1)
+                if d==0{
+                    //nt.dow |= uint32(sundaysAtFirst<<start)
+                    nt.dow |= uint8(1<<start)
+                }else{
+                    dayRange&=skips[d-1]&mask7
+                    nt.dow |= uint8(dayRange)
+                }
+            }
+        
+	goto st295
+tr919:
+//line parse.rl:356
+
+            m=0
+            for _, x := range s[mark:p] {
+                m*=10
+                m+=uint64(x-'0') // since we know that x is a numerical digit we can subtract the rune '0' to convert to a number from 0 to 9
+            }
+        
+//line parse.rl:395
+d=m
+//line parse.rl:236
+
+            {
+                //const sundaysAtFirst = uint64(1 | 1<<7 | 1<<14 | 1<<21 | 1<<28 | 1<<35 | 1<<42)
+                if d>7{
+                    return nt, fmt.Errorf("invalid day of week */%d", d)
+                }
+                if start>7 {
+                    return nt, fmt.Errorf("invalid start day of week %d", start)
+                }
+                if end==7{
+                    end=6 // for compatibility with older crons
+                }
+                if end>6 {
+                    return nt, fmt.Errorf("invalid end day of week %d", start)
+                }
+                if start>end {
+                    return nt, errors.New("invalid day of week range start must be before end")
+                }
+
+                // handle the case that isn't a 
+                dayRange := (^uint64(0))<<(64 - (end-start+1))>>(64 - end-1)
+                if d==0{
+                    //nt.dow |= uint32(sundaysAtFirst<<start)
+                    nt.dow |= uint8(1<<start)
+                }else{
+                    dayRange&=skips[d-1]&mask7
+                    nt.dow |= uint8(dayRange)
+                }
+            }
+        
+	goto st295
+tr922:
+//line parse.rl:394
+ end=m; d=1;
+//line parse.rl:236
+
+            {
+                //const sundaysAtFirst = uint64(1 | 1<<7 | 1<<14 | 1<<21 | 1<<28 | 1<<35 | 1<<42)
+                if d>7{
+                    return nt, fmt.Errorf("invalid day of week */%d", d)
+                }
+                if start>7 {
+                    return nt, fmt.Errorf("invalid start day of week %d", start)
+                }
+                if end==7{
+                    end=6 // for compatibility with older crons
+                }
+                if end>6 {
+                    return nt, fmt.Errorf("invalid end day of week %d", start)
+                }
+                if start>end {
+                    return nt, errors.New("invalid day of week range start must be before end")
+                }
+
+                // handle the case that isn't a 
+                dayRange := (^uint64(0))<<(64 - (end-start+1))>>(64 - end-1)
+                if d==0{
+                    //nt.dow |= uint32(sundaysAtFirst<<start)
+                    nt.dow |= uint8(1<<start)
+                }else{
+                    dayRange&=skips[d-1]&mask7
+                    nt.dow |= uint8(dayRange)
+                }
+            }
+        
+	goto st295
+tr925:
 //line parse.rl:394
  start=m; end=6;d=0;
 //line parse.rl:236
@@ -14445,7 +14447,7 @@ tr924:
 			goto _test_eof295
 		}
 	st_case_295:
-//line parse.go:14449
+//line parse.go:14451
 		switch ( s)[p] {
 		case 42:
 			goto tr592
@@ -14487,16 +14489,16 @@ d=0;
 			goto _test_eof487
 		}
 	st_case_487:
-//line parse.go:14491
+//line parse.go:14493
 		switch ( s)[p] {
 		case 32:
-			goto tr908
-		case 44:
 			goto tr909
-		case 45:
+		case 44:
 			goto tr910
-		case 47:
+		case 45:
 			goto tr911
+		case 47:
+			goto tr912
 		}
 		switch {
 		case ( s)[p] > 13:
@@ -14504,10 +14506,10 @@ d=0;
 				goto st487
 			}
 		case ( s)[p] >= 9:
-			goto tr908
+			goto tr909
 		}
 		goto st0
-tr910:
+tr911:
 //line parse.rl:356
 
             m=0
@@ -14519,7 +14521,7 @@ tr910:
 //line parse.rl:394
  start=m; end=6;d=0;
 	goto st296
-tr925:
+tr926:
 //line parse.rl:394
  start=m; end=6;d=0;
 	goto st296
@@ -14528,7 +14530,7 @@ tr925:
 			goto _test_eof296
 		}
 	st_case_296:
-//line parse.go:14532
+//line parse.go:14534
 		switch ( s)[p] {
 		case 70:
 			goto st298
@@ -14566,14 +14568,14 @@ tr599:
 			goto _test_eof488
 		}
 	st_case_488:
-//line parse.go:14570
+//line parse.go:14572
 		switch ( s)[p] {
 		case 32:
-			goto tr913
-		case 44:
 			goto tr914
-		case 47:
+		case 44:
 			goto tr915
+		case 47:
+			goto tr916
 		}
 		switch {
 		case ( s)[p] > 13:
@@ -14581,14 +14583,14 @@ tr599:
 				goto st488
 			}
 		case ( s)[p] >= 9:
-			goto tr913
+			goto tr914
 		}
 		goto st0
-tr906:
+tr907:
 //line parse.rl:394
  start=0;end=6;m=0;d=1; 
 	goto st297
-tr911:
+tr912:
 //line parse.rl:356
 
             m=0
@@ -14600,7 +14602,7 @@ tr911:
 //line parse.rl:394
  start=m; end=6;d=0;
 	goto st297
-tr915:
+tr916:
 //line parse.rl:356
 
             m=0
@@ -14612,11 +14614,11 @@ tr915:
 //line parse.rl:394
  end=m; d=1;
 	goto st297
-tr922:
+tr923:
 //line parse.rl:394
  end=m; d=1;
 	goto st297
-tr926:
+tr927:
 //line parse.rl:394
  start=m; end=6;d=0;
 	goto st297
@@ -14625,7 +14627,7 @@ tr926:
 			goto _test_eof297
 		}
 	st_case_297:
-//line parse.go:14629
+//line parse.go:14631
 		if 48 <= ( s)[p] && ( s)[p] <= 57 {
 			goto tr605
 		}
@@ -14641,12 +14643,12 @@ tr605:
 			goto _test_eof489
 		}
 	st_case_489:
-//line parse.go:14645
+//line parse.go:14647
 		switch ( s)[p] {
 		case 32:
-			goto tr917
-		case 44:
 			goto tr918
+		case 44:
+			goto tr919
 		}
 		switch {
 		case ( s)[p] > 13:
@@ -14654,7 +14656,7 @@ tr605:
 				goto st489
 			}
 		case ( s)[p] >= 9:
-			goto tr917
+			goto tr918
 		}
 		goto st0
 	st298:
@@ -14714,17 +14716,17 @@ m=3
 			goto _test_eof490
 		}
 	st_case_490:
-//line parse.go:14718
+//line parse.go:14720
 		switch ( s)[p] {
 		case 32:
-			goto tr920
-		case 44:
 			goto tr921
-		case 47:
+		case 44:
 			goto tr922
+		case 47:
+			goto tr923
 		}
 		if 9 <= ( s)[p] && ( s)[p] <= 13 {
-			goto tr920
+			goto tr921
 		}
 		goto st0
 	st300:
@@ -14864,7 +14866,7 @@ d=0;
 			goto _test_eof310
 		}
 	st_case_310:
-//line parse.go:14868
+//line parse.go:14870
 		switch ( s)[p] {
 		case 82:
 			goto st311
@@ -14917,19 +14919,19 @@ m=3
 			goto _test_eof491
 		}
 	st_case_491:
-//line parse.go:14921
+//line parse.go:14923
 		switch ( s)[p] {
 		case 32:
-			goto tr923
-		case 44:
 			goto tr924
-		case 45:
+		case 44:
 			goto tr925
-		case 47:
+		case 45:
 			goto tr926
+		case 47:
+			goto tr927
 		}
 		if 9 <= ( s)[p] && ( s)[p] <= 13 {
-			goto tr923
+			goto tr924
 		}
 		goto st0
 tr595:
@@ -14941,7 +14943,7 @@ d=0;
 			goto _test_eof312
 		}
 	st_case_312:
-//line parse.go:14945
+//line parse.go:14947
 		switch ( s)[p] {
 		case 79:
 			goto st313
@@ -14970,7 +14972,7 @@ d=0;
 			goto _test_eof314
 		}
 	st_case_314:
-//line parse.go:14974
+//line parse.go:14976
 		switch ( s)[p] {
 		case 65:
 			goto st315
@@ -15015,7 +15017,7 @@ d=0;
 			goto _test_eof317
 		}
 	st_case_317:
-//line parse.go:15019
+//line parse.go:15021
 		switch ( s)[p] {
 		case 72:
 			goto st318
@@ -15060,7 +15062,7 @@ d=0;
 			goto _test_eof320
 		}
 	st_case_320:
-//line parse.go:15064
+//line parse.go:15066
 		switch ( s)[p] {
 		case 69:
 			goto st321
@@ -15283,7 +15285,7 @@ tr685:
 			goto _test_eof322
 		}
 	st_case_322:
-//line parse.go:15287
+//line parse.go:15289
 		switch ( s)[p] {
 		case 42:
 			goto tr578
@@ -15337,7 +15339,7 @@ d=0;
 			goto _test_eof323
 		}
 	st_case_323:
-//line parse.go:15341
+//line parse.go:15343
 		switch ( s)[p] {
 		case 32:
 			goto tr634
@@ -15378,7 +15380,7 @@ tr686:
 			goto _test_eof324
 		}
 	st_case_324:
-//line parse.go:15382
+//line parse.go:15384
 		switch ( s)[p] {
 		case 65:
 			goto st328
@@ -15428,7 +15430,7 @@ tr639:
 			goto _test_eof325
 		}
 	st_case_325:
-//line parse.go:15432
+//line parse.go:15434
 		switch ( s)[p] {
 		case 32:
 			goto tr648
@@ -15487,7 +15489,7 @@ tr687:
 			goto _test_eof326
 		}
 	st_case_326:
-//line parse.go:15491
+//line parse.go:15493
 		if 48 <= ( s)[p] && ( s)[p] <= 57 {
 			goto tr652
 		}
@@ -15503,7 +15505,7 @@ tr652:
 			goto _test_eof327
 		}
 	st_case_327:
-//line parse.go:15507
+//line parse.go:15509
 		switch ( s)[p] {
 		case 32:
 			goto tr653
@@ -15600,7 +15602,7 @@ m=9
 			goto _test_eof330
 		}
 	st_case_330:
-//line parse.go:15604
+//line parse.go:15606
 		switch ( s)[p] {
 		case 32:
 			goto tr659
@@ -15826,7 +15828,7 @@ d=0;
 			goto _test_eof347
 		}
 	st_case_347:
-//line parse.go:15830
+//line parse.go:15832
 		switch ( s)[p] {
 		case 80:
 			goto st348
@@ -15903,7 +15905,7 @@ m=9
 			goto _test_eof349
 		}
 	st_case_349:
-//line parse.go:15907
+//line parse.go:15909
 		switch ( s)[p] {
 		case 32:
 			goto tr684
@@ -15939,7 +15941,7 @@ d=0;
 			goto _test_eof351
 		}
 	st_case_351:
-//line parse.go:15943
+//line parse.go:15945
 		switch ( s)[p] {
 		case 69:
 			goto st352
@@ -15968,7 +15970,7 @@ d=0;
 			goto _test_eof353
 		}
 	st_case_353:
-//line parse.go:15972
+//line parse.go:15974
 		switch ( s)[p] {
 		case 69:
 			goto st354
@@ -15997,7 +15999,7 @@ d=0;
 			goto _test_eof355
 		}
 	st_case_355:
-//line parse.go:16001
+//line parse.go:16003
 		switch ( s)[p] {
 		case 65:
 			goto st356
@@ -16046,7 +16048,7 @@ d=0;
 			goto _test_eof358
 		}
 	st_case_358:
-//line parse.go:16050
+//line parse.go:16052
 		switch ( s)[p] {
 		case 65:
 			goto st359
@@ -16079,7 +16081,7 @@ d=0;
 			goto _test_eof360
 		}
 	st_case_360:
-//line parse.go:16083
+//line parse.go:16085
 		switch ( s)[p] {
 		case 79:
 			goto st361
@@ -16108,7 +16110,7 @@ d=0;
 			goto _test_eof362
 		}
 	st_case_362:
-//line parse.go:16112
+//line parse.go:16114
 		switch ( s)[p] {
 		case 67:
 			goto st363
@@ -16137,7 +16139,7 @@ d=0;
 			goto _test_eof364
 		}
 	st_case_364:
-//line parse.go:16141
+//line parse.go:16143
 		switch ( s)[p] {
 		case 69:
 			goto st365
@@ -16360,7 +16362,7 @@ tr746:
 			goto _test_eof366
 		}
 	st_case_366:
-//line parse.go:16364
+//line parse.go:16366
 		switch ( s)[p] {
 		case 42:
 			goto tr567
@@ -16402,7 +16404,7 @@ d=0;
 			goto _test_eof367
 		}
 	st_case_367:
-//line parse.go:16406
+//line parse.go:16408
 		switch ( s)[p] {
 		case 32:
 			goto tr707
@@ -16443,7 +16445,7 @@ tr747:
 			goto _test_eof368
 		}
 	st_case_368:
-//line parse.go:16447
+//line parse.go:16449
 		switch ( s)[p] {
 		case 70:
 			goto st372
@@ -16481,7 +16483,7 @@ tr712:
 			goto _test_eof369
 		}
 	st_case_369:
-//line parse.go:16485
+//line parse.go:16487
 		switch ( s)[p] {
 		case 32:
 			goto tr718
@@ -16540,7 +16542,7 @@ tr748:
 			goto _test_eof370
 		}
 	st_case_370:
-//line parse.go:16544
+//line parse.go:16546
 		if 48 <= ( s)[p] && ( s)[p] <= 57 {
 			goto tr722
 		}
@@ -16556,7 +16558,7 @@ tr722:
 			goto _test_eof371
 		}
 	st_case_371:
-//line parse.go:16560
+//line parse.go:16562
 		switch ( s)[p] {
 		case 32:
 			goto tr723
@@ -16629,7 +16631,7 @@ m=3
 			goto _test_eof374
 		}
 	st_case_374:
-//line parse.go:16633
+//line parse.go:16635
 		switch ( s)[p] {
 		case 32:
 			goto tr728
@@ -16779,7 +16781,7 @@ d=0;
 			goto _test_eof385
 		}
 	st_case_385:
-//line parse.go:16783
+//line parse.go:16785
 		switch ( s)[p] {
 		case 82:
 			goto st386
@@ -16832,7 +16834,7 @@ m=3
 			goto _test_eof387
 		}
 	st_case_387:
-//line parse.go:16836
+//line parse.go:16838
 		switch ( s)[p] {
 		case 32:
 			goto tr745
@@ -16856,7 +16858,7 @@ d=0;
 			goto _test_eof388
 		}
 	st_case_388:
-//line parse.go:16860
+//line parse.go:16862
 		switch ( s)[p] {
 		case 79:
 			goto st389
@@ -16885,7 +16887,7 @@ d=0;
 			goto _test_eof390
 		}
 	st_case_390:
-//line parse.go:16889
+//line parse.go:16891
 		switch ( s)[p] {
 		case 65:
 			goto st391
@@ -16930,7 +16932,7 @@ d=0;
 			goto _test_eof393
 		}
 	st_case_393:
-//line parse.go:16934
+//line parse.go:16936
 		switch ( s)[p] {
 		case 72:
 			goto st394
@@ -16975,7 +16977,7 @@ d=0;
 			goto _test_eof396
 		}
 	st_case_396:
-//line parse.go:16979
+//line parse.go:16981
 		switch ( s)[p] {
 		case 69:
 			goto st397
@@ -17140,7 +17142,7 @@ d=m
 			goto _test_eof398
 		}
 	st_case_398:
-//line parse.go:17144
+//line parse.go:17146
 		if ( s)[p] == 42 {
 			goto tr561
 		}
@@ -17161,7 +17163,7 @@ d=0;
 			goto _test_eof399
 		}
 	st_case_399:
-//line parse.go:17165
+//line parse.go:17167
 		switch ( s)[p] {
 		case 32:
 			goto tr761
@@ -17198,7 +17200,7 @@ tr763:
 			goto _test_eof400
 		}
 	st_case_400:
-//line parse.go:17202
+//line parse.go:17204
 		if 48 <= ( s)[p] && ( s)[p] <= 57 {
 			goto tr766
 		}
@@ -17214,7 +17216,7 @@ tr766:
 			goto _test_eof401
 		}
 	st_case_401:
-//line parse.go:17218
+//line parse.go:17220
 		switch ( s)[p] {
 		case 32:
 			goto tr767
@@ -17265,7 +17267,7 @@ tr769:
 			goto _test_eof402
 		}
 	st_case_402:
-//line parse.go:17269
+//line parse.go:17271
 		if 48 <= ( s)[p] && ( s)[p] <= 57 {
 			goto tr771
 		}
@@ -17281,7 +17283,7 @@ tr771:
 			goto _test_eof403
 		}
 	st_case_403:
-//line parse.go:17285
+//line parse.go:17287
 		switch ( s)[p] {
 		case 32:
 			goto tr772
@@ -17330,7 +17332,7 @@ tr787:
 			goto _test_eof404
 		}
 	st_case_404:
-//line parse.go:17334
+//line parse.go:17336
 		if 48 <= ( s)[p] && ( s)[p] <= 57 {
 			goto tr775
 		}
@@ -17346,7 +17348,7 @@ tr775:
 			goto _test_eof405
 		}
 	st_case_405:
-//line parse.go:17350
+//line parse.go:17352
 		switch ( s)[p] {
 		case 32:
 			goto tr776
@@ -17375,7 +17377,7 @@ d=0;
 			goto _test_eof406
 		}
 	st_case_406:
-//line parse.go:17379
+//line parse.go:17381
 		switch ( s)[p] {
 		case 32:
 			goto tr779
@@ -17412,7 +17414,7 @@ tr781:
 			goto _test_eof407
 		}
 	st_case_407:
-//line parse.go:17416
+//line parse.go:17418
 		if 48 <= ( s)[p] && ( s)[p] <= 57 {
 			goto tr784
 		}
@@ -17428,7 +17430,7 @@ tr784:
 			goto _test_eof408
 		}
 	st_case_408:
-//line parse.go:17432
+//line parse.go:17434
 		switch ( s)[p] {
 		case 32:
 			goto tr785
@@ -17455,7 +17457,7 @@ p = (te) - 1
             return nt, fmt.Errorf("error in parsing at char %d, '%s'", p, s[p:p+1])
         }
 	goto st492
-tr927:
+tr928:
 //line parse.rl:351
 te = p+1
 {
@@ -17464,13 +17466,13 @@ te = p+1
             return nt, fmt.Errorf("error in parsing at char %d, '%s'", p, s[p:p+1])
         }
 	goto st492
-tr930:
-//line parse.rl:416
+tr931:
+//line parse.rl:417
 te = p
 p--
 
 	goto st492
-tr931:
+tr932:
 //line parse.rl:351
 te = p
 p--
@@ -17480,74 +17482,82 @@ p--
             return nt, fmt.Errorf("error in parsing at char %d, '%s'", p, s[p:p+1])
         }
 	goto st492
-tr932:
+tr933:
 //line parse.rl:414
- nt.setEveryDay(int(m)); 
-//line parse.rl:415
+ nt.addEveryDay(int(m)); 
+//line parse.rl:416
 te = p
 p--
 
 	goto st492
-tr933:
+tr934:
 //line parse.rl:412
  nt.addEveryDur(time.Duration(m)*time.Hour); 
-//line parse.rl:415
+//line parse.rl:416
 te = p
 p--
 
 	goto st492
-tr935:
+tr936:
 //line parse.rl:413
  nt.addEveryDur(time.Duration(m)*time.Minute); 
-//line parse.rl:415
-te = p
-p--
-
-	goto st492
-tr938:
-//line parse.rl:408
- nt.setEveryMonth(int(m)); 
-//line parse.rl:415
+//line parse.rl:416
 te = p
 p--
 
 	goto st492
 tr939:
-//line parse.rl:407
- nt.addEveryDur(time.Duration(m)*time.Millisecond); 
-//line parse.rl:415
+//line parse.rl:408
+ nt.setEveryMonth(int(m)); 
+//line parse.rl:416
 te = p
 p--
 
 	goto st492
 tr940:
-//line parse.rl:410
- nt.addEveryDur( time.Duration(m)) ;
-//line parse.rl:415
+//line parse.rl:407
+ nt.addEveryDur(time.Duration(m)*time.Millisecond); 
+//line parse.rl:416
 te = p
 p--
 
 	goto st492
 tr941:
-//line parse.rl:411
-nt.addEveryDur(time.Duration(m)*time.Second); 
-//line parse.rl:415
+//line parse.rl:410
+ nt.addEveryDur( time.Duration(m)) ;
+//line parse.rl:416
 te = p
 p--
 
 	goto st492
 tr942:
-//line parse.rl:409
- nt.addEveryDur(time.Duration(m)*time.Microsecond); 
-//line parse.rl:415
+//line parse.rl:411
+nt.addEveryDur(time.Duration(m)*time.Second); 
+//line parse.rl:416
 te = p
 p--
 
 	goto st492
-tr944:
+tr943:
+//line parse.rl:409
+ nt.addEveryDur(time.Duration(m)*time.Microsecond); 
+//line parse.rl:416
+te = p
+p--
+
+	goto st492
+tr945:
+//line parse.rl:415
+ nt.addEveryDay(int(m*7)); 
+//line parse.rl:416
+te = p
+p--
+
+	goto st492
+tr946:
 //line parse.rl:406
  nt.setEveryYear(int(m));
-//line parse.rl:415
+//line parse.rl:416
 te = p
 p--
 
@@ -17563,7 +17573,7 @@ ts = 0
 //line NONE:1
 ts = p
 
-//line parse.go:17567
+//line parse.go:17577
 		switch ( s)[p] {
 		case 32:
 			goto st493
@@ -17586,9 +17596,9 @@ ts = p
 				goto st0
 			}
 		default:
-			goto tr929
+			goto tr930
 		}
-		goto tr927
+		goto tr928
 	st493:
 		if p++; p == pe {
 			goto _test_eof493
@@ -17600,8 +17610,8 @@ ts = p
 		if 9 <= ( s)[p] && ( s)[p] <= 13 {
 			goto st493
 		}
-		goto tr930
-tr929:
+		goto tr931
+tr930:
 //line NONE:1
 te = p+1
 
@@ -17615,7 +17625,7 @@ te = p+1
 			goto _test_eof494
 		}
 	st_case_494:
-//line parse.go:17619
+//line parse.go:17629
 		switch ( s)[p] {
 		case 68:
 			goto tr791
@@ -17629,8 +17639,10 @@ te = p+1
 			goto tr795
 		case 85:
 			goto tr796
-		case 89:
+		case 87:
 			goto tr797
+		case 89:
+			goto tr798
 		case 100:
 			goto tr791
 		case 104:
@@ -17643,8 +17655,10 @@ te = p+1
 			goto tr795
 		case 117:
 			goto tr796
-		case 121:
+		case 119:
 			goto tr797
+		case 121:
+			goto tr798
 		case 181:
 			goto tr796
 		case 194:
@@ -17653,7 +17667,7 @@ te = p+1
 		if 48 <= ( s)[p] && ( s)[p] <= 57 {
 			goto st409
 		}
-		goto tr931
+		goto tr932
 	st409:
 		if p++; p == pe {
 			goto _test_eof409
@@ -17672,8 +17686,10 @@ te = p+1
 			goto tr795
 		case 85:
 			goto tr796
-		case 89:
+		case 87:
 			goto tr797
+		case 89:
+			goto tr798
 		case 100:
 			goto tr791
 		case 104:
@@ -17686,8 +17702,10 @@ te = p+1
 			goto tr795
 		case 117:
 			goto tr796
-		case 121:
+		case 119:
 			goto tr797
+		case 121:
+			goto tr798
 		case 181:
 			goto tr796
 		case 194:
@@ -17712,8 +17730,8 @@ tr791:
 			goto _test_eof495
 		}
 	st_case_495:
-//line parse.go:17716
-		goto tr932
+//line parse.go:17734
+		goto tr933
 tr792:
 //line parse.rl:356
 
@@ -17729,20 +17747,20 @@ tr792:
 			goto _test_eof496
 		}
 	st_case_496:
-//line parse.go:17733
+//line parse.go:17751
 		switch ( s)[p] {
 		case 82:
 			goto st497
 		case 114:
 			goto st497
 		}
-		goto tr933
+		goto tr934
 	st497:
 		if p++; p == pe {
 			goto _test_eof497
 		}
 	st_case_497:
-		goto tr933
+		goto tr934
 tr793:
 //line parse.rl:356
 
@@ -17758,7 +17776,7 @@ tr793:
 			goto _test_eof498
 		}
 	st_case_498:
-//line parse.go:17762
+//line parse.go:17780
 		switch ( s)[p] {
 		case 79:
 			goto st499
@@ -17769,19 +17787,19 @@ tr793:
 		case 115:
 			goto st500
 		}
-		goto tr935
+		goto tr936
 	st499:
 		if p++; p == pe {
 			goto _test_eof499
 		}
 	st_case_499:
-		goto tr938
+		goto tr939
 	st500:
 		if p++; p == pe {
 			goto _test_eof500
 		}
 	st_case_500:
-		goto tr939
+		goto tr940
 tr794:
 //line parse.rl:356
 
@@ -17797,7 +17815,7 @@ tr794:
 			goto _test_eof410
 		}
 	st_case_410:
-//line parse.go:17801
+//line parse.go:17819
 		switch ( s)[p] {
 		case 83:
 			goto st501
@@ -17810,7 +17828,7 @@ tr794:
 			goto _test_eof501
 		}
 	st_case_501:
-		goto tr940
+		goto tr941
 tr795:
 //line parse.rl:356
 
@@ -17826,8 +17844,8 @@ tr795:
 			goto _test_eof502
 		}
 	st_case_502:
-//line parse.go:17830
-		goto tr941
+//line parse.go:17848
+		goto tr942
 tr796:
 //line parse.rl:356
 
@@ -17843,20 +17861,20 @@ tr796:
 			goto _test_eof503
 		}
 	st_case_503:
-//line parse.go:17847
+//line parse.go:17865
 		switch ( s)[p] {
 		case 83:
 			goto st504
 		case 115:
 			goto st504
 		}
-		goto tr942
+		goto tr943
 	st504:
 		if p++; p == pe {
 			goto _test_eof504
 		}
 	st_case_504:
-		goto tr942
+		goto tr943
 tr797:
 //line parse.rl:356
 
@@ -17872,9 +17890,26 @@ tr797:
 			goto _test_eof505
 		}
 	st_case_505:
-//line parse.go:17876
-		goto tr944
-tr799:
+//line parse.go:17894
+		goto tr945
+tr798:
+//line parse.rl:356
+
+            m=0
+            for _, x := range s[mark:p] {
+                m*=10
+                m+=uint64(x-'0') // since we know that x is a numerical digit we can subtract the rune '0' to convert to a number from 0 to 9
+            }
+        
+	goto st506
+	st506:
+		if p++; p == pe {
+			goto _test_eof506
+		}
+	st_case_506:
+//line parse.go:17911
+		goto tr946
+tr800:
 //line parse.rl:351
 te = p+1
 {
@@ -17882,9 +17917,9 @@ te = p+1
 
             return nt, fmt.Errorf("error in parsing at char %d, '%s'", p, s[p:p+1])
         }
-	goto st506
-tr953:
-//line parse.rl:420
+	goto st507
+tr955:
+//line parse.rl:421
 te = p
 p--
 {
@@ -17899,9 +17934,9 @@ p--
                 nt.end=^uint8(0)
                 if p!=pe-1{return nt, fmt.Errorf("error in parsing at char %d, '%s'", p, s[p:p+1])}
             }
-	goto st506
-tr954:
-//line parse.rl:456
+	goto st507
+tr956:
+//line parse.rl:457
 te = p
 p--
 {
@@ -17916,19 +17951,19 @@ p--
                 nt.end =^uint8(0)
                 if p!=pe-1{return nt, fmt.Errorf("error in parsing at char %d, '%s'", p, s[p:p+1])}
             }
-	goto st506
-tr955:
-//line parse.rl:505
+	goto st507
+tr957:
+//line parse.rl:506
 te = p
 p--
 {
                 nt.every = true;
                 p = mark
-                {stack[top] = 506; top++; goto st492 }
+                {stack[top] = 507; top++; goto st492 }
             }
-	goto st506
-tr957:
-//line parse.rl:480
+	goto st507
+tr959:
+//line parse.rl:481
 te = p
 p--
 {
@@ -17943,9 +17978,9 @@ p--
                 nt.end =^uint8(0)
                 if p!=pe-1{return nt, fmt.Errorf("error in parsing at char %d, '%s'", p, s[p:p+1])}
             }
-	goto st506
-tr958:
-//line parse.rl:492
+	goto st507
+tr960:
+//line parse.rl:493
 te = p
 p--
 {
@@ -17960,9 +17995,9 @@ p--
                 nt.end =^uint8(0)
                 if p!=pe-1{return nt, fmt.Errorf("error in parsing at char %d, '%s'", p, s[p:p+1])}
             }
-	goto st506
-tr959:
-//line parse.rl:468
+	goto st507
+tr961:
+//line parse.rl:469
 te = p
 p--
 {
@@ -17977,9 +18012,9 @@ p--
                 nt.end =^uint8(0)
                 if p!=pe-1{return nt, fmt.Errorf("error in parsing at char %d, '%s'", p, s[p:p+1])}
             }
-	goto st506
-tr960:
-//line parse.rl:432
+	goto st507
+tr962:
+//line parse.rl:433
 te = p
 p--
 {
@@ -17994,9 +18029,9 @@ p--
                 nt.end =^uint8(0)
                 if p!=pe-1{return nt, fmt.Errorf("error in parsing at char %d, '%s'", p, s[p:p+1])}
             }
-	goto st506
-tr961:
-//line parse.rl:444
+	goto st507
+tr963:
+//line parse.rl:445
 te = p
 p--
 {
@@ -18011,19 +18046,19 @@ p--
                 nt.end =^uint8(0)
                 if p!=pe-1{return nt, fmt.Errorf("error in parsing at char %d, '%s'", p, s[p:p+1])}
             }
-	goto st506
-	st506:
+	goto st507
+	st507:
 //line NONE:1
 ts = 0
 
 		if p++; p == pe {
-			goto _test_eof506
+			goto _test_eof507
 		}
-	st_case_506:
+	st_case_507:
 //line NONE:1
 ts = p
 
-//line parse.go:18027
+//line parse.go:18062
 		switch ( s)[p] {
 		case 97:
 			goto st412
@@ -18047,7 +18082,7 @@ ts = p
 		}
 	st_case_411:
 		if ( s)[p] == 43 {
-			goto tr799
+			goto tr800
 		}
 		goto st0
 	st412:
@@ -18057,7 +18092,7 @@ ts = p
 	st_case_412:
 		switch ( s)[p] {
 		case 43:
-			goto tr799
+			goto tr800
 		case 110:
 			goto st413
 		}
@@ -18113,21 +18148,21 @@ ts = p
 		}
 	st_case_418:
 		if ( s)[p] == 121 {
-			goto st507
+			goto st508
 		}
 		goto st0
-	st507:
+	st508:
 		if p++; p == pe {
-			goto _test_eof507
+			goto _test_eof508
 		}
-	st_case_507:
+	st_case_508:
 		if ( s)[p] == 32 {
-			goto st507
+			goto st508
 		}
 		if 9 <= ( s)[p] && ( s)[p] <= 13 {
-			goto st507
+			goto st508
 		}
-		goto tr953
+		goto tr955
 	st419:
 		if p++; p == pe {
 			goto _test_eof419
@@ -18135,7 +18170,7 @@ ts = p
 	st_case_419:
 		switch ( s)[p] {
 		case 43:
-			goto tr799
+			goto tr800
 		case 97:
 			goto st420
 		}
@@ -18164,21 +18199,21 @@ ts = p
 		}
 	st_case_422:
 		if ( s)[p] == 121 {
-			goto st508
+			goto st509
 		}
 		goto st0
-	st508:
+	st509:
 		if p++; p == pe {
-			goto _test_eof508
+			goto _test_eof509
 		}
-	st_case_508:
+	st_case_509:
 		if ( s)[p] == 32 {
-			goto st508
+			goto st509
 		}
 		if 9 <= ( s)[p] && ( s)[p] <= 13 {
-			goto st508
+			goto st509
 		}
-		goto tr954
+		goto tr956
 	st423:
 		if p++; p == pe {
 			goto _test_eof423
@@ -18186,7 +18221,7 @@ ts = p
 	st_case_423:
 		switch ( s)[p] {
 		case 43:
-			goto tr799
+			goto tr800
 		case 118:
 			goto st424
 		}
@@ -18225,33 +18260,33 @@ ts = p
 	st_case_427:
 		switch ( s)[p] {
 		case 32:
-			goto tr815
+			goto tr816
 		case 95:
 			goto st428
 		}
 		if 9 <= ( s)[p] && ( s)[p] <= 13 {
-			goto tr815
+			goto tr816
 		}
 		goto st0
-tr815:
+tr816:
 //line parse.rl:132
 
             mark = p;
         
-	goto st509
-	st509:
+	goto st510
+	st510:
 		if p++; p == pe {
-			goto _test_eof509
+			goto _test_eof510
 		}
-	st_case_509:
-//line parse.go:18248
+	st_case_510:
+//line parse.go:18283
 		if ( s)[p] == 32 {
-			goto st509
+			goto st510
 		}
 		if 9 <= ( s)[p] && ( s)[p] <= 13 {
-			goto st509
+			goto st510
 		}
-		goto tr955
+		goto tr957
 	st428:
 		if p++; p == pe {
 			goto _test_eof428
@@ -18306,21 +18341,21 @@ tr815:
 		}
 	st_case_433:
 		if ( s)[p] == 101 {
-			goto st510
+			goto st511
 		}
 		goto st0
-	st510:
+	st511:
 		if p++; p == pe {
-			goto _test_eof510
+			goto _test_eof511
 		}
-	st_case_510:
+	st_case_511:
 		if ( s)[p] == 32 {
-			goto st510
+			goto st511
 		}
 		if 9 <= ( s)[p] && ( s)[p] <= 13 {
-			goto st510
+			goto st511
 		}
-		goto tr957
+		goto tr959
 	st434:
 		if p++; p == pe {
 			goto _test_eof434
@@ -18363,21 +18398,21 @@ tr815:
 		}
 	st_case_438:
 		if ( s)[p] == 100 {
-			goto st511
+			goto st512
 		}
 		goto st0
-	st511:
+	st512:
 		if p++; p == pe {
-			goto _test_eof511
+			goto _test_eof512
 		}
-	st_case_511:
+	st_case_512:
 		if ( s)[p] == 32 {
-			goto st511
+			goto st512
 		}
 		if 9 <= ( s)[p] && ( s)[p] <= 13 {
-			goto st511
+			goto st512
 		}
-		goto tr958
+		goto tr960
 	st439:
 		if p++; p == pe {
 			goto _test_eof439
@@ -18385,7 +18420,7 @@ tr815:
 	st_case_439:
 		switch ( s)[p] {
 		case 43:
-			goto tr799
+			goto tr800
 		case 111:
 			goto st440
 		}
@@ -18423,21 +18458,21 @@ tr815:
 		}
 	st_case_443:
 		if ( s)[p] == 121 {
-			goto st512
+			goto st513
 		}
 		goto st0
-	st512:
+	st513:
 		if p++; p == pe {
-			goto _test_eof512
+			goto _test_eof513
 		}
-	st_case_512:
+	st_case_513:
 		if ( s)[p] == 32 {
-			goto st512
+			goto st513
 		}
 		if 9 <= ( s)[p] && ( s)[p] <= 13 {
-			goto st512
+			goto st513
 		}
-		goto tr959
+		goto tr961
 	st444:
 		if p++; p == pe {
 			goto _test_eof444
@@ -18445,7 +18480,7 @@ tr815:
 	st_case_444:
 		switch ( s)[p] {
 		case 43:
-			goto tr799
+			goto tr800
 		case 105:
 			goto st445
 		case 111:
@@ -18503,7 +18538,7 @@ tr815:
 		}
 	st_case_450:
 		if ( s)[p] == 116 {
-			goto st508
+			goto st509
 		}
 		goto st0
 	st451:
@@ -18548,21 +18583,21 @@ tr815:
 		}
 	st_case_455:
 		if ( s)[p] == 121 {
-			goto st513
+			goto st514
 		}
 		goto st0
-	st513:
+	st514:
 		if p++; p == pe {
-			goto _test_eof513
+			goto _test_eof514
 		}
-	st_case_513:
+	st_case_514:
 		if ( s)[p] == 32 {
-			goto st513
+			goto st514
 		}
 		if 9 <= ( s)[p] && ( s)[p] <= 13 {
-			goto st513
+			goto st514
 		}
-		goto tr960
+		goto tr962
 	st456:
 		if p++; p == pe {
 			goto _test_eof456
@@ -18570,7 +18605,7 @@ tr815:
 	st_case_456:
 		switch ( s)[p] {
 		case 43:
-			goto tr799
+			goto tr800
 		case 101:
 			goto st457
 		}
@@ -18608,21 +18643,21 @@ tr815:
 		}
 	st_case_460:
 		if ( s)[p] == 121 {
-			goto st514
+			goto st515
 		}
 		goto st0
-	st514:
+	st515:
 		if p++; p == pe {
-			goto _test_eof514
+			goto _test_eof515
 		}
-	st_case_514:
+	st_case_515:
 		if ( s)[p] == 32 {
-			goto st514
+			goto st515
 		}
 		if 9 <= ( s)[p] && ( s)[p] <= 13 {
-			goto st514
+			goto st515
 		}
-		goto tr961
+		goto tr963
 	st461:
 		if p++; p == pe {
 			goto _test_eof461
@@ -18630,7 +18665,7 @@ tr815:
 	st_case_461:
 		switch ( s)[p] {
 		case 43:
-			goto tr799
+			goto tr800
 		case 101:
 			goto st462
 		}
@@ -19107,6 +19142,7 @@ tr815:
 	_test_eof504: cs = 504; goto _test_eof
 	_test_eof505: cs = 505; goto _test_eof
 	_test_eof506: cs = 506; goto _test_eof
+	_test_eof507: cs = 507; goto _test_eof
 	_test_eof411: cs = 411; goto _test_eof
 	_test_eof412: cs = 412; goto _test_eof
 	_test_eof413: cs = 413; goto _test_eof
@@ -19115,37 +19151,37 @@ tr815:
 	_test_eof416: cs = 416; goto _test_eof
 	_test_eof417: cs = 417; goto _test_eof
 	_test_eof418: cs = 418; goto _test_eof
-	_test_eof507: cs = 507; goto _test_eof
+	_test_eof508: cs = 508; goto _test_eof
 	_test_eof419: cs = 419; goto _test_eof
 	_test_eof420: cs = 420; goto _test_eof
 	_test_eof421: cs = 421; goto _test_eof
 	_test_eof422: cs = 422; goto _test_eof
-	_test_eof508: cs = 508; goto _test_eof
+	_test_eof509: cs = 509; goto _test_eof
 	_test_eof423: cs = 423; goto _test_eof
 	_test_eof424: cs = 424; goto _test_eof
 	_test_eof425: cs = 425; goto _test_eof
 	_test_eof426: cs = 426; goto _test_eof
 	_test_eof427: cs = 427; goto _test_eof
-	_test_eof509: cs = 509; goto _test_eof
+	_test_eof510: cs = 510; goto _test_eof
 	_test_eof428: cs = 428; goto _test_eof
 	_test_eof429: cs = 429; goto _test_eof
 	_test_eof430: cs = 430; goto _test_eof
 	_test_eof431: cs = 431; goto _test_eof
 	_test_eof432: cs = 432; goto _test_eof
 	_test_eof433: cs = 433; goto _test_eof
-	_test_eof510: cs = 510; goto _test_eof
+	_test_eof511: cs = 511; goto _test_eof
 	_test_eof434: cs = 434; goto _test_eof
 	_test_eof435: cs = 435; goto _test_eof
 	_test_eof436: cs = 436; goto _test_eof
 	_test_eof437: cs = 437; goto _test_eof
 	_test_eof438: cs = 438; goto _test_eof
-	_test_eof511: cs = 511; goto _test_eof
+	_test_eof512: cs = 512; goto _test_eof
 	_test_eof439: cs = 439; goto _test_eof
 	_test_eof440: cs = 440; goto _test_eof
 	_test_eof441: cs = 441; goto _test_eof
 	_test_eof442: cs = 442; goto _test_eof
 	_test_eof443: cs = 443; goto _test_eof
-	_test_eof512: cs = 512; goto _test_eof
+	_test_eof513: cs = 513; goto _test_eof
 	_test_eof444: cs = 444; goto _test_eof
 	_test_eof445: cs = 445; goto _test_eof
 	_test_eof446: cs = 446; goto _test_eof
@@ -19158,13 +19194,13 @@ tr815:
 	_test_eof453: cs = 453; goto _test_eof
 	_test_eof454: cs = 454; goto _test_eof
 	_test_eof455: cs = 455; goto _test_eof
-	_test_eof513: cs = 513; goto _test_eof
+	_test_eof514: cs = 514; goto _test_eof
 	_test_eof456: cs = 456; goto _test_eof
 	_test_eof457: cs = 457; goto _test_eof
 	_test_eof458: cs = 458; goto _test_eof
 	_test_eof459: cs = 459; goto _test_eof
 	_test_eof460: cs = 460; goto _test_eof
-	_test_eof514: cs = 514; goto _test_eof
+	_test_eof515: cs = 515; goto _test_eof
 	_test_eof461: cs = 461; goto _test_eof
 	_test_eof462: cs = 462; goto _test_eof
 	_test_eof463: cs = 463; goto _test_eof
@@ -19173,73 +19209,75 @@ tr815:
 	if p == eof {
 		switch cs {
 		case 465:
-			goto tr857
+			goto tr858
 		case 466:
-			goto tr857
+			goto tr858
 		case 467:
-			goto tr859
+			goto tr860
 		case 10:
 			goto tr11
 		case 468:
-			goto tr860
+			goto tr861
 		case 11:
 			goto tr14
 		case 469:
-			goto tr861
+			goto tr862
 		case 12:
 			goto tr17
 		case 470:
-			goto tr862
+			goto tr863
 		case 471:
-			goto tr862
+			goto tr863
 		case 472:
-			goto tr864
+			goto tr865
 		case 493:
-			goto tr930
-		case 494:
 			goto tr931
+		case 494:
+			goto tr932
 		case 409:
 			goto tr789
 		case 495:
-			goto tr932
+			goto tr933
 		case 496:
-			goto tr933
+			goto tr934
 		case 497:
-			goto tr933
+			goto tr934
 		case 498:
-			goto tr935
+			goto tr936
 		case 499:
-			goto tr938
-		case 500:
 			goto tr939
+		case 500:
+			goto tr940
 		case 410:
 			goto tr789
 		case 501:
-			goto tr940
-		case 502:
 			goto tr941
+		case 502:
+			goto tr942
 		case 503:
-			goto tr942
+			goto tr943
 		case 504:
-			goto tr942
+			goto tr943
 		case 505:
-			goto tr944
-		case 507:
-			goto tr953
+			goto tr945
+		case 506:
+			goto tr946
 		case 508:
-			goto tr954
-		case 509:
 			goto tr955
+		case 509:
+			goto tr956
 		case 510:
 			goto tr957
 		case 511:
-			goto tr958
-		case 512:
 			goto tr959
-		case 513:
+		case 512:
 			goto tr960
-		case 514:
+		case 513:
 			goto tr961
+		case 514:
+			goto tr962
+		case 515:
+			goto tr963
 		case 473, 485:
 //line parse.rl:394
  start=0;end=6;m=0;d=1; 
@@ -19724,14 +19762,14 @@ d=m
                 }
             }
         
-//line parse.go:19728
+//line parse.go:19766
 		}
 	}
 
 	_out: {}
 	}
 
-//line parse.rl:545
+//line parse.rl:546
     if !nt.valid() {
         return nt, fmt.Errorf("failed to parse cron string '%s' %v %b", s, nt, mask12)
     }

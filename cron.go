@@ -119,8 +119,8 @@ func (p *Parsed) everyDay() int {
 	return int(p.dom)
 }
 
-func (p *Parsed) setEveryDay(d int) {
-	p.dom = uint32(d) // we overload this field to also store seconds for every
+func (p *Parsed) addEveryDay(d int) {
+	p.dom += uint32(d) // we overload this field to also store days for every
 }
 
 func (p *Parsed) everySeconds() time.Duration {

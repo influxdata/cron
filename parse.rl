@@ -411,7 +411,8 @@ func parse(s string)(Parsed, error){
                     | (/s/i %{nt.addEveryDur(time.Duration(m)*time.Second); })
                     | ((/h/i./r/i?) %{ nt.addEveryDur(time.Duration(m)*time.Hour); })
                     | (/m/i %{ nt.addEveryDur(time.Duration(m)*time.Minute); })
-                    | (/d/i %{ nt.setEveryDay(int(m)); })
+                    | (/d/i %{ nt.addEveryDay(int(m)); })
+                    | (/w/i %{ nt.addEveryDay(int(m*7)); })
                 ) => {};
             space+ => {};
             [0-9]| ^("y"|"m"|"µ"|"u"|"n"|"h"|"m"|"d") => parse_err;
